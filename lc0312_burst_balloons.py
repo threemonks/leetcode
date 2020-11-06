@@ -42,6 +42,9 @@ idea:
         1. we need to pad nums with index nums[-1]=1 and nums[n]=1 to make boundary case easier
         2. pop all 0s first as they don't add value
         3. base case is i+1==j, as there's no balloon to pop
+        
+time O(N^3)
+space O(N^2)        
 """
 
 
