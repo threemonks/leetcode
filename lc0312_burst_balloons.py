@@ -30,7 +30,8 @@ from typing import List
 
 """
 idea:
-    if we consider bursting a balloon i, and ramaining balloons [0, i-1] and [i+1, n), then maxCoins from left subarray and right subarray depend on each other as they are now adjacent
+    basic divide and conquer (try to divide into smaller subproblems)
+    if we consider bursting a balloon i, and ramaining balloons [0, i-1] and [i+1, n), then maxCoins from left subarray and right subarray depend on each other as they are now adjacent, so it is not cleanly separated subproblems.
     so we do reverse thinking, if we divide the array into two subarrays using the last balloons to pop, i, then its coin is maxCoins(0, i) + nums[0]*nums[i]*nums[n+1]+maxCoins(i+1,n+1) <- recursive
 
     dp:
