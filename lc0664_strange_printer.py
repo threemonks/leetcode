@@ -92,6 +92,8 @@ class Solution1:
             for k in range(i, j):
                 if (s[k] == s[j]):
                     min_turn = min(min_turn, dp(i, k) + dp(k + 1, j - 1))
+                else:
+                    min_turn = min(min_turn, dp(i, k) + dp(k + 1, j))
             return min_turn
 
         return dp(0, len(s) - 1)
