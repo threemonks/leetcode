@@ -50,6 +50,7 @@ In all test cases, all words were chosen randomly from the 1000 most common US E
 The time limit may be more challenging than usual. It is expected that a 50 sticker test case can be solved within 35ms on average.
 
 """
+import collections
 import math
 from functools import lru_cache
 from typing import List
@@ -73,24 +74,42 @@ bitMask | (1 << idxBit) 用于取`idxBit`位置
 DP 背包 状态压缩 bitmask
 """
 """
+observation that can speed up:
+
+1. for all stickers, we can ignore any letters that are not in target word
+2. if a sticker dominates another, we shouldn't include the dominated sticker in our sticker collection. A dominates B if A.count(letter) >= B.count(letter) for all letters
+
 idea
+
 use bitmask to represent weather a given letter of target has been included or not
 dp[i] := minimum number of stickers required to get to state i of target
 
 for each state i, and for each word st, can this word get the state to a new state j, and what's the dp of this new state
 dp[j] = min(dp[j], dp[i]+1)
 
+Time Complexity: O(2^T * S * T) - S be the total number of letters in all stickers, and TT be the number of letters in the target word
+Space Complexity: O(2^T)
 
 """
-
 
 class Solution:
     def minStickers(self, stickers: List[str], target: str) -> int:
 
-        n = len(target)
-        N = (1 << n)  # number of states
-        dp = [math.inf for _ in range(N)]
-        dp[0] = 0
+        t_count = collections.Counter(target)
+        # remove letters from sticker that do not appear in target
+        # also count letters in sticker
+        A = [collections.Counter(sticker) & t_count for sticker in stickers]
+        # print('A=%s' % str(A))
+
+        # remove dominated sticker(s)
+        for i in range(len(A) - 1, -1, -1):
+            if any(A[i] == A[i] & A[j] for j in range(len(A)) if i != j):
+                A.pop(i)
+
+        # print('A=%s' % str(A))
+
+        stickers = ["".join(s_count.elements()) for s_count in A]
+        print('stickers=%s' % str(stickers))
 
         def get_new_state(target, i, st):
             """
@@ -106,14 +125,61 @@ class Solution:
                         break
             return i
 
+        n = len(target)
+        N = (1 << n)  # number of states
+        dp = [math.inf for _ in range(N)]
+        dp[0] = 0
+
         for i in range(N):
             if dp[i] == math.inf:
                 continue
             for st in stickers:
-                j = get_new_state(target, i, st)
+                # get new state
+                #j = get_new_state(target, i, st)
+                j = i
+                for ch in st:
+                    for k in range(n):
+                        if ((j & (1 << k)) == 0) and ch == target[k]:
+                            j |= (1 << k)
+                            break
                 dp[j] = min(dp[j], dp[i] + 1)
 
         return dp[N - 1] if dp[N - 1] != math.inf else -1
+
+
+"""
+leetcode solutions
+Time Complexity: O(2^T * S * T) where SS be the total number of letters in all stickers, and TT be the number of letters in the target word. We can examine each loop carefully to arrive at this conclusion.
+Space Complexity: O(2^T), the space used by dp.
+
+"""
+class Solution1(object):
+    def minStickers(self, stickers, target):
+        t_count = collections.Counter(target)
+        A = [collections.Counter(sticker) & t_count
+             for sticker in stickers]
+
+        for i in range(len(A) - 1, -1, -1):
+            if any(A[i] == A[i] & A[j] for j in range(len(A)) if i != j):
+                A.pop(i)
+
+        stickers = ["".join(s_count.elements()) for s_count in A]
+        dp = [-1] * (1 << len(target))
+        dp[0] = 0
+        for state in range(1 << len(target)):
+            if dp[state] == -1: continue
+            for sticker in stickers:
+                now = state
+                for letter in sticker:
+                    for i, c in enumerate(target):
+                        if (now >> i) & 1: continue
+                        if c == letter:
+                            now |= 1 << i
+                            break
+                if dp[now] == -1 or dp[now] > dp[state] + 1:
+                    dp[now] = dp[state] + 1
+
+        return dp[-1]
 
 
 def main():
