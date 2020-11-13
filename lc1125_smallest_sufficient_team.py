@@ -53,6 +53,9 @@ observation:
 use bitmask to represent a given skill is set or not
 dp[i] := minimum number of person required to set skill represented by bitmask i, i.e., i=5 b0101 means skill 2 and skill 0 is set (starting from right)
 
+Time O(N(people) * 2^N(req_skills))
+Space O(2^N(req_skills))
+
 """
 
 
