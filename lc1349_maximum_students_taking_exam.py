@@ -154,8 +154,65 @@ class Solution:
         # print([dp[m-1][k] for k in range((1 << n))])
         return max([dp[m-1][k] for k in range((1 << n))])
 
+
+"""
+use 1-d dp state matrix
+"""
+class Solution1:
+    def maxStudents(self, seats: List[List[str]]) -> int:
+        m = len(seats)
+        n = len(seats[0])
+
+        # convert seats to bitmask int array
+        seatbits = []
+        for row in seats:
+            rowbit = 0
+            for idx, c in enumerate(row[::-1]):
+                if c == '.':
+                    rowbit |= (1 << idx)
+            #print(bin(rowbit))
+            seatbits.append(rowbit)
+        # print([bin(bs) for bs in seatbits])
+
+        def count_bits(i):
+            """
+            count number of bits set in binary form of i
+            :param i:
+            :return:
+            """
+            return len([ones for ones in bin(i)[2:] if ones=='1'])
+
+        dp = [0 for _ in range((1<<n))]
+        for bitset in range(0, (1 << n)):
+            # no adjacent seats used, and only valid seats used
+            if ((bitset & (bitset >> 1)) == 0) and ((bitset & seatbits[0]) == bitset):
+                dp[bitset] = count_bits(bitset)
+
+        for i in range(1, m):
+            prev_dp = dp[:]
+            for bitset in range(0, (1<<n)):
+                if (bitset & (bitset >> 1)) > 0:
+                    continue
+                # for each bitset in row i-1, what bitset in i will work?
+                if not ((bitset & seatbits[i]) == bitset):
+                    continue
+                # check all bitset in i-1 th row?
+                dp[bitset] = 0
+                for prev_bitset in range(1<<n):
+                    # no adjacent valid states, nor left upper or right upper adjacent valid states
+                    if (bitset & (prev_bitset >> 1) == 0) and (bitset & (prev_bitset << 1) == 0):
+                        dp[bitset] = max(dp[bitset], prev_dp[prev_bitset] + count_bits(bitset))
+            # print('i=%s' % i)
+            # print(bin(seatbits[i]))
+            # print([bin(idx) for idx, v in enumerate(dp[i])])
+            # print(dp[i])
+
+        # print([dp[m-1][k] for k in range((1 << n))])
+        return max([dp[k] for k in range((1 << n))])
+
+
 def main():
-    sol = Solution()
+    sol = Solution1()
     assert sol.maxStudents([["#",".","#","#",".","#"],
                 [".","#","#","#","#","."],
                 ["#",".","#","#",".","#"]]) == 4, 'fails'
