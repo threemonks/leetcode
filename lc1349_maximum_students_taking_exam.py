@@ -64,8 +64,11 @@ bitmask cheatsheets
 1. (x >> i) & 1 to get i-th bit in state x
    x & (1 << i)
 2. (x & y) == x to check if x is a subset of y, i.e., every bit in x can be 1 only if the corresponding bit in y is 1
-3. (x & (x >> 1)) == 0 to check if there are no adjancent valid states in x (1 is valid, 0 is invalid state)
-
+3. (x & (x >> 1)) == 0 to check if there are no adjacent valid states in x (1 is valid, 0 is invalid state)
+4. iterate through all subsets of something target
+    while state:
+        # do something with state
+        state = (state-1)&total_states
 observation:
 第一型 dp 时间序列 + bitmask 状态压缩 
 
@@ -119,19 +122,11 @@ class Solution:
             seatbits.append(rowbit)
         # print([bin(bs) for bs in seatbits])
 
-        def count_bits(i):
-            """
-            count number of bits set in binary form of i
-            :param i:
-            :return:
-            """
-            return len([ones for ones in bin(i)[2:] if ones=='1'])
-
         dp = [[0 for _ in range((1<<n))] for _ in range(m)]
         for bitset in range(0, (1 << n)):
             # no adjacent seats used, and only valid seats used
             if ((bitset & (bitset >> 1)) == 0) and ((bitset & seatbits[0]) == bitset):
-                dp[0][bitset] = count_bits(bitset)
+                dp[0][bitset] = bin(bitset).count("1")
 
         for i in range(1, m):
             for bitset in range(0, (1<<n)):
@@ -145,7 +140,7 @@ class Solution:
                 for prev_bitset in range(1<<n):
                     # no adjacent valid states, nor left upper or right upper adjacent valid states
                     if (bitset & (prev_bitset >> 1) == 0) and (bitset & (prev_bitset << 1) == 0):
-                        dp[i][bitset] = max(dp[i][bitset], dp[i-1][prev_bitset] + count_bits(bitset))
+                        dp[i][bitset] = max(dp[i][bitset], dp[i-1][prev_bitset] + bin(bitset).count("1"))
             # print('i=%s' % i)
             # print(bin(seatbits[i]))
             # print([bin(idx) for idx, v in enumerate(dp[i])])
@@ -174,19 +169,11 @@ class Solution1:
             seatbits.append(rowbit)
         # print([bin(bs) for bs in seatbits])
 
-        def count_bits(i):
-            """
-            count number of bits set in binary form of i
-            :param i:
-            :return:
-            """
-            return len([ones for ones in bin(i)[2:] if ones=='1'])
-
         dp = [0 for _ in range((1<<n))]
         for bitset in range(0, (1 << n)):
             # no adjacent seats used, and only valid seats used
             if ((bitset & (bitset >> 1)) == 0) and ((bitset & seatbits[0]) == bitset):
-                dp[bitset] = count_bits(bitset)
+                dp[bitset] = bin(bitset).count("1")
 
         for i in range(1, m):
             prev_dp = dp[:]
@@ -201,7 +188,7 @@ class Solution1:
                 for prev_bitset in range(1<<n):
                     # no adjacent valid states, nor left upper or right upper adjacent valid states
                     if (bitset & (prev_bitset >> 1) == 0) and (bitset & (prev_bitset << 1) == 0):
-                        dp[bitset] = max(dp[bitset], prev_dp[prev_bitset] + count_bits(bitset))
+                        dp[bitset] = max(dp[bitset], prev_dp[prev_bitset] + bin(bitset).count("1"))
             # print('i=%s' % i)
             # print(bin(seatbits[i]))
             # print([bin(idx) for idx, v in enumerate(dp[i])])
