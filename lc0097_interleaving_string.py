@@ -57,8 +57,10 @@ dp[i][j] = dp[i-1][j] is True && s1[i] == s3[i+j]
            or dp[i][j-1] is True && s2[j] == s3[i+j]
 
 # define dp as (m+1)*(n+1) and add leading dummy char to both string to avoid special handling edge case
-"""
 
+time O(m*n)
+space O(m*n)
+"""
 
 class Solution:
     def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
@@ -94,8 +96,37 @@ class Solution:
 
         return dp[-1][-1]
 
+"""
+DFS recursive with memoization
+"""
+class Solution1:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        l = len(s1)
+        m = len(s2)
+        n = len(s3)
+
+        @lru_cache(None)
+        def helper(i, j, k):
+            """
+            i: the index we are checking in s1
+            j: the index we are checking in s2
+            k: the index we are checking in s3
+            """
+            if i == l and j == m and k == n:
+                return True
+            if k == n and not (i == l and j == m):
+                return False
+            if i < l and j < m and k < n and s1[i] == s3[k] and s2[j] == s3[k]:
+                return helper(i + 1, j, k + 1) or helper(i, j + 1, k + 1)
+            elif i < l and k < n and s1[i] == s3[k]:
+                return helper(i + 1, j, k + 1)
+            elif j < m and k < n and s2[j] == s3[k]:
+                return helper(i, j + 1, k + 1)
+
+        return bool(helper(0, 0, 0))
+
 def main():
-    sol = Solution()
+    sol = Solution1()
     assert sol.isInterleave("aabcc", "dbbca", "aadbbcbcac") is True, 'fails'
 
     assert sol.isInterleave("aabcc", "dbbca", "aadbbbaccc") is False, 'fails'
