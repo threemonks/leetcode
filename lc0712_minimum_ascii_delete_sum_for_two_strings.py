@@ -30,6 +30,8 @@ Note:
 All elements of each string will have an ASCII value in [97, 122].
 
 """
+from functools import lru_cache
+
 """
 DP with two string
 dp bottom up
@@ -80,11 +82,39 @@ class Solution:
 
         return dp[l1][l2]
 
+
+"""
+DP top down / recursive
+"""
+
+class Solution1:
+    def minimumDeleteSum(self, s1: str, s2: str) -> int:
+        if s1 == s2:
+            return 0
+        @lru_cache(None)
+        def helper(i, j):
+            if i == -1 and j == -1:
+                return 0
+            elif i == -1 and j >= 0:
+                return sum([ord(c) for c in s2[:j + 1]])
+            elif i >= 0 and j == -1:
+                return sum([ord(c) for c in s1[:i + 1]])
+            if s1[i] == s2[j]:
+                return helper(i - 1, j - 1)
+            else:
+                return min(helper(i - 1, j) + ord(s1[i]), helper(i, j - 1) + ord(s2[j]))
+
+        return helper(len(s1) - 1, len(s2) - 1)
+
+
 def main():
-    sol = Solution()
+    sol = Solution1()
     assert sol.minimumDeleteSum("sea", "eat") == 231, 'fails'
 
     assert sol.minimumDeleteSum("delete", "leet") == 403, 'fails'
+
+    assert sol.minimumDeleteSum("igijekdtywibepwonjbwykkqmrgmtybwhwjiqudxmnniskqjfbkpcxukrablqmwjndlhblxflgehddrvwfacarwkcpmcfqnajqfxyqwiugztocqzuikamtvmbjrypfqvzqiwooewpzcpwhdejmuahqtukistxgfafrymoaodtluaexucnndlnpeszdfsvfofdylcicrrevjggasrgdhwdgjwcchyanodmzmuqeupnpnsmdkcfszznklqjhjqaboikughrnxxggbfyjriuvdsusvmhiaszicfa"
+"ikhuivqorirphlzqgcruwirpewbjgrjtugwpnkbrdfufjsmgzzjespzdcdjcoioaqybciofdzbdieegetnogoibbwfielwungehetanktjqjrddkrnsxvdmehaeyrpzxrxkhlepdgpwhgpnaatkzbxbnopecfkxoekcdntjyrmmvppcxcgquhomcsltiqzqzmkloomvfayxhawlyqxnsbyskjtzxiyrsaobbnjpgzmetpqvscyycutdkpjpzfokvi") == 41731, 'fails'
 
 if __name__ == '__main__':
    main()
