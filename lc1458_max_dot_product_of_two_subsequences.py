@@ -69,7 +69,7 @@ class Solution:
         l2 = len(nums2)
         nums1 = nums1
         nums2 = nums2
-        dp = [[-math.inf for _ in range(l2)] for _ in range(l1)]
+        dp = [[-math.inf/2 for _ in range(l2)] for _ in range(l1)] # init to -math.inf/2 as we are calculating max, and to avoid overflow when using math.inf directly
         dp[0][0] = nums1[0]*nums2[0]
         for i in range(1, l1):
             dp[i][0] = max(dp[i-1][0], nums1[i]*nums2[0])
@@ -79,10 +79,10 @@ class Solution:
 
         for i in range(1, l1):
             for j in range(1, l2):
-                dp[i][j] = max(dp[i - 1][j - 1] + nums1[i] * nums2[j],
+                dp[i][j] = max(dp[i - 1][j - 1] + nums1[i] * nums2[j], # update dp[i-1][j-1] with new dot product result
                                dp[i - 1][j],
                                dp[i][j - 1],
-                               nums1[i] * nums2[j]
+                               nums1[i] * nums2[j] # ignore previous F(.., ..) because it might be better to not add it at all (i.e. if it is negative).
                                )
                 print(numpy.matrix(dp))
 
@@ -100,7 +100,7 @@ class Solution1:
         def helper(i, j):
             nonlocal nums1, nums2
             if i == -1 or j == -1:
-                return -math.inf
+                return -math.inf/2
             if i == 0 and j == 0:
                 return nums1[i] * nums2[j]
             return max(helper(i - 1, j - 1)+nums1[i] * nums2[j], helper(i - 1, j), helper(i, j - 1), nums1[i] * nums2[j])
