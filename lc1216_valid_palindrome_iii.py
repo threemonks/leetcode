@@ -40,7 +40,7 @@ dp two string s and s[::-1] / two pointers
 dp topdown recursive w/ memoization
 
 time O(m^2)
-space O(m^2)?
+space O(m^2)
 """
 
 
