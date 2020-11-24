@@ -53,7 +53,6 @@ maximize: dp[state]
              ||
 minimize ( maximize: dp[state'])
 
-
 dp[i,M] := after first i-th piles used, how many stones Alice can have
     dp[i,] = sum(piles[i...]) - dp[i+X, max(M,X)] # effective, stones gained by Alice for taking first X remaining piles, is sum of all remaining stones, minus whatever bob can gain after Alice's turn, which is dp[i+X, max(M, X)]
 
