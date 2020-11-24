@@ -43,6 +43,43 @@ from functools import lru_cache
 from typing import List
 
 """
+{X X X X X X X} X
+solve(1, n)
+once Alex done solve(1, n), Lee will do solve(2, n) if Alex picks 1, or solve(1, n-1) if Alex picks n
+
+int solve(1, n):
+    1. if picks piles[1] => piles[1] + sum[2...n] - solve(2, n) = sum[1...n] - solve(2, n)
+    2. if picks piles[n] => piles[n] + sum[1...n-1] - solve(1, n-1) = sum[1...n] - solve(1, n-1)
+
+"""
+
+
+class Solution:
+    def stoneGame(self, piles: List[int]) -> bool:
+
+        n = len(piles)
+        # add dummy value in front to avoid special handling of index 0
+        piles = [0] + piles
+
+        # prefix sum
+        presum = [0] * (n + 1)
+        presum[0] = 0
+        for i in range(1, n + 1):
+            presum[i] = presum[i - 1] + piles[i]
+
+        @lru_cache(None)
+        def solve(i, j):
+            nonlocal piles, presum
+            if i == j:
+                return piles[i]
+            return max(presum[n] - presum[0] - solve(i + 1, j), presum[n] - presum[0] - solve(i, j - 1))
+
+        gain = solve(1, n)
+
+        return gain > presum[n] - gain  # my gain > oppononent's gain
+
+
+"""
 observation: let Lee's move deduct the score amount from Alex score points
 dp(i, j) : maximum score Alex can get more then Lee with remaining piles [i, .., j]
 
@@ -102,7 +139,7 @@ space O(n)
 """
 
 
-class Solution:
+class Solution3:
     def stoneGame(self, piles: List[int]) -> bool:
         l = len(piles)
         dp = [0 for _ in range(l)]

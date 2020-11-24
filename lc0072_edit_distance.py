@@ -49,7 +49,7 @@ from functools import lru_cache
 from typing import List
 
 """
-dp with two strings
+dp with two series
 
 dp[i][j] := minmum operation required to convert word1[:i] to word2[:j]
 

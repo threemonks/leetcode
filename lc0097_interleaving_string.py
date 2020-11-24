@@ -48,7 +48,7 @@ from functools import lru_cache
 from typing import List
 
 """
-dp with two strings
+dp with two series
 
 dp[i][j] := interleaving or not for s1[:i], s2[:j] to interleave and get s3[:i+j]
 
