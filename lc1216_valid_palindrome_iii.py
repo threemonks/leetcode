@@ -2,13 +2,6 @@
 1216. Valid Palindrome III
 Hard
 
-202
-
-5
-
-Add to List
-
-Share
 Given a string s and an integer k, find out if the given string is a K-Palindrome or not.
 
 A string is K-Palindrome if it can be transformed into a palindrome by removing at most k characters from it.

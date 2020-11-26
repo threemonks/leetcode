@@ -2,13 +2,6 @@
 1312. Minimum Insertion Steps to Make a String Palindrome
 Hard
 
-548
-
-6
-
-Add to List
-
-Share
 Given a string s. In one step you can insert any character at any index of the string.
 
 Return the minimum number of steps to make s palindrome.

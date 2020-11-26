@@ -2,13 +2,6 @@
 1458. Max Dot Product of Two Subsequences
 Hard
 
-364
-
-9
-
-Add to List
-
-Share
 Given two arrays nums1 and nums2.
 
 Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.

@@ -2,13 +2,6 @@
 1655. Distribute Repeating Integers
 Hard
 
-60
-
-5
-
-Add to List
-
-Share
 You are given an array of n integers, nums, where there are at most 50 unique values in the array. You are also given an array of m customer order quantities, quantity, where quantity[i] is the amount of integers the ith customer ordered. Determine if it is possible to distribute nums such that:
 
 The ith customer gets exactly quantity[i] integers,

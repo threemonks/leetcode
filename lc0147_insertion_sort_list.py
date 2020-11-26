@@ -2,13 +2,6 @@
 147. Insertion Sort List
 Medium
 
-769
-
-619
-
-Add to List
-
-Share
 Sort a linked list using insertion sort.
 
 

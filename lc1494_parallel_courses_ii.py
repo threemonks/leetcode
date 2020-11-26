@@ -2,13 +2,6 @@
 1494. Parallel Courses II
 Hard
 
-269
-
-27
-
-Add to List
-
-Share
 Given the integer n representing the number of courses at some university labeled from 1 to n, and the array dependencies where dependencies[i] = [xi, yi]  represents a prerequisite relationship, that is, the course xi must be taken before the course yi.  Also, you are given the integer k.
 
 In one semester you can take at most k courses as long as you have taken all the prerequisites for the courses you are taking.

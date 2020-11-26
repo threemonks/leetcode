@@ -2,13 +2,6 @@
 1446. Consecutive Characters
 Easy
 
-379
-
-11
-
-Add to List
-
-Share
 Given a string s, the power of the string is the maximum length of a non-empty substring that contains only one unique character.
 
 Return the power of the string.

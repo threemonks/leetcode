@@ -2,13 +2,6 @@
 583. Delete Operation for Two Strings
 Medium
 
-1273
-
-30
-
-Add to List
-
-Share
 Given two words word1 and word2, find the minimum number of steps required to make word1 and word2 the same, where in each step you can delete one character in either string.
 
 Example 1:

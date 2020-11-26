@@ -2,13 +2,6 @@
 664. Strange Printer
 Hard
 
-496
-
-51
-
-Add to List
-
-Share
 There is a strange printer with the following two special requirements:
 
 The printer can only print a sequence of the same character each time.

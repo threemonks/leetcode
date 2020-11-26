@@ -2,13 +2,6 @@
 1130. Minimum Cost Tree From Leaf Values
 Medium
 
-1585
-
-123
-
-Add to List
-
-Share
 Given an array arr of positive integers, consider all binary trees such that:
 
 Each node has either 0 or 2 children;
