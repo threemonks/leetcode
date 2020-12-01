@@ -67,7 +67,7 @@ class Solution:
 
         stack = []
         prev_larger = [
-                          1] * n  # number of consecutive elements larger than arr[i] on left, from arr[0] ... arr[i-1], ending at arr[i-1]
+                          1] * n  # number of consecutive elements larger than arr[i] on left, in range from arr[0] to arr[i-1], ending at arr[i-1]
         for i in range(0, n):
             while stack and stack[-1][0] >= arr[i]:
                 prev_larger[i] += stack.pop()[1]
@@ -78,7 +78,7 @@ class Solution:
 
         stack = []
         next_larger = [
-                          1] * n  # number of consecutive elements larger than arr[i] on right, from arr[i+1] ... arr[n-1], starting at arr[i+1]
+                          1] * n  # number of consecutive elements larger than arr[i] on right, in range from arr[i+1] to arr[n-1], starting at arr[i+1]
         for i in range(n - 1, -1, -1):
             while stack and stack[-1][0] > arr[i]:
                 next_larger[i] += stack.pop()[1]
