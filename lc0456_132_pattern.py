@@ -39,11 +39,17 @@ from typing import List
 observation
 
 to find pattern n1<n3<n2, we need to find the maximum n3 with n3<n2, and the smallest n1 to its left, scan through array and use decreasing stack to keep track of n3<n2 pattern
-scan the array from right allow one pass finish as we just need to remember max n3 with a n2>n3 to its left. we use decreasing stack to keep track of largest n3 and associated possible n2's so far, - n3 being the most recently popped one, and n2 candidates are the ones still in stack - use monotonically decreasing stack as we want to get (n3,n2) pairs as large as possible, so that we have better chance of finding an n1 < n3 to the left.
+scan the array from right allow one pass finish as we just need to remember max n3 with a n2>n3 to its left. we use decreasing stack to keep track of largest n3 and associated possible n2's possible so far, - n3 being the most recently popped one, and n2 candidates are the ones still in stack - use monotonically decreasing stack as we want to get (n3,n2) pairs as large as possible, so that we have better chance of finding an n1 < n3 to the left.
 algorithm:
 1. scan array from right to left, if new number nums[i] larger than stack top (stack[-1]), pop the stack top until it is larger than nums[i] (or stack is empty), then push nums[i]
 2. we keep track of maximum of such n3 (always the latest number popped from stack)
 3. if new number from array nums[i] < n3, then we found n1 < n3 (last number popped out from stack, largest among the ones popped out) < n2 (numbers remains in stack)
+
+We want (n3,n2) pair with (n3<n2) as large as possible, which allows us more likely to find a smaller n1 < n3 (greedy), so we are looking for storing largest n3,n2 in stack, there when we push in, we popup stack top values that are smaller, so we are storing larger ones at bottom of stack, thus it is a decreasing stack.
+
+如何考虑堆栈需要保留的值的大小问题（或者需要踢出的值）：
+    想保留小值 那么就用小值踢大值
+    想保留大值 那么就用大值踢小值
 
 time O(N) each number is pushed and popped just once
 space O(N) worst case stack length is len(nums)
