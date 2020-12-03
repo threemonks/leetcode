@@ -39,27 +39,34 @@ from typing import List
 observation
 
 to find pattern n1<n3<n2, we need to find the maximum n3 with n3<n2, and the smallest n1 to its left, scan through array and use decreasing stack to keep track of n3<n2 pattern
-scan the array from right allow one pass finish as we just need to remember max n3, as the stack keep n3<n2
+scan the array from right allow one pass finish as we just need to remember max n3 with a n2>n3 to its left. we use decreasing stack to keep track of largest n3 and associated possible n2's so far, - n3 being the most recently popped one, and n2 candidates are the ones still in stack - use monotonically decreasing stack as we want to get (n3,n2) pairs as large as possible, so that we have better chance of finding an n1 < n3 to the left.
+algorithm:
+1. scan array from right to left, if new number nums[i] larger than stack top (stack[-1]), pop the stack top until it is larger than nums[i] (or stack is empty), then push nums[i]
+2. we keep track of maximum of such n3 (always the latest number popped from stack)
+3. if new number from array nums[i] < n3, then we found n1 < n3 (last number popped out from stack, largest among the ones popped out) < n2 (numbers remains in stack)
+
+time O(N) each number is pushed and popped just once
+space O(N) worst case stack length is len(nums)
 
 """
-
 
 class Solution:
     def find132pattern(self, nums: List[int]) -> bool:
         n = len(nums)
 
+
         n3 = -math.inf
         stack = []
 
-        for i in range(n - 1, -1, -1):
+        for i in range(n-1, -1, -1):
             while stack and stack[-1] < nums[i]:
                 n3 = stack.pop()
-                print('after pop n3=%s stack=%s' % (n3, str(stack)))
+                # print('after pop n3=%s stack=%s' % (n3, str(stack)))
             if nums[i] < n3:
-                print('n1=%s n2=%s n3=%s' % (nums[i], stack[-1], n3))
+                # print('n1=%s n2=%s n3=%s' % (nums[i], stack[-1], n3))
                 return True
             stack.append(nums[i])
-            print('after append n3=%s stack=%s' % (n3, str(stack)))
+            # print('after append n3=%s stack=%s' % (n3, str(stack)))
 
         return False
 
