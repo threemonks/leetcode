@@ -150,19 +150,22 @@ class Solution:
         for i in range(1, m + 1):
             for j in range(1, n + 1):
                 for k in range(1, min(i + j + 1, K+1)):
-                    dp[i][j][k] = max(dp[i - 1][j][k - 1] + str(nums1[i]),
-                                      dp[i][j - 1][k - 1] + str(nums2[j]),
-                                      dp[i - 1][j - 1][k])
+                    dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j][k - 1] + str(nums1[i]))
+                    dp[i][j][k] = max(dp[i][j][k], dp[i][j - 1][k - 1] + str(nums2[j]))
+                    dp[i][j][k] = max(dp[i][j][k], dp[i - 1][j][k])
+                    dp[i][j][k] = max(dp[i][j][k], dp[i][j-1][k])
 
         return [int(s) for s in dp[m][n][K]]
 
 def main():
     sol = Solution()
-    assert sol.maxNumber([3, 4, 6, 5], [9, 1, 2, 5, 8, 3], 5) == [9, 8, 6, 5, 3], 'fails'
+    # assert sol.maxNumber([3, 4, 6, 5], [9, 1, 2, 5, 8, 3], 5) == [9, 8, 6, 5, 3], 'fails'
+    #
+    # assert sol.maxNumber([6, 7], [6, 0, 4], 5) == [6, 7, 6, 0, 4], 'fails'
+    #
+    # assert sol.maxNumber([3, 9], [8, 9], 3) == [9, 8, 9], 'fails'
 
-    assert sol.maxNumber([6, 7], [6, 0, 4], 5) == [6, 7, 6, 0, 4], 'fails'
-
-    assert sol.maxNumber([3, 9], [8, 9], 3) == [9, 8, 9], 'fails'
+    assert sol.maxNumber([5,2,2], [6,4,1], 3) == [6, 5, 4], 'fails'
 
 if __name__ == '__main__':
    main()
