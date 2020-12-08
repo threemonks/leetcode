@@ -84,8 +84,55 @@ class Solution:
         return calc_expr(stack)
 
 
+"""
+observation:
+
+1. for +-*/ use stack
+2. for paren () use recursive (or new stack), opening paren cause recursive calculate, closing paren cause result to be pushed back,
+   note parenthesis binds tighter than plus or minus
+3. space can be removed or ignored
+4. test digit .isdigit or '0' <= char <= '9'
+5. finally sum all numbers (with signs) in stack
+
+use stack to hold tokens, closing parenthesis will trigger process of all tokens up till opening parenthesis, then replae all elements in stack up to opening parenthesis with the result value, and continue to process stack
+"""
+
+
+class Solution1:
+
+    def calculate(self, s: str) -> int:
+        i = 0
+
+        def calc() -> int:
+            nonlocal s, i
+            stack = []
+            num = 0
+            operator = '+'
+            while i < len(s):
+                c = s[i]
+                i += 1
+                if c in '0123456789':
+                    num = num * 10 + int(c)
+                elif c == '(':
+                    num = calc()
+                if c in '+-)' or i >= len(s):  # operator or closing paren or last char
+                    if operator == '+':
+                        stack.append(num)
+                        operator = c
+                    elif operator == '-':
+                        stack.append(-num)
+                        operator = c
+                    num = 0
+                    # print('i=%s stack=%s' % (i, str(stack)))
+                    if c == ')':
+                        break
+
+            return sum(stack)
+
+        return calc()
+
 def main():
-    sol = Solution()
+    sol = Solution1()
     assert sol.calculate("1 + 1") == 2, 'fails'
 
     assert sol.calculate(" 2-1 + 2 ") == 3, 'fails'
