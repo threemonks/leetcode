@@ -52,6 +52,7 @@ time O(N)
 space O(N)
 """
 
+
 class Solution:
     def calculate(self, s: str) -> int:
         i = 0
@@ -64,33 +65,32 @@ class Solution:
             while i < len(s):
                 c = s[i]
                 i += 1
-                if c == ' ':
-                    continue
-                if c == '(':
-                    num = calc()
                 if c in '0123456789':
                     num = num * 10 + int(c)
-                if c in '+-*/)' or i >= len(s) - 1:  # operator, closing paren or end of string
+                elif c == '(':
+                    num = calc()
+                if c in '+-*/)' or i >= len(s):  # operator, closing paren or end of string
                     if operator == '+':
                         stack.append(num)
                         print('after + %s' % str(stack))
+                        operator = c
                     elif operator == '-':
                         stack.append(-num)
+                        operator = c
                         print('after - %s' % str(stack))
                     elif operator == '*':
                         t = stack.pop()
                         stack.append(t * num)
+                        operator = c
                         print('after * %s' % str(stack))
                     elif operator == '/':
-                        t = stack.pop()
-                        stack.append(-(-t // num) if t < 0 else t // num)  # round towards zero
+                        numerate = stack.pop()
+                        print('numerate=%s num=%s' % (numerate, num))
+                        stack.append(-(-numerate // num) if numerate < 0 else numerate // num)  # round towards zero
+                        operator = c
                         print('after / %s' % str(stack))
-                    else:  # end of string
-                        stack.append(num)
-                        print('after end of string %s' % str(stack))
                     if c == ')':
                         break
-                    operator = c
                     num = 0
                 print(stack)
 
