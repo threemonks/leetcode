@@ -73,22 +73,19 @@ class Solution:
                     if operator == '+':
                         stack.append(num)
                         print('after + %s' % str(stack))
-                        operator = c
                     elif operator == '-':
                         stack.append(-num)
-                        operator = c
                         print('after - %s' % str(stack))
                     elif operator == '*':
                         t = stack.pop()
                         stack.append(t * num)
-                        operator = c
                         print('after * %s' % str(stack))
                     elif operator == '/':
                         numerate = stack.pop()
                         print('numerate=%s num=%s' % (numerate, num))
                         stack.append(-(-numerate // num) if numerate < 0 else numerate // num)  # round towards zero
-                        operator = c
                         print('after / %s' % str(stack))
+                    operator = c
                     if c == ')':
                         break
                     num = 0
