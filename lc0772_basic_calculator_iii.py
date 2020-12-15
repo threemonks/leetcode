@@ -43,6 +43,94 @@ s is a valid expression.
 """
 
 """
+calculator or expression with paren/brace eval
+
+use recursive with string stack for elements of expression to handle parenthesis
+then use stack to handle sub-express without parenthesis
+
+use stack
+( => push into stack, clear cusStr
+) => eval curStr, concatenate with stack.pop()
+else:
+  curStr + s[i]
+
+func eval needs to handle (no paren, but number could have sign)
+*/ has higher precedence, needs to pop one from stack, eval with next val, then push back result
++5--433+3*-210-2-3-+3+-5
++5, --433, +3*(-210), -2, -3, -+3, -5,
+"""
+
+
+class Solution:
+    def calculate(self, s: str) -> int:
+
+        # remove white space
+        s = ''.join([c for c in s if c != ' '])
+
+        def calc(s):
+            """
+            evaludate string expression with +-*/ without parenthesis
+            """
+            if (s[0] != '+' and s[0] != '-'):
+                s = '+' + s
+            stack = []
+            num = ''
+            i = 0
+            while i < len(s):
+                c = s[i]
+                print('i=%s c=%s' % (i, c))
+                if c == '+' or c == '-':
+                    j = i+1
+                    if s[j] == '+' or s[j] == '-': # this is sign of number
+                        j+=1
+                    while j < len(s) and s[j].isdigit():
+                        j+=1
+                    num = s[i+1:j]
+                    i = j-1
+                    if c == '-':
+                        stack.append(-int(num))
+                    else:
+                        stack.append(int(num))
+                    num = ''
+                elif c == '*' or c == '/':
+                    j = i+1
+                    if s[j] == '+' or s[j] == '-': # this is sign of number
+                        j+=1
+                    while j < len(s) and s[j].isdigit():
+                        j+=1
+                    num = s[i+1:j]
+                    i = j-1
+                    prev_num = stack.pop()
+                    if c == '*':
+                        stack.append(prev_num * int(num))
+                    else:  # /
+                        stack.append(-(-prev_num // int(num)) if prev_num < 0 else prev_num // int(num))
+                    num = ''
+
+                print('stack=%s' % str(stack))
+                i += 1
+
+            if num: # last number
+                stack.append(int(num))
+
+            return sum(stack)
+
+        cur_str = ''
+        stack = []  # holding string elements with parenthesis evaluated first
+        for c in s:
+            if c == '(':
+                stack.append(cur_str)
+                cur_str = ''
+            elif c == ')':
+                cur_res = calc(cur_str)
+                cur_str = stack.pop() + str(cur_res)
+            else:
+                cur_str += c
+        print('cur_str=%s' % cur_str)
+        return calc(cur_str)
+
+
+"""
 use recursive to handle parenthesis precedence
 combine minus sign to number into negative number
 */ has higher binding priority than +-, i.e., if there is operator */, pop out stack top element, calculate */ result, push the result back into stack
@@ -53,7 +141,7 @@ space O(N)
 """
 
 
-class Solution:
+class Solution1:
     def calculate(self, s: str) -> int:
         i = 0
 
@@ -104,6 +192,8 @@ def main():
     assert sol.calculate("2*(5+5*2)/3+(6/2+8)") == 21, 'fails'
 
     assert sol.calculate("(2+6* 3+5- (3*14/7+2)*5)+3") == -12, 'fails'
+
+    assert sol.calculate("2-(5-6)") == 3, 'fails'
 
     assert sol.calculate("0") == 0, 'fails'
 
