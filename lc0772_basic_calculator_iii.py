@@ -49,13 +49,13 @@ use recursive with string stack for elements of expression to handle parenthesis
 then use stack to handle sub-express without parenthesis
 
 use stack
-( => push into stack, clear cusStr
-) => eval curStr, concatenate with stack.pop()
+( => push cur_str into stack, clear cur_str
+) => eval cur_str, concatenate with stack.pop()
 else:
   curStr + s[i]
 
 func eval needs to handle (no paren, but number could have sign)
-*/ has higher precedence, needs to pop one from stack, eval with next val, then push back result
+*/ has higher precedence, needs to pop one from stack, eval with next val, then push back result, needs to handle when result has leading +- sign
 +5--433+3*-210-2-3-+3+-5
 +5, --433, +3*(-210), -2, -3, -+3, -5,
 """
