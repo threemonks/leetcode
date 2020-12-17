@@ -1,0 +1,110 @@
+"""
+
+930. Binary Subarrays With Sum
+Medium
+
+In an array A of 0s and 1s, how many non-empty subarrays have sum S?
+
+
+
+Example 1:
+
+Input: A = [1,0,1,0,1], S = 2
+Output: 4
+Explanation:
+The 4 subarrays are bolded below:
+[1,0,1,0,1]
+[1,0,1,0,1]
+[1,0,1,0,1]
+[1,0,1,0,1]
+
+
+Note:
+
+A.length <= 30000
+0 <= S <= A.length
+A[i] is either 0 or 1.
+
+"""
+
+from typing import List
+
+"""
+Hashmap + prefix_sum
+
+遍历每个元素A[j]，考察所有以A[j]结尾，满足条件和为S的子数组，有哪些可能起点i，计算可能起点i的个数
+
+涉及数组subarray的和，转化为前缀和来处理，sum[i:j]=pre_sum[j]-pre_sum[i-1]，其中sum[i:j]=S，对于某个元素A[j]，pre_sum[j]已知，则以A[j]结尾，和为S的子数组个数，就是前缀和为pre_sum[j]-S=pre_sum[i-1]的i的个数，即
+
+result += counts_dct[pre_sum[j]-S]
+
+
+"""
+
+import collections
+class Solution0:
+    def numSubarraysWithSum(self, A: List[int], S: int) -> int:
+        n = len(A)
+        counts_dct = collections.defaultdict(int) # number of subarray with sum to S, after check up to index j
+        result = 0
+        counts_dct[0] = 1
+        pre_sum = [0]*len(A)
+        for j in range(n):
+            pre_sum[j] = (pre_sum[j-1] if j-1>=0 else 0) + A[j]
+            result += counts_dct[pre_sum[j]-S]
+            counts_dct[pre_sum[j]]+=1
+
+        return result
+
+"""
+simplify pre_sum from 1d to 0d as we only use one previous value
+"""
+import collections
+class Solution1:
+    def numSubarraysWithSum(self, A: List[int], S: int) -> int:
+        n = len(A)
+        counts_dct = collections.defaultdict(int) # number of subarray with sum to S, after check up to index j
+        result = 0
+        counts_dct[0] = 1
+        pre_sum = 0
+        for j in range(n):
+            pre_sum = pre_sum + A[j]
+            result += counts_dct[pre_sum-S]
+            counts_dct[pre_sum]+=1
+
+        return result
+
+
+"""
+sliding window
+use sliding window to find number of subarrays whose sum is <= S
+than the answer is sum_less_than_k(S) - sum_less_than_k(S-1)
+to find number of subarrays whose sum is at most S, we use prefix sum
+"""
+
+class Solution:
+    def numSubarraysWithSum(self, A: List[int], S: int) -> int:
+
+        def sum_less_than_k(k):
+            nonlocal A
+            n = len(A)
+            res = 0
+            i = 0
+            for j in range(n):
+                k -= A[j]
+                while i <= j and k < 0:
+                    k += A[i]
+                    i += 1
+                res += j - i + 1
+                # print('i=%s j=%s k=%s' % (i, j, k))
+            return res
+
+        return sum_less_than_k(S) - sum_less_than_k(S - 1)
+
+
+def main():
+    sol = Solution()
+    assert sol.numSubarraysWithSum([1,0,1,0,1], 2) == 4, 'fails'
+
+if __name__ == '__main__':
+   main()
