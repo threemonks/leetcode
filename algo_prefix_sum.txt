@@ -1,0 +1,12 @@
+https://github.com/zea7ot/leetcode-problems-by-tags-zea7ot/blob/master/txt/by_algorithm/dynamic_programming/summary.txt
+
+# Prefix Sums:
+    about why `count += prefixSums.get(sum - k)` - the count increases of subarray with sum value k after visiting node j is counts[presum-k] (i.e., counts of subarray whose sum is k, and ends at j)
+    https://leetcode.com/problems/subarray-sum-equals-k/discuss/535507/Explanation-to-why-map.get(sum-k)-is-done-than-count%2B%2B
+
+    store previous sum and the times of this sum, because sum[i, j] = sum[0, j] - sum[0, i - 1], this is a very very important idea
+    https://leetcode.com/problems/binary-subarrays-with-sum/discuss/187005/3-ways-to-solve-this-kind-of-problem.
+
+    about initialization of map of presum counts: preSum.put(0, 1) / counts[0]=1
+     https://leetcode.com/problems/subarray-sum-equals-k/discuss/102106/Java-Solution-PreSum-+-HashMap/416171
+    https://leetcode.com/problems/subarray-sum-equals-k/discuss/102106/Java-Solution-PreSum-+-HashMap/238328
