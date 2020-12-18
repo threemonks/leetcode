@@ -76,21 +76,23 @@ class Solution1:
 
 
 """
-sliding window
+keep a sliding window with sum <= S
 use sliding window to find number of subarrays whose sum is <= S
 than the answer is sum_less_than_k(S) - sum_less_than_k(S-1)
 to find number of subarrays whose sum is at most S, we use prefix sum
+
 """
 
-class Solution:
+
+class Solution2:
     def numSubarraysWithSum(self, A: List[int], S: int) -> int:
 
-        def sum_less_than_k(k):
+        def at_most(k):
             nonlocal A
             n = len(A)
             res = 0
             i = 0
-            for j in range(n):
+            for j in range(n):  # loop right end index
                 k -= A[j]
                 while i <= j and k < 0:
                     k += A[i]
@@ -99,7 +101,38 @@ class Solution:
                 # print('i=%s j=%s k=%s' % (i, j, k))
             return res
 
-        return sum_less_than_k(S) - sum_less_than_k(S - 1)
+        return at_most(S) - at_most(S - 1)
+
+
+"""
+keep as long as possible sliding window with sum < S
+each time when right index j moves right once, if nums[j] + sums  < S, then we got j-i+1 more subarrays whose sum < S
+
+"""
+
+
+class Solution:
+    def numSubarraysWithSum(self, A: List[int], S: int) -> int:
+
+        def sum_less_than_k(k):
+            nonlocal A
+            n = len(A)
+            res = 0
+            sums = 0
+            j = 0
+            for i in range(n):  # loop left end index
+                if j < i:
+                    j = i
+                    sums = 0
+                while j < n and sums + A[j] < k:  # end right index as far right as possible but keep sum S < k
+                    sums += A[j]
+                    j += 1
+                res += j - i  # now sums+A[j] >= k, and sums+A[j-1]<k, so we added j-i, not j-i+1 subarrays
+                sums -= A[i]
+                # print('i=%s j=%s sums=%s res=%s' % (i, j, sums, res))
+            return res
+
+        return sum_less_than_k(S + 1) - sum_less_than_k(S)
 
 
 def main():
