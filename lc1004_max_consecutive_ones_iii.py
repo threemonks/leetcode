@@ -164,6 +164,32 @@ class Solution:
         return res
 
 
+"""
+双指针，固定(遍历)右边界，探索左边界
+左边界探索优化（因为寻找最大窗口，不需要缩小窗口，所以在右边界是遍历（每次移动1）的情况下，左边界其实只在需要的时候（K<0）往右移动1
+
+因为求最大的窗口，所以窗口变小是没有意义的
+1）窗口增大： left不变，right右移，即right++
+什么时候增大？窗口内的0数量没有达到上限K
+2）窗口不变：left跟着right右移，即left++, right++
+什么时候不变？窗口内的0数量达到了上限K
+"""
+
+
+class Solution4:
+    def longestOnes(self, A: List[int], K: int) -> int:
+        n = len(A)
+        i = 0
+        for j in range(n):
+            if A[j] == 0:
+                K -= 1
+            if K < 0:
+                if A[i] == 0:
+                    K += 1
+                i += 1
+
+        return j - i + 1
+
 def main():
     sol = Solution()
     assert sol.longestOnes([1,1,1,0,0,0,1,1,1,1,0], 2) == 6, 'fails'
