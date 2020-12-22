@@ -59,6 +59,30 @@ class Solution:
         return res
 
 
+"""
+use two pointers denote start (i) and end (j) of substring investigating, also store last seen position of each character to identify duplicate, update start(i) is char seen already and last seen index is within the substring we are evaluating checking, if char not seen, or last seen outside start, then add this new char into current substring, and update ans (max length)
+"""
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if not s: return 0
+        n = len(s)
+        lastpos = dict()
+        ans = 0
+        i = 0
+        for j in range(n):
+            c = s[j]
+            if c in lastpos and i <= lastpos[
+                c]:  # only care about lastpos within [i,j], characters seen before i does not impact current substring
+                i = lastpos[c] + 1
+            else:
+                ans = max(ans, j - i + 1)
+            lastpos[c] = j
+            # print('i=%s j=%s c=%s lastpos=%s ans=%s' % (i, j, c, str(lastpos), ans))
+
+        return ans
+
+
 def main():
     sol = Solution()
     assert sol.lengthOfLongestSubstring("abcabcbb") == 3, 'fails'
