@@ -51,14 +51,14 @@ space O(1) ~ 2**5
 class Solution:
     def findTheLongestSubstring(self, s: str) -> int:
         n = len(s)
-        c2i = {'a': 0, 'e': 1, 'i': 2, 'o': 3, 'u': 4}
+        vowels = {'a': 0, 'e': 1, 'i': 2, 'o': 3, 'u': 4}
         first_pos = {
             0: -1}  # first index of given pattern (a pattern represents even or odd count state of all five vowels, one bit for each)
         cur = 0  # current pattern (each bit represents number of times (odd or even) that given vowel has appeared so far)
         res = 0
         for i, c in enumerate(s):
-            if c in c2i:
-                v = c2i[c]
+            if c in vowels:
+                v = vowels[c]
                 cur ^= (2 ** v)
             if cur in first_pos:
                 res = max(res, i - first_pos[cur])
