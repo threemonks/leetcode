@@ -82,7 +82,7 @@ class Solution:
         res = 0
 
         j = 0
-        for i in range(n):
+        for i in range(n): # loop left index
             if j < i:  # in case j moved to left of i, reset it
                 j = i
                 prod = 1
