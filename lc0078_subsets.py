@@ -51,18 +51,59 @@ since path+[nums[i]] is creating new object (list) to pass into recursive call, 
 """
 
 
-class Solution:
+class Solution1:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        def helper(start, path):  # backtrack
+        def dfs(start, path):  # backtrack
             nonlocal nums
             ans = [path]
             for i in range(start, len(nums)):
-                ans += helper(i + 1, path + [nums[i]])
+                ans += dfs(i + 1, path + [nums[i]])
 
             # print('ans=%s' % ans)
             return ans
 
-        return helper(0, [])
+        return dfs(0, [])
+
+"""
+backtrack/dfs
+pass remaining part of nums to be explored/processed into recusrive call, use third argument to return result 
+"""
+class Solution2:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        def dfs(nums, path, res):  # backtrack
+            """
+            take first element from remaining nums, append to each element in partial subset (a path from tree root ([]) to current tree node) to get a new set of subsets, add this to result, and also use this as new partial subset into recursive call to next level, with nums[1:] as remaining nums to be explored (first element already processed)
+
+            nums: remaining nums to explore/process
+            path: partial subsets (partial path from tree root ([]) to current tree node) constructed so far after visiting leading parts of original array nums
+            res: the result subsets created so far
+            """
+            res.append(path)
+            for i in range(len(nums)):
+                dfs(nums[i+1:], path + [nums[i]], res)
+
+        res = []
+        dfs(nums, [], res)
+        return res
+
+
+"""
+binary sorted / bitmask
+"""
+
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        output = []
+        for i in range(1 << n):
+            # if j-th bit of i is set, append nums[j] (index starts at 0)
+            # for bit test for i, its index starts at 1
+            output.append([nums[j] for j in range(n) if (i & (1 << ((j + 1) - 1)))])
+
+        # print(output)
+        return output
+
 
 def main():
     sol = Solution()
