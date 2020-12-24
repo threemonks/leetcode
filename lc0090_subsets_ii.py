@@ -27,10 +27,10 @@ class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
         def dfs(nums, path, res):
             """
-            take first element from remaining nums, append to each element in partial subset to get a new set of subsets, add this to result, and also use this as new partial subset into recursive call to next level, with nums[1:] as remaining nums to be explored (first element already processed)
+            take first element from remaining nums, append to each element in partial subset (a path from tree root ([]) to current tree node) to get a new set of subsets, add this to result, and also use this as new partial subset into recursive call to next level, with nums[1:] as remaining nums to be explored (first element already processed)
 
             nums: remaining nums to explore/process
-            path: partial subsets constructed so far after visiting leading parts of original array nums
+            path: partial subsets (partial path from tree root ([]) to current tree node) constructed so far after visiting leading parts of original array nums
             res: the result subsets created so far
             """
             res.append(path)
