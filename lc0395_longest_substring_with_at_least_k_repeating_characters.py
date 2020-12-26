@@ -31,9 +31,7 @@ modified sliding window / two pointer, with dict keeping track of number of uniq
 we calculate total number of distinct chars (max 26) first, and loop from 1 to total_distinct_chars, get maximum substring length for each distinct chars count, and return the max as result
 """
 import collections
-
-
-class Solution:
+class Solution0:
     def longestSubstring(self, s: str, k: int) -> int:
         n = len(s)
 
@@ -42,19 +40,19 @@ class Solution:
             j = 0
             res = 0
             chars = collections.defaultdict(int)
-            count = 0  # number of chars that appeared at least k times
+            count = 0 # number of chars that appeared at least k times
             for i in range(n):
-                while j < n and (len(chars) <= l):
+                while j < n and (len(chars)<=l):
                     # if we don't have l chars or any char does not k counts
                     chars[s[j]] += 1
                     if chars[s[j]] == k:
                         count += 1
                     if len(chars) == l and count == l:
-                        res = max(res, j - i + 1)
+                        res = max(res, j-i+1)
                     j += 1
 
                 chars[s[i]] -= 1
-                if chars[s[i]] == k - 1:
+                if chars[s[i]] == k-1:
                     count -= 1
                 if chars[s[i]] == 0:
                     chars.pop(s[i])
@@ -68,11 +66,47 @@ class Solution:
         return res
 
 
+"""
+divide and conqure
+some characters appears less than k times, so they cannot be in any valid substring, we can use these chars as splitter, process substring on each side  of splitter char recursively.
+"""
+import collections
+class Solution:
+    def longestSubstring(self, s: str, k: int) -> int:
+        n = len(s)
+
+        counts = dict()
+        for c in s:
+            if c in counts:
+                counts[c] += 1
+            else:
+                counts[c] = 1
+
+        bad_chars = [c for c, v in counts.items() if v < k] # appeared less than k counts
+        if not bad_chars:
+            return n
+
+        res = 0
+        i = 0
+        while i < n:
+            if counts[s[i]] < k:
+                i += 1
+                continue
+            j = i
+            while j < n and counts[s[j]]>=k:
+                j += 1
+            # s[j] is bad_chars
+            res = max(res, self.longestSubstring(s[i:j], k))
+            i = j+1
+
+        return res
+
+
 def main():
     sol = Solution()
     assert sol.longestSubstring("aaabb", 3) == 3, 'fails'
 
-    assert sol.longestSubstring("ababbc", 2) == 53, 'fails'
+    assert sol.longestSubstring("ababbc", 2) == 5, 'fails'
 
 if __name__ == '__main__':
    main()
