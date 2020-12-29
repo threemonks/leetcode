@@ -63,8 +63,11 @@ class Solution0:
 """
 dp bototm up
 dp[i] : number of combinations (or rather, permutations) for target i
+dp logic
+dp[target] : number of combinations for target target, is sum of result combinations count of taking each element of nums, use it as first number of the result combination, and recursively calculate dp[target-nums[i]]
+    for each number nums[j] in nums
+        dp[target] += dp[target-nums[i]] 
 """
-
 
 class Solution:
     def combinationSum4(self, nums: List[int], target: int) -> int:
