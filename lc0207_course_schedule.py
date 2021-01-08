@@ -95,13 +95,13 @@ class Solution0:
         return True
 
 """
-2. BFS (toplogical sort) 
- BFS核心是拓扑排序。就是遍历图中所有节点，寻找入度为0的节点cur，处理其指向节点(dependencies)（减少其入度，加入queue）,然后把节点cur从queue弹出，同时记录当前cur为处理过。当便利结束，应该是所有节点都处理过（count == len(numCourses），否则即可判断有环。
+2. BFS (topological sort) 
+ BFS核心是拓扑排序。就是遍历图中所有节点，寻找入度为0的节点cur，处理其指向节点(dependencies)（减少其入度，加入queue）,然后把节点cur从queue弹出，同时记录当前cur为处理过。当遍历结束，应该是所有节点都处理过（count == len(numCourses），否则即可判断有环。
 """
 
-class Solution:
+class Solution1:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        # build depenceny list
+        # build dependency list
         deplist = collections.defaultdict(list)
         indegree = collections.defaultdict(int)
 
@@ -127,6 +127,126 @@ class Solution:
                     count += 1
 
         return count == numCourses
+
+
+"""
+using dfs to traverse tree nodes, before we reach any node with outdegree of 0, for any node we visit, mark with value 2, and if we encounter a node with value 2 before we reach node of outdegree 0, then we have cycle. If we don't encounter any node with value 2 before we reach node with outdegree 0, then we backtrack and mark any node visited with value 1
+
+so if we traverse before we reach node with outdegree of 0, and encounter node marked with 0, then it is ok to just back from there
+
+"""
+
+class Solution3:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # convert prerequisites to adjacency matrics (edges)
+
+        adj = dict()
+        for p in prerequisites:
+            c, dep = p
+            if dep in adj:
+                adj[dep].append(c)
+            else:
+                adj[dep] = [c]
+
+        visited = [0] * numCourses
+
+        def dfs(i):
+            """
+            return False if there's cycle when we start at course i
+            """
+            nonlocal visited
+            # print('i=%s visited=%s' % (i, visited))
+            if visited[i] == 2:
+                return False
+            elif visited[i] == 1:
+                return True
+            else:  # i not in visited
+                visited[i] = 2
+                if i not in adj:
+                    return True
+                for j in adj[i]:
+                    if dfs(j) is False:
+                        return False
+                    else:  # dfs(j) is True
+                        visited[j] = 1
+
+                return True
+
+        for i in range(numCourses):
+            if dfs(i) is False:
+                return False
+            visited[i] = 1
+
+        return True
+
+
+"""
+toplogical sort implemented via BFS
+
+L = empty list that will contain sorted elements
+S = set of all nodes with no incoming edge
+
+while S is non-empty do
+    remove a node n from S
+    add n to tail of L
+    for each node m with an edge e from n to m do:
+        insert m into S
+
+if graph has edges then
+    return error (graph has at least one cycle)
+else:
+    retur L (a topologically sorted order)
+
+1. start from nodes without prerequisites (indegree=0), add it to global ordered list, following the dependenceis (edges)
+2. once we follow an edge, we then remove the edge from the graph
+3. with removal of edges, there would then be more nodes appearing without any prerequisit dependency (indegree=0), in addition to the initial list in the first step
+4. the algorithm would terminate when we can no longer remove any edges from the graph. There are two possible outcomes:
+    1) if there are still some edges left in the graph, then these edges must have formed certain cycles, which is similar to the deadlock situation. It is due to thse cyclic dependencies that we can not remove them during the above process.
+    2) Otherwise, we have removed all the edges from the graph, and we got a topological order of the graph.
+"""
+import collections
+
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # convert prerequisites to dependencylist
+        # also construct indegree list
+
+        deplist = collections.defaultdict(list)
+        indegrees = collections.defaultdict(int)
+        for p in prerequisites:
+            prereq, c = p
+            deplist[prereq].append(c)
+            indegrees[c] += 1
+
+        # print('deplist=%s' % deplist)
+        # print('indegrees=%s' % indegrees)
+
+        L = []  # sorted list
+        q = []  # all course/nodes with indegree=0
+
+        for c in range(numCourses):
+            if indegrees[c] == 0:
+                q.append(c)
+
+        # print('q=%s' % q)
+
+        visited = set()
+
+        while q:
+            c = q.pop()
+            # print('c=%s' % c)
+            visited.add(c)
+            L.append(c)
+            if c in deplist:
+                for dc in deplist[c]:
+                    indegrees[dc] -= 1
+                    if indegrees[dc] == 0:
+                        q.append(dc)
+
+        # print('L=%s' % L)
+        # print('visited=%s' % visited)
+        return len(visited) == numCourses
 
 
 def main():
