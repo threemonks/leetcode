@@ -136,7 +136,13 @@ class Solution1:
 
 
 """
-using dfs to traverse tree nodes, if before we backtrack, we encounter a node already in our path to a leaf node, then there is a cycle
+using postorder dfs to traverse the tree
+for each node
+    if it is already in our path:
+        then there is a cycle
+    else:
+        postorder traverse all its children (adjacent list),
+        after that, we mark this node as visisted (postorder)
 """
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
@@ -151,28 +157,27 @@ class Solution:
                 adj[dep] = [c]
 
         visited = set()
-        def dfs(i, path):
+        def postorder_dfs(cur, path):
             """
             return False if there's cycle when we start at course i
             """
             nonlocal visited
-            # print('i=%s visited=%s' % (i, visited))
-            if i in visited:
+            # print('cur=%s visited=%s' % (cur, visited))
+            if cur in visited:
                 return True
             else:
-                if i in path:
-                    return False
-                if i in adj:
-                    for j in adj[i]:
-                        if dfs(j, path+[i]) is False:
+                if cur in path:
+                    return False # cycle detected
+                if cur in adj:
+                    for j in adj[cur]:
+                        if postorder_dfs(j, path+[cur]) is False:
                             return False
-                visited.add(i)
+                visited.add(cur)
                 return True
 
-        for i in range(numCourses):
-            if dfs(i, []) is False:
+        for cur in range(numCourses):
+            if postorder_dfs(cur, []) is False:
                 return False
-            visited.add(i)
 
         return True
 
