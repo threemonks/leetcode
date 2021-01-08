@@ -168,12 +168,13 @@ class Solution:
             else:
                 if cur in path:
                     return False # cycle detected
-                if cur in adj:
-                    for j in adj[cur]:
-                        if postorder_dfs(j, path+[cur]) is False:
-                            return False
-                visited.add(cur)
-                return True
+                else:
+                    if cur in adj:
+                        for j in adj[cur]:
+                            if postorder_dfs(j, path+[cur]) is False:
+                                return False
+                    visited.add(cur)
+                    return True
 
         for cur in range(numCourses):
             if postorder_dfs(cur, []) is False:
