@@ -58,12 +58,19 @@ from typing import List
 """
 use monotonic queue (deque) to keep track of elements within sliding window, but keep only decreasing elements so that the leftmost (first) element is always the largest, and obtain O(1) add and removal, for each new element, we remove elements that is outside of sliding window, and remove all elements in deque that is smaller than current new element, and append first element (largest) to output (after we have visited at least k-1 element)
 
+sliding window max notes:
+1. sliding window max stores array index in the deque
+2. when new element pops larger older element from the end of deque, it is compared by value (nums[i]<nums[q[-1]])
+3. when old (front of queue) element goes out of focus gets kicked out, it is compared using index (q[0]+k<i)
+4. after we kicked out smaller element from end of queue, we then add the new item
+   q.append(nums[i])
+5. we pops out element from front of queue when it is too old (out of window size k) for next i (iteration increases i)
+
 Note:
   each element is processed exactly twice (added, and removed) so total time is O(N)
 time O(N)
 space O(k)
 """
-
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
@@ -97,7 +104,6 @@ class Solution:
 use a mononotic decreasing stack (list) instead of deque to hold interested elements in sliding window - much slower
 time O(N*k) # list.pop() is not O(1)
 """
-
 
 class Solution1:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
