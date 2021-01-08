@@ -38,7 +38,9 @@ from typing import List
 
 """
 two pointers - brutal force to get max sum
-do we use sliding window max? - yes
+dp[i] := max sum of valid subsequence with element ending at i
+dp[i] = nums[i] + max([0, dp[i-k], dp[i-k+1], dp[i-1]])
+use sliding window max for dp
 what defines the sliding window size? j-i<=k
 what do we store in dq? index of numbers that could be next largest?
 """
@@ -61,9 +63,13 @@ class Solution0:
 
 """
 two pointers
+dp[i] := max sum of valid subsequence with element ending at i
+dp[i] = nums[i] + max([0, dp[i-k], dp[i-k+1], dp[i-1]])
 use sliding window max to obtain max dp out of all dps within the sliding window
 what defines the sliding window size? j-i<=k
 what do we store in queue? index of dps that could be max for future, but still satify j-i<=k
+we keep deque decreasing so q[0] is always the max within the window, to do that, we pop out any element in end of queue with smaller dp[q[-1]] < dp[i]
+and at end of each iteration on index i, we popleft front of queue when it is no longer valid q[0]+k<=i
 time O(N)
 space O(N)
 """
@@ -73,7 +79,8 @@ class Solution:
     def constrainedSubsetSum(self, nums: List[int], k: int) -> int:
         n = len(nums)
 
-        dp = [-math.inf] * n  # store max sum of valid subsequence ending at i
+        dp = [
+                 -math.inf] * n  # store max sum of valid subsequence ending at i (valid means all its element has distance <= k)
         q = collections.deque()
         q.append(0)
         dp[0] = nums[0]
@@ -87,10 +94,12 @@ class Solution:
             q.append(i)
             # print('i=%s dp=%s q=%s' % (i, dp, q))
             res = max(res, dp[i])
-            if q and q[0] + k <= i:
+            if q and q[
+                0] + k <= i:  # if queue front element is too far from i (q[0]+k<i), we cannot include it further down, drop it
                 q.popleft()
 
         return res
+
 
 def main():
     sol = Solution()
