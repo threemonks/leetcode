@@ -74,19 +74,25 @@ class Solution0:
             nonlocal visited, deplist
             if visited[cur] == 1:
                 return True
-            visited[cur] = 2
-            for dep in deplist[cur]:
-                if visited[dep] == 1:
-                    continue
-                elif visited[dep] == 2:
-                    return False  # cycle detected down this node
-                else:  # not visited yet
-                    if dfs(dep) is False:
-                        return False
+            elif visited[cur] == 2:
+                return False  # cycle detected down this node
+            else:
+                visited[cur] = 2
+                for dep in deplist[cur]:
+                    # for dep, we can skip the visited test, just call dfs(dep) directly, and return False if False, otherwise do nothing else (continue)
+                    if visited[dep] == 1:
+                        continue
+                    elif visited[dep] == 2:
+                        return False  # cycle detected down this node
+                    else:  # not visited yet
+                        if dfs(dep) is False:
+                            return False
+                        else: # this branch can be dropped
+                            continue
 
-            visited[cur] = 1
+                visited[cur] = 1
 
-            return True
+                return True
 
         for cur in range(numCourses):
             if dfs(cur) is False:
@@ -130,13 +136,9 @@ class Solution1:
 
 
 """
-using dfs to traverse tree nodes, before we reach any node with outdegree of 0, for any node we visit, mark with value 2, and if we encounter a node with value 2 before we reach node of outdegree 0, then we have cycle. If we don't encounter any node with value 2 before we reach node with outdegree 0, then we backtrack and mark any node visited with value 1
-
-so if we traverse before we reach node with outdegree of 0, and encounter node marked with 0, then it is ok to just back from there
-
+using dfs to traverse tree nodes, if before we backtrack, we encounter a node already in our path to a leaf node, then there is a cycle
 """
-
-class Solution3:
+class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         # convert prerequisites to adjacency matrics (edges)
 
@@ -148,34 +150,29 @@ class Solution3:
             else:
                 adj[dep] = [c]
 
-        visited = [0] * numCourses
-
-        def dfs(i):
+        visited = set()
+        def dfs(i, path):
             """
             return False if there's cycle when we start at course i
             """
             nonlocal visited
             # print('i=%s visited=%s' % (i, visited))
-            if visited[i] == 2:
-                return False
-            elif visited[i] == 1:
+            if i in visited:
                 return True
-            else:  # i not in visited
-                visited[i] = 2
-                if i not in adj:
-                    return True
-                for j in adj[i]:
-                    if dfs(j) is False:
-                        return False
-                    else:  # dfs(j) is True
-                        visited[j] = 1
-
+            else:
+                if i in path:
+                    return False
+                if i in adj:
+                    for j in adj[i]:
+                        if dfs(j, path+[i]) is False:
+                            return False
+                visited.add(i)
                 return True
 
         for i in range(numCourses):
-            if dfs(i) is False:
+            if dfs(i, []) is False:
                 return False
-            visited[i] = 1
+            visited.add(i)
 
         return True
 
@@ -205,7 +202,6 @@ else:
     2) Otherwise, we have removed all the edges from the graph, and we got a topological order of the graph.
 """
 import collections
-
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
