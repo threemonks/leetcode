@@ -92,8 +92,6 @@ class Solution:
                     if child not in visited:
                         sources.append(child)
 
-        print(is_reachable)
-
         return [is_reachable[query[0]][query[1]] for query in queries]
 
 
