@@ -65,7 +65,7 @@ class Solution:
                 if s[j] == t[j]:
                     continue
                 else:
-                    if t[j] not in adj_list[s[j]]:
+                    if t[j] not in adj_list[s[j]]:  # avoid adding same edge twice, causing incorrect inderee count
                         adj_list[s[j]].append(t[j])
                         indegrees[t[j]] += 1
                     # once we encounter an pair of chars not match, remaining chars order does not matter
@@ -92,7 +92,7 @@ class Solution:
                         sources.append(child)
 
         print("sorted_list=%s" % sorted_list)
-        if len(sorted_list) != len(indegrees):
+        if len(sorted_list) != len(indegrees):  # detect cycle
             return ""
         else:
             return "".join(sorted_list)
