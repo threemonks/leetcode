@@ -128,7 +128,7 @@ import heapq
 """
 Dijkstra's Algorithm
 distance is traveltime
-use heap to keep (traveltime, node), so that each time we pop least node with least distance
+use heap to keep (traveltime, node), so that each time we pop out node with least distance
 
 steps:
     1. create min heap queue to store (distance, node) of each node
