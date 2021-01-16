@@ -16,6 +16,7 @@ Output: 2
 Explanation: T is "aa" which its length is 2.
 
 """
+import collections
 
 """
 use two pointer, iterate (fix) right index, explore left
@@ -24,6 +25,7 @@ use hashmap to store counts of each char within the current substring
 time O(N*K)
 spae O(K)
 """
+
 
 class Solution0:
     def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
@@ -56,24 +58,51 @@ spae O(K)
 """
 from collections import OrderedDict
 
+
 class Solution:
     def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
         lastpos = OrderedDict()  # last position of each char in current substring
         left = 0  # start of current substring
         res = 0
-        for right, c in enumerate(s):
+        for i, c in enumerate(s):
             if c in lastpos:
                 del lastpos[c]
-                lastpos[c] = right  # make sure new index is updated, and stored as last one in OrderedDict
+                lastpos[c] = i  # make sure new index is updated, and stored as last one in OrderedDict
             else:
-                lastpos[c] = right
+                lastpos[c] = i
                 while len(lastpos) > k:
                     # delete first (most left) element of lastpos, and move left boundary of current substring i to 1+(the index pointed to by the value of this deleted key)
                     _, del_idx = lastpos.popitem(last=False)
                     # move left pointer of the sliding window
                     left = del_idx + 1
                 # now len(counts.keys()) <= k
-            res = max(res, right - left + 1)
+            res = max(res, i - left + 1)
+
+        return res
+
+
+"""
+sliding window
+iterate right index i, explore left boundary to keep window valid, then update result
+time O(N*K)
+space O(N)
+"""
+
+
+class Solution2:
+    def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
+        counts = collections.defaultdict(int) # left boundary of sliding window, for string with letters only, we can use array
+        res = 0
+        left = 0
+        for i, c in enumerate(s):
+            counts[c] += 1  # add to window
+            while len(counts.keys()) > k:  # make sure window is valid by removing left most char if necessary
+                counts[s[left]] -= 1
+                if counts[
+                    s[left]] == 0:  # remove key if count drops to zero, as we needs to keep k characters in window
+                    del counts[s[left]]
+                left += 1
+            res = max(res, i - left + 1)  # update result
 
         return res
 
