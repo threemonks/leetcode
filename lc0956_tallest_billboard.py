@@ -58,6 +58,8 @@ Note:
     1. to avoid negative index when diff goes to -5000, we add offset to dp index
     2. the above transition equation is valid only if the value of dp to be used to transfer from is valid
 
+time O(N*M) - N = len(rods), M = min(3^N, sum(rods)<=5000)
+  3^N because each rode can be put in left, right, or discarded.
 """
 from functools import lru_cache
 class Solution:
