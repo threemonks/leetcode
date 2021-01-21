@@ -38,9 +38,9 @@ from typing import List
 first impression would be a 2D knapsack problem, then it would be dp[left][right], but left right height range is 0 ~ 5000, dp[5000][5000] would be too big
 
 1 <= rods[i] <= 1000
-and sum(rods) <= 5000 => indicates that we would like dp of value (diff between left and right rod height)
+and sum(rods) <= 5000 => indicates that we would like dp dimension on value (index being diff between left and right rod height)
 
-define dp[diff] := max left height with diff = left height - right height
+define dp[diff] := max left height for diff = left height - right height
 
 target is to find max diff[0] with all rods used to update it
 
@@ -59,26 +59,26 @@ Note:
     2. the above transition equation is valid only if the value of dp to be used to transfer from is valid
 
 """
-
+from functools import lru_cache
 class Solution:
     def tallestBillboard(self, rods: List[int]) -> int:
         # sort rods
         offset = 5000
-        dp = [-1] * (2 * offset + 1)  # height of -1 means this diff is not meaningful (was not achieved)
-        dp[0 + offset] = 0  # initial condition, using no rods, diff is 0 (+offset)
+        dp = [-1] * (2*offset+1) # height of -1 means this diff is not meaningful (was not achieved)
+        dp[0+offset] = 0 # initial condition, using no rods, diff is 0 (+offset)
 
         for i, l in enumerate(rods):
             # rods[i] has not been used yet, use it to update all dps
-            dp_old = dp[:]  # keep a copy so that with each rod, we update dp[diff] using dp from previous round of rod
-            for diff in range(-offset, offset + 1):
-                if dp_old[diff + offset] == -1:  # previous state is not meaningful
+            dp_old = dp [:] # keep a copy so that with each rod, we update dp[diff] using dp from previous round of rod
+            for diff in range(-offset, offset+1):
+                if dp_old[diff+offset] == -1: # previous state is not meaningful
                     continue
-                if diff + l + offset < 2 * offset + 1:
-                    dp[diff + l + offset] = max(dp[diff + l + offset], dp_old[diff + offset] + l)
-                if diff - l + offset >= 0:
-                    dp[diff - l + offset] = max(dp[diff - l + offset], dp_old[diff + offset])
+                if diff+l+offset < 2*offset+1:
+                    dp[diff+l+offset] = max(dp[diff+l+offset], dp_old[diff+offset]+l)
+                if diff-l+offset >= 0:
+                    dp[diff-l+offset] = max(dp[diff-l+offset], dp_old[diff+offset])
 
-        return dp[0 + offset]
+        return dp[0+offset]
 
 def main():
     sol = Solution()
