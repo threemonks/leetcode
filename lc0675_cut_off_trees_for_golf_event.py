@@ -51,7 +51,7 @@ from typing import List
 """
 outer layer - we need to start at (0, 0), go to each tree in ascending height, avoid blocked cells, and minimizing total steps
 
-from each step to next step, we use BFS to explore all its neighbors, using steps as cost, to try to get to next height tree location with least number of steps
+from each step to next step, we use BFS/Dijkstra's algorithm  to explore all its neighbors, using steps as cost, to try to get to next height tree location with least number of steps
 
 
 """
