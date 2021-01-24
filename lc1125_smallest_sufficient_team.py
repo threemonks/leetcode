@@ -123,7 +123,7 @@ class Solution:
 
             return ans
 
-        return dp(0)
+        return dp(0) # would start from dp(full_mask) if we need to use subsets, then start with full_mask will make it easier to get and use subsets mask
 
 def main():
     sol = Solution()
