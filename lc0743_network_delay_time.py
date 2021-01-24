@@ -149,7 +149,7 @@ class Solution:
             u, v, w = t
             adj_list[u].append((v, w))
 
-        q = [(0, k)]  # node and earliesttime to arrive to this node
+        q = [(0, k)]  # earliesttime to arrive, starting node
         heapq.heapify(q)
 
         dist = dict()
