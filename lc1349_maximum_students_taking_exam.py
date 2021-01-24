@@ -99,7 +99,7 @@ space O(2^N*m) - can be reduced to 1-d (2^N) since for each row, we only use inf
 
 """
 
-class Solution:
+class Solution0:
     def maxStudents(self, seats: List[List[str]]) -> int:
         m = len(seats)
         n = len(seats[0])
@@ -191,8 +191,80 @@ class Solution1:
         return max([dp[k] for k in range((1 << n))])
 
 
+"""
+DP recursion with bitmask
+
+two possible ways to handle transition
+1. just iterate all possible masks (1<<n) in current row # this works for n<=8, but might not work for n=32
+2. iterate submask (subsets) of the mask for current row
+
+"""
+
+class Solution2:
+    def maxStudents(self, seats: List[List[str]]) -> int:
+        m, n = len(seats), len(seats[0])
+
+        valid_seats = [0] * m  # n bits
+        for i in range(m):
+            for j in range(n):
+                if seats[i][j] == '.':
+                    valid_seats[i] |= (1 << j)
+
+        def bit_count(n):
+            cnt = 0
+            while n:
+                n &= n - 1  # get most significant bit
+                cnt += 1
+
+            return cnt
+
+        @lru_cache(None)
+        def dp(i, prev_mask):
+            if i == m:
+                return 0
+            ans = 0
+
+            for mask in range(1 << n): # iterate all possible masks, only use valid ones
+                if mask & valid_seats[i] == mask:
+                    if mask & (mask >> 1) == 0 and mask & (mask << 1) == 0 and prev_mask & (
+                            mask >> 1) == 0 and prev_mask & (mask << 1) == 0:
+                        ans = max(ans, bit_count(mask) + dp(i + 1, mask))
+
+            return ans
+
+        return dp(0, 0)
+
+class Solution:
+    def maxStudents(self, seats: List[List[str]]) -> int:
+        m, n = len(seats), len(seats[0])
+
+        valid_seats = [0] * m  # n bits
+        for i in range(m):
+            for j in range(n):
+                if seats[i][j] == '.':
+                    valid_seats[i] |= (1 << j)
+
+        @lru_cache(None)
+        def dp(i, prev_mask):
+            if i == m:
+                return 0
+            ans = 0
+            mask = valid_seats[i]
+            while mask >= 0:  # loop through all possible subsets of 1 bits combinations in mask, must include 0 (empty set), as some rows might have no students
+                if mask & valid_seats[i] == mask and mask & (mask << 1) == 0 and prev_mask & (
+                        mask << 1) == 0 and prev_mask & (mask >> 1) == 0:
+                    ans = max(ans, bin(mask).count('1') + dp(i+1, mask))
+                if mask == 0: # avoid infinite loop, as empty is always subset of empty
+                    break
+                mask = (mask - 1) & valid_seats[i]
+
+            return ans
+
+        return dp(0, 0)
+
+
 def main():
-    sol = Solution1()
+    sol = Solution()
     assert sol.maxStudents([["#",".","#","#",".","#"],
                 [".","#","#","#","#","."],
                 ["#",".","#","#",".","#"]]) == 4, 'fails'
