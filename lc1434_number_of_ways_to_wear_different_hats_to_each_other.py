@@ -45,6 +45,7 @@ n == hats.length
 hats[i] contains a list of unique integers.
 
 """
+import collections
 import math
 from functools import lru_cache
 from typing import List
@@ -83,7 +84,7 @@ for hat in hats: # n < 40
 return dp[1111111111]
 
 """
-class Solution:
+class Solution0:
     def numberWays(self, hats: List[List[int]]) -> int:
         n = len(hats)
         N = (1<<n)
@@ -114,6 +115,45 @@ class Solution:
             dp = dp_new
 
         return dp[N-1]
+
+
+"""
+dp bitmask with recursion
+
+we could iterate all persons, and use bitmask represents which hat this person wears, check under each state (this person wear certain hat), how does it impact other user's choice, then the number of states is 2^40, which is too big
+
+alternatively, we can iterate all hats, and use bitmask to represents which person this hat is assigned to, and check under each state, how later hats can assign (cannot assign to person who already has hat), the number of states is 2^10
+"""
+
+
+class Solution:
+    def numberWays(self, hats: List[List[int]]) -> int:
+        n = len(hats)
+        MOD = 10 ** 9 + 7
+
+        h2p = collections.defaultdict(list)  # each member list are the persons that would wear this hat (hat number as key)
+        for i in range(n):
+            for h in hats[i]:
+                h2p[h].append(i)
+
+        full_mask = (1 << n) - 1
+
+        @lru_cache(None)
+        def dp(i, mask):
+            if mask == full_mask:  # base case, all persons have hat
+                return 1
+            if i == 41:  # all hats have been tried, but found no valid distribution, so this path contributes 0 type of ways to wear
+                return 0
+
+            ans = dp(i + 1, mask)  # hat is not assigned to a person
+            for p in h2p[i]:  # check all person that prefers this hat
+                if mask & (1 << p) == 0:  # if this person does not have a hat yet
+                    ans += dp(i + 1, mask | (
+                                1 << p))  # possible solution, check next hat to see if it can form a valid distribution
+
+            return ans % MOD
+
+        return dp(0, 0)
 
 
 def main():
