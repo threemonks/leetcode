@@ -52,7 +52,7 @@ Space O(2^N(req_skills))
 """
 
 
-class Solution:
+class Solution0:
     def smallestSufficientTeam(self, req_skills: List[str], people: List[List[str]]) -> List[int]:
 
         n = len(req_skills)
@@ -61,18 +61,6 @@ class Solution:
         dp = [math.inf for _ in range(N)]
         team = [[] for _ in range(N)]
         dp[0] = 0
-
-        def get_new_state(req_skills, i, p):
-            """
-            given  people p skill sets, current state i, return the new state j
-            """
-            n = len(req_skills)
-            for sk in p:
-                for k in range(n):
-                    if (i & (1 << k) == 0) and sk == req_skills[k]:
-                        i += (1 << k)
-                        break
-            return i
 
         # people_skills is a array of people skillset bitmap
         people_skills = [0 for _ in range(len(people))]
@@ -98,6 +86,44 @@ class Solution:
             return team[N - 1]
         else:
             return []
+
+
+from functools import lru_cache
+
+"""
+DP recursive with memoization
+"""
+
+
+class Solution:
+    def smallestSufficientTeam(self, req_skills: List[str], people: List[List[str]]) -> List[int]:
+        m, n = len(req_skills), len(people)
+        mapping = {v: i for i, v in enumerate(req_skills)}  # skill to its index
+
+        people_skill_masks = [0] * n  # people id to its skill bit masks
+        for i, p in enumerate(people):
+            for skill in p:
+                if skill in mapping:
+                    people_skill_masks[i] |= (1 << mapping[skill])  # 0000 0010 | 0000 0001 => 0000 0011
+
+        full_mask = (1 << m) - 1
+
+        @lru_cache(None)
+        def dp(masks):
+            if masks == full_mask:  # base case
+                return []
+
+            ans = [0] * (
+                        n + 1)  # default is list of people, and want max, so use [0] * (n+1), similar to math.inf if ans is to look for number of people
+            for i, psm in enumerate(people_skill_masks):
+                nxt_mask = masks | psm
+                if nxt_mask != masks:
+                    ans = min(ans, [i] + dp(nxt_mask),
+                              key=len)  # if we need number of people, 1+dp(nxt_mask), and would be just min, without define key func, but we are returning actual people list, so we are comparing number of people in the list to return least number of people
+
+            return ans
+
+        return dp(0)
 
 def main():
     sol = Solution()
