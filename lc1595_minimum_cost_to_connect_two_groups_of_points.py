@@ -55,25 +55,22 @@ Two steps:
     1. connect all group 1 nodes to group2 nodes, each group1 node have one edge going out to group 2, but each group 2 node might have more than one incoming
     2. for any group2 node that have no connection yet, connect them to group 1 node with least cost
 """
-
-
 class Solution:
     def connectTwoGroups(self, cost: List[List[int]]) -> int:
         m, n = len(cost), len(cost[0])
         # print('m=%s n=%s' % (m, n))
 
         # get minimum cost to any point in group 1 for any point in group 2
-
-        min_cost = [min(c) for c in list(zip(*cost))]
+        min_cost = [min(c) for c in list(zip(*cost))] # zip(*cost) transpose 2-d array
 
         @lru_cache(None)
         def dp(i, mask):
             if i == m:
                 # if there's any points in right group still not connected, connect back to point in left group with minimum cost
-                # for any bit in mask that is not set, connect that back to group 1 with min cost
+                #for any bit in mask that is not set, connect that back to group 1 with min cost
                 ans = 0
                 for j in range(n):
-                    if mask & (1 << j) == 0:  # 0110 & 1000 == 0 > jth bit not set
+                    if mask & (1<<j) == 0: #0110 & 1000 == 0 > jth bit not set
                         ans += min_cost[j]
 
                 return ans
@@ -81,7 +78,7 @@ class Solution:
             ans = math.inf
             for j in range(n):
                 # print('i=%s j=%s' % (i, j))
-                ans = min(ans, cost[i][j] + dp(i + 1, mask | (1 << j)))
+                ans = min(ans, cost[i][j]+dp(i+1, mask | (1<<j)))
 
             return ans
 
