@@ -67,6 +67,8 @@ now BFS search shortest path (weighted) from start point to end point
 
 note visited records smallest cost we visit a node, and we may revisit a node if now comes with a smaller cost.
 
+time O(mn)
+space O(mn)
 """
 class Solution:
     def minCost(self, grid: List[List[int]]) -> int:
