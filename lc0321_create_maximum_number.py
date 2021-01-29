@@ -159,11 +159,11 @@ class Solution:
 
 def main():
     sol = Solution()
-    # assert sol.maxNumber([3, 4, 6, 5], [9, 1, 2, 5, 8, 3], 5) == [9, 8, 6, 5, 3], 'fails'
-    #
-    # assert sol.maxNumber([6, 7], [6, 0, 4], 5) == [6, 7, 6, 0, 4], 'fails'
-    #
-    # assert sol.maxNumber([3, 9], [8, 9], 3) == [9, 8, 9], 'fails'
+    assert sol.maxNumber([3, 4, 6, 5], [9, 1, 2, 5, 8, 3], 5) == [9, 8, 6, 5, 3], 'fails'
+
+    assert sol.maxNumber([6, 7], [6, 0, 4], 5) == [6, 7, 6, 0, 4], 'fails'
+
+    assert sol.maxNumber([3, 9], [8, 9], 3) == [9, 8, 9], 'fails'
 
     assert sol.maxNumber([5,2,2], [6,4,1], 3) == [6, 5, 4], 'fails'
 
