@@ -44,24 +44,22 @@ class Employee:
         self.subordinates = subordinates
 
 
+import collections
+
+
 class Solution0:
-    def getImportance(self, employees: List['Employee'], eid: int) -> int:
-        print(employees)
+    def getImportance(self, employees: List['Employee'], empoloyee_id: int) -> int:
         if not employees: return 0
 
-        adj_list = collections.defaultdict(list)
-        importance = collections.defaultdict(int)
-        for employee in employees:
-            adj_list[employee.id] = employee.subordinates
-            importance[employee.id] = employee.importance
+        emap = {e.id: e for e in employees}
 
         q = collections.deque()
-        q.append(eid)
+        q.append(empoloyee_id)
         ans = 0
         while q:
             eid = q.popleft()
-            ans += importance[eid]
-            for s in adj_list[eid]:
+            ans += emap[eid].importance
+            for s in emap[eid].subordinates:
                 q.append(s)
 
         return ans
