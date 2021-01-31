@@ -40,6 +40,9 @@ All the strings in wordList are unique.
 import collections
 from typing import List
 
+import collections
+from typing import List
+
 """
 BFS
 
@@ -50,7 +53,7 @@ Note: a graph built from wordList directly is too big, we replace one character 
 """
 
 
-class Solution0:
+class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         if endWord not in wordList: return 0
         n = len(wordList)
@@ -69,11 +72,11 @@ class Solution0:
                 w = word[:i] + '*' + word[i + 1:]
                 res.extend(adj_list[w])
 
-            return res
+            return list(set(res))
 
         q = collections.deque([(beginWord, 1)])
-        visited = dict()
-        visited[beginWord] = 1
+        visited = set()
+        visited.add(beginWord)
 
         while q:
             cur, steps = q.popleft()
@@ -83,9 +86,10 @@ class Solution0:
                 nsteps = steps + 1
                 if nei not in visited:
                     q.append((nei, nsteps))
-                    visited[nei] = nsteps
+                    visited.add(nei)
 
         return 0
+
 
 import heapq
 import collections
