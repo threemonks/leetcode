@@ -37,8 +37,6 @@ beginWord != endWord
 All the strings in wordList are unique.
 
 """
-import collections
-from typing import List
 
 import collections
 from typing import List
@@ -67,16 +65,17 @@ class Solution:
 
         def get_neighbors(word):
             nonlocal adj_list
-            res = []
+            res = set()
             for i in range(m):
-                w = word[:i] + '*' + word[i + 1:]
-                res.extend(adj_list[w])
+                generic_word = word[:i] + '*' + word[i + 1:]
+                for w in adj_list[generic_word]:
+                    res.add(adj_list[w])
 
-            return list(set(res))
+            return list(res)
 
         q = collections.deque([(beginWord, 1)])
-        visited = set()
-        visited.add(beginWord)
+        visited = dict()
+        visited[beginWord] = 1
 
         while q:
             cur, steps = q.popleft()
@@ -86,7 +85,7 @@ class Solution:
                 nsteps = steps + 1
                 if nei not in visited:
                     q.append((nei, nsteps))
-                    visited.add(nei)
+                    visited[nei] = nsteps
 
         return 0
 
