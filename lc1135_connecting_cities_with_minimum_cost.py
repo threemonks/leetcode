@@ -38,6 +38,7 @@ connections[i][0] != connections[i][1]
 
 """
 import heapq
+from typing import List
 
 """
 MST minimum Spanning Tree - Prim with minheap
@@ -77,7 +78,7 @@ class Solution0:
 import heapq
 
 """
-MST minimum Spanning Tree - Kruscal
+MST minimum Spanning Tree - Kruskal's algorithm
 
 sorty all edges and process each edge starting with least cost
 
