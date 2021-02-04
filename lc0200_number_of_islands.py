@@ -36,6 +36,8 @@ n == grid[i].length
 grid[i][j] is '0' or '1'.
 
 """
+from typing import List
+
 """
 union find
 
@@ -62,7 +64,7 @@ class DSU:
             self.parent[xp] = yp
 
 
-class Solution:
+class Solution0:
     def numIslands(self, grid: List[List[str]]) -> int:
         m = len(grid)
         n = len(grid[0])
@@ -87,6 +89,80 @@ class Solution:
                             count -= 1
 
         return count
+
+
+"""
+BFS
+loop through all nodes
+    for a node with value "1"
+    increase island_count by 1
+    add to queue
+
+    while q
+        pop from queue
+        mark it as visited (or set to 0 if allowed, as it is faster)
+        find its valid neighbors that is also 1, add into queue
+
+return island count
+"""
+
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        num_island = 0
+        q = []
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == "1":
+                    grid[i][j] == '0'
+                    num_island += 1
+                    q.append((i, j))
+                    while q:
+                        x, y = q.pop()
+                        grid[x][y] = '0'
+                        for nx, ny in [(x + dx, y + dy) for dx, dy in dirs if 0 <= x + dx < m and 0 <= y + dy < n]:
+                            if grid[nx][ny] == '1':
+                                q.append((nx, ny))
+
+        return num_island
+
+
+"""
+DFS/recursive
+
+Note: instead of mark as visited, we set value of grid[i][j] from "1" to "0" after visited
+"""
+
+
+class Solution2:
+    def dfs(self, grid, x, y):
+        m = len(grid)
+        n = len(grid[0])
+        grid[x][y] = '0'
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for nx, ny in [(x + dx, y + dy) for dx, dy in dirs if 0 <= x + dx < m and 0 <= y + dy < n]:
+            if grid[nx][ny] == '1':
+                self.dfs(grid, nx, ny)
+
+    def numIslands(self, grid: List[List[str]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+
+        num_island = 0
+        q = []
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == "1":
+                    num_island += 1
+                    self.dfs(grid, i, j)
+
+        return num_island
 
 
 def main():
