@@ -29,9 +29,12 @@ Constraints:
 A[i][j] == 0 or A[i][j] == 1
 
 """
+
 from itertools import product
 import collections
 from typing import List
+from itertools import product
+import collections
 
 """
 use DFS to find island1, for all its node, mark node as visited, add node to queue (for later BFS explore for island 2), also change node value to -1, so that later we will look for value 1 and know it is island 2
@@ -71,13 +74,16 @@ class Solution:
         # the first 1 we found that is island 2, because we have turned all nodes in island 1 to value -1
         # and the steps from node in island 1 is required to connect to island 2
         while queue:
-            x, y, h = queue.popleft()
-            if A[x][y] == 1:
-                return h - 1
-            for nx, ny in [(x + dx, y + dy) for dx, dy in dirs if 0 <= x + dx < m and 0 <= y + dy < n]:
-                if (nx, ny) not in visited:  # we explore 0 (water) to find 1s in the second island
-                    visited.add((nx, ny))
-                    queue.append((nx, ny, h + 1))
+            l = len(queue)
+            while l:
+                x, y, h = queue.popleft()
+                if A[x][y] == 1:
+                    return h - 1
+                for nx, ny in [(x + dx, y + dy) for dx, dy in dirs if 0 <= x + dx < m and 0 <= y + dy < n]:
+                    if (nx, ny) not in visited:  # we explore 0 (water) to find 1s in the second island
+                        visited.add((nx, ny))
+                        queue.append((nx, ny, h + 1))
+                l -= 1
 
         return -1
 
