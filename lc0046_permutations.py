@@ -4,8 +4,6 @@ Medium
 
 Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
 
-
-
 Example 1:
 
 Input: nums = [1,2,3]
@@ -27,23 +25,35 @@ Constraints:
 All the integers of nums are unique.
 
 """
+from typing import List
+
 """
 dfs/backtracking
-iterate through the nums list, pick the first element, append it to current running partial list (a path from tree root to current node), to build new partial list, along with remaining elements of nums, to pass into recursive call.
-If the running partial list has expected length, add it to result list
+
+1. iterate through the nums list, pick one element, append it to current running partial list (a path from tree root to current node), to build new partial list
+2. along with remaining available elements of nums, to pass into recursive call.
+3. If the running partial list has expected length, add it to global result list
+
+https://medium.com/@CalvinChankf/a-general-approach-for-subsets-combinations-and-permutations-5c8fe3aff0ae
+
+#   available characters , chosen characters
+dfs(nums[:i] + nums[i+1:], path+ [nums[i]])
+
 """
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         n = len(nums)
-        def dfs(arr, path, res):
+        res = []
+        def dfs(arr, path):
+            nonlocal res
             nonlocal n
             if len(path) == n:
                 res.append(path)
             for i in range(len(arr)):
-                dfs(arr[:i] + arr[i+1:], path + [arr[i]], res)
+                dfs(arr[:i] + arr[i+1:], path + [arr[i]])
 
         res = []
-        dfs(nums, [], res)
+        dfs(nums, [])
         return res
 
 def main():
