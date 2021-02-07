@@ -38,6 +38,7 @@ Constraints:
 """
 import bisect
 import math
+from typing import List
 
 """
 observation, if goal falls beyong max sum of all elements in sum, or below min sum of all elements in sum, then the best we can have is maxsum or minsum
