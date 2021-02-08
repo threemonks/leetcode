@@ -39,7 +39,7 @@ space O(N^2)
 """
 
 
-class Solution:
+class Solution0:
     def totalNQueens(self, n: int) -> int:
 
         queens = []
@@ -80,6 +80,36 @@ class Solution:
 
         return backtrack(0, 0)
 
+
+"""
+use backtrack to find all n-queens solution, then use its path signature to identify unique ones
+seems all result we obtained are unique
+
+"""
+
+
+class Solution:
+    def totalNQueens(self, n: int) -> int:
+
+        def checkok(x, y, path):
+            for i, j in path:
+                if i == x or j == y or x - i == y - j or x - i == j - y:
+                    return False
+            return True
+
+        queens = []
+
+        def backtrack(row, path):
+            if row == n:
+                queens.append(path)
+            for col in range(n):
+                if checkok(row, col, path):
+                    backtrack(row + 1, path + [(row, col)])
+
+        queens = []
+        backtrack(0, [])
+
+        return len(queens)
 
 def main():
     sol = Solution()
