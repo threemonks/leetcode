@@ -82,8 +82,9 @@ class Solution0:
 
 
 """
-use backtrack to find all n-queens solution, then use its path signature to identify unique ones
-seems all result we obtained are unique
+use backtrack to find all n-queens solution
+
+-- a queen is in check if it is on same row or col, or diagonal (x-i==y-j or x-i=-(y-j) with another queen
 
 """
 
@@ -93,7 +94,7 @@ class Solution:
 
         def checkok(x, y, path):
             for i, j in path:
-                if i == x or j == y or x - i == y - j or x - i == j - y:
+                if i == x or j == y or x - i == y - j or x - i == -(y - j):
                     return False
             return True
 
