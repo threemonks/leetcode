@@ -35,40 +35,59 @@ Constraints:
 from typing import List
 
 """
-backtrack/dfs
+dfs
+1. take first element from remaining nums, append to each element in partial subset (a path from tree root ([]) to current tree node) to get a new set of subsets
+2. add this new set of subsets to result if length of subset is k
+3. also use this as new partial subset into recursive call to next level, with nums[1:] as remaining nums to be explored (first element already processed)
+visualization:
+https://medium.com/@CalvinChankf/a-general-approach-for-subsets-combinations-and-permutations-5c8fe3aff0ae
+
 """
 
 
-class Solution0:
+class Solution:
     def combine(self, n: int, k: int) -> List[List[int]]:
-        def dfs(nums, k, path, res):
-            """
-            take first element from remaining nums, append to each element in partial combination (a path from tree root ([]) to current tree node) to get a new set of partial combinations, add this to result if length is k, and also use this as new partial combination into recursive call to next level, with nums[1:] as remaining nums to be explored (first element already processed)
+        res = []
 
-            nums: remaining nums to explore/process
-            k: number of elements in a result combination
-            path: partial combintations (a path from tree root ([]) to current tree node) constructed so far after visiting leading parts of original array nums
-            res: the result combinations created so far
-            """
+        def dfs(i, path):
+            nonlocal res
             if len(path) == k:
                 res.append(path)
-            for i in range(len(nums)):
-                dfs(nums[i + 1:], k, path + [nums[i]], res)
+            elif len(path) < k:
+                for j in range(i, n + 1):
+                    dfs(j + 1, path + [j])
 
-        nums = list(range(1, n + 1))
-        res = []
-        dfs(nums, k, [], res)
-        print('res')
+        dfs(1, [])
 
         return res
 
+
+"""
+start with [[]], take one char from beginning of remaining available strings, append to each of the running result to form a new set of results to add to existing running result, if the resulting set has expected length
+"""
+
+
+class Solution1:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        nums = list(range(1, n + 1))
+        result = []
+
+        def dfs(nums, path):
+            if len(path) == k:
+                result.append(path)
+            for i in range(len(nums)):
+                dfs(nums[i + 1:], path + [nums[i]])
+
+        dfs(nums, [])
+
+        return result
 
 """
 Generation based on the mapping between binary bitmasks and the corresponding permutations / combinations / subsets
 """
 
 
-class Solution:
+class Solution2:
     def combine(self, n: int, k: int) -> List[List[int]]:
         # generate bitmask from 0...00 to 1...1 (n bits)
         nums = list(range(1, n + 1))
