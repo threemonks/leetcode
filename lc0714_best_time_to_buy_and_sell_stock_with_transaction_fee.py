@@ -27,13 +27,14 @@ Note:
 from typing import List
 
 """
-DP
-
 dp0[i] := value on day i, with no stock at hand
 dp1[i] := value on day i, with stock at hand
 
 dp1[i] = max(dp1[i-1], dp0[i-1]-prices[i])
 dp0[i] = max(dp0[i-1], dp1[i-1]-fee+prices[i])
+
+time O(n)
+space O(n) - can simplify to O(1) since each dp uses only the immediate previous value
 """
 
 
