@@ -54,30 +54,58 @@ space O(N)
 """
 
 
+class Solution0:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates = sorted(candidates)
+        n = len(candidates)
+
+        result = []
+
+        self.backtrack(candidates, [], 0, target, result)
+
+        return result
+
+    def backtrack(self, candidates, path, idx, target, result):
+        n = len(candidates)
+        if target == 0:
+            result.append(tuple(path))
+        elif target < 0 or idx == n:
+            return
+        else:
+            for i in range(idx, n):
+                if i > idx and candidates[i] == candidates[i - 1]:  # skip to avoid duplicate
+                    continue
+                self.backtrack(candidates, path + [candidates[i]], i + 1, target - candidates[i], result)
+
+
+"""
+for each element, choose or not choose
+"""
+
+
 class Solution:
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
         candidates = sorted(candidates)
         n = len(candidates)
 
-        results = []
+        result = []
 
-        def backtrack(path, start, target):
-            nonlocal candidates
-            if target == 0:
-                if tuple(path) not in results:
-                    results.append(tuple(path))
-            elif target < 0 or (len(path) and target < path[
-                -1]):  # all remaining numbers are larger than target, no need to proceed
-                return
-            else:
-                for i in range(start, n):
-                    if i > start and candidates[i] == candidates[i - 1]:  # skip to avoid duplicate
-                        continue
-                    backtrack(path + [candidates[i]], i + 1, target - candidates[i])
+        self.backtrack(candidates, [], 0, target, result)
 
-        backtrack([], 0, target)
+        return result
 
-        return [list(r) for r in results]
+    def backtrack(self, candidates, path, idx, target, result):
+        if target == 0:
+            result.append(path)
+            return
+        elif target < 0 or idx == len(candidates):
+            return
+        else:
+            self.backtrack(candidates, path + [candidates[idx]], idx + 1, target - candidates[idx], result)
+            # skip duplicate elements
+            while idx < len(candidates) - 1 and candidates[idx] == candidates[idx + 1]:
+                idx += 1
+            self.backtrack(candidates, path, idx + 1, target, result)
 
 
 def main():
