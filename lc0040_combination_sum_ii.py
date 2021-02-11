@@ -79,9 +79,9 @@ class Solution0:
 
 
 """
-for each element, choose or not choose
+keep a running result, for next distinct element in available remaining elements (skip duplicate), 
+choose or not choose this element to append to current running result, to get a new result.
 """
-
 
 class Solution:
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
