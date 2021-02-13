@@ -46,6 +46,22 @@ All elements of candidates are distinct.
 """
 from typing import List
 
+"""
+DFS tree traversal, and traverse all elements in order, at each node, only consider elements at or after current elements, not before, as considering elements before would cause duplicate
+
+backtrack(remain, comb, start)
+i) base case remain == 0, we have one result to add to final ist
+ii) another base case, remain < 0, we exceed target value, stop exploration of this path
+iii) otherwise, we explore sublists of candidates as i in [start ... n], for each candiate, we invoke recursive function itself with updated parameters
+    *) add current candidate to the combination (path)
+    *) with added candidate, remain targe to fulfill is less, remain-candidates[i]
+    *) for next exploration, start from current cursor i
+    *) at end of each exploration, we backtrack by removing candiate from combination (path)
+
+time complexity (N^(T/M + 1)) - T is target value, M is minimum value among candidates, so the length of result comb set is bounded by T/M, this is also the maximum number of nodes of a N-ary tree of height T/M, which is N^(T/M + 1)
+space O(T/M) - number of recusrive calls is T/M
+"""
+
 
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
@@ -64,6 +80,7 @@ class Solution:
         backtrack(target, [], 0)
 
         return results
+
 
 def main():
     sol = Solution()
