@@ -60,10 +60,9 @@ Constraints:
 """
 from typing import List
 """
-backtrack
+backtrack / recursive
 """
-
-class Solution:
+class Solution0:
     def combinationSum3(self, k: int, n: int) -> List[List[int]]:
         self.result = []
         self.backtrack(1, [], k, n)
@@ -77,17 +76,38 @@ class Solution:
         if idx > 9 or target < 0 or len(path) >= k or idx > target:
             return
 
-        for i in range(idx, 10):  # number 1 to 9
+        for i in range(idx, 10): # number 1 to 9
             if i > target:
                 continue
-            self.backtrack(i + 1, path + [i], k, target - i)
+            self.backtrack(i+1, path+[i], k, target-i)
+
+
+"""
+iterative (similar to recursive, but using stack directly)
+"""
+class Solution:
+    def combinationSum3(self, k: int, n: int) -> List[List[int]]:
+        total, start, path = 0, 1, []
+        stack = [(total, start, path)]
+        result = []
+        while stack:
+            total, start, path = stack.pop()
+            if total == n and len(path) == k:
+                result.append(path)
+                continue
+            for i in range(start, 10):
+                if total + i > n:
+                    break
+                stack.append((total+i, i+1, path+[i]))
+
+        return result
 
 
 def main():
     sol = Solution()
     assert sol.combinationSum3(k = 3, n = 7) == [[1,2,4]], 'fails'
 
-    assert sol.combinationSum3(k = 3, n = 9) == [[1,2,6],[1,3,5],[2,3,4]], 'fails'
+    assert sorted(sol.combinationSum3(k = 3, n = 9)) == sorted([[1,2,6],[1,3,5],[2,3,4]]), 'fails'
 
     assert sol.combinationSum3(k = 3, n = 2) == [], 'fails'
 
