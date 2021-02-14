@@ -70,7 +70,7 @@ class Solution:
         result = []
         paths = [[]]
         for i in range(n):
-            prev_paths = paths[:]
+            prev_paths = list(paths)
             paths = []
             for path in prev_paths:
                 paths.append(path + [S[i]])
