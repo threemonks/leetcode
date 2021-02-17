@@ -135,13 +135,13 @@ class Solution:
 
 def main():
     sol = Solution()
-    assert sol.addOperators(num = "123", target = 6) == ["1+2+3", "1*2*3"], 'fails'
+    assert sorted(sol.addOperators(num = "123", target = 6)) == sorted(["1+2+3", "1*2*3"]), 'fails'
 
-    assert sol.addOperators(num = "232", target = 8) == ["2*3+2", "2+3*2"], 'fails'
+    assert sorted(sol.addOperators(num = "232", target = 8)) == sorted(["2*3+2", "2+3*2"]), 'fails'
 
-    assert sol.addOperators(num = "105", target = 5) == ["1*0+5","10-5"], 'fails'
+    assert sorted(sol.addOperators(num = "105", target = 5)) == sorted(["1*0+5","10-5"]), 'fails'
 
-    assert sol.addOperators(num = "00", target = 0) == ["0+0", "0-0", "0*0"], 'fails'
+    assert sorted(sol.addOperators(num = "00", target = 0)) == sorted(["0+0", "0-0", "0*0"]), 'fails'
 
     assert sol.addOperators(num = "3456237490", target = 9191) == [], 'fails'
 
