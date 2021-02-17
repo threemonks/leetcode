@@ -28,7 +28,7 @@ All the integers of nums are unique.
 from typing import List
 
 """
-backtracking
+backtracking 1
 in each recursive step, do this:
 1. if the partial result is of desired length, add to global result sets
 2. loop and take one number from remaining available numbers, append to partial result (path)
@@ -36,19 +36,53 @@ in each recursive step, do this:
 backtrack(nums[:i]+nums[i+1:], path+[nums[i]])
 
 """
-class Solution0:
+
+
+class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         n = len(nums)
         res = []
+
         def backtrack(nums, path):
             nonlocal res
             if len(path) == n:
                 res.append(path)
             for i in range(len(nums)):
-                backtrack(nums[:i]+nums[i+1:], path+[nums[i]])
+                backtrack(nums[:i] + nums[i + 1:], path + [nums[i]])
 
         backtrack(nums, [])
         return res
+
+
+"""
+backtracking 1
+in each recursive step, do this:
+1. if the partial result is of desired length, add to global result sets
+2. take first letter from remaining nums, insert into each possible position of running partial result
+
+backtrack(nums[:i]+nums[i+1:], path+[nums[i]])
+
+"""
+
+
+class Solution1:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        res = []
+
+        def backtrack(path, arr):
+            nonlocal res
+            if len(path) == n:
+                res.append(path)
+                return
+            if not arr:
+                return
+            for i in range(len(path) + 1):
+                backtrack(path[:i] + [arr[0]] + path[i:], arr[1:])
+
+        backtrack([], nums)
+        return res
+
 
 """
 iterative - build from n-1 to n, for length n permutation, insert n-th element into every possible insertion position of the n-1 element result from previous run
@@ -58,7 +92,9 @@ Permutations of three elements can be obtained by inserting 3 at different posit
 Inserting 3 in different positions of 1 2 leads to 1 2 3, 1 3 2 and 3 1 2.
 Inserting 3 in different positions of 2 1 leads to 2 1 3, 2 3 1 and 3 2 1.
 """
-class Solution:
+
+
+class Solution2:
     def permute(self, nums: List[int]) -> List[List[int]]:
         n = len(nums)
         result = []
@@ -70,8 +106,8 @@ class Solution:
                 if not p:
                     perms = [[nums[0]]]
                 else:
-                    for j in range(len(p)+1):
-                        perms.append(p[:j] + [num] +p[j:])
+                    for j in range(len(p) + 1):
+                        perms.append(p[:j] + [num] + p[j:])
 
             for np in perms:
                 if len(np) == n:
