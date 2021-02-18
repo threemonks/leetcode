@@ -62,6 +62,33 @@ class Solution0:
 
 
 """
+brutal force
+
+Note:
+    0<=i<j<k<n just means don't reuse number, as there's no requirement on the order of i, j, k, since the satisfying condition is nums[i]+nums[j]+nums[k] < target, => we can sort and use two pointers or do binary search
+
+time O(N^3)
+"""
+
+
+class Solution0:
+    def threeSumSmaller(self, nums: List[int], target: int) -> int:
+        n = len(nums)
+
+        result = []
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                t = nums[i] + nums[j]
+                for k in range(j + 1, n):
+                    if t + nums[k] < target:
+                        result.append([nums[i], nums[j], nums[k]])
+
+        # print(result)
+        return len(result)
+
+
+"""
 binary search
 """
 
