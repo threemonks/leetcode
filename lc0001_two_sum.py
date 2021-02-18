@@ -35,6 +35,7 @@ Only one valid answer exists.
 """
 import collections
 from typing import List
+import collections
 
 """
 
@@ -100,7 +101,7 @@ mistakes:
 """
 
 
-class Solution:
+class Solution2:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         # build index map
         index_map = dict()
@@ -112,6 +113,35 @@ class Solution:
                 comp_num] != i:  # only one valid solution, so if duplicate number that is target/2, it would appear only twice
                 return [i, index_map[comp_num]]
             index_map[nums[i]] = i
+
+
+"""
+
+two pointers - use two pointers (l and r) to scan from start and end towards middle, if sum is > target, move r to left, if sum < target, move l to right
+
+
+time O(nlog(n)) - sorting
+space O(n)
+
+
+"""
+
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        n = len(nums)
+        nums = enumerate(nums)  # this generates list of pairs (index, num)
+        nums = sorted(nums, key=lambda x: x[1])
+
+        l, r = 0, n - 1
+        while l < r:
+            sums = nums[l][1] + nums[r][1]
+            if sums == target:
+                return [nums[l][0], nums[r][0]]
+            elif sums < target:
+                l += 1
+            else:
+                r -= 1
 
 
 def main():
