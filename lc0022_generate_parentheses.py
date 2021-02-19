@@ -2,29 +2,25 @@
 22. Generate Parentheses
 Medium
 
-Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
-
-Example 1:
-
-Input: n = 3
-Output: ["((()))","(()())","(())()","()(())","()()()"]
-Example 2:
-
-Input: n = 1
-Output: ["()"]
-
-Constraints:
-
-1 <= n <= 8
-
+https://leetcode.com/problems/generate-parentheses/
 """
 from typing import List
 
 """
-backtrack
+Backtrack
 
-time (4^n/sqrt(n))
-space (4^n/sqrt(n)) 
+base case:
+    total length == n*2 (pairs)
+recursive case:
+    if left < n:
+        backtrack(left+1, right, curr+'(')
+    if right < left and right < n:
+        backtrack(left, right+1, curr+')')
+
+restriction is number of right parenthesis cannot be more than number of left parenthesis
+
+time catalan(n) * O(n) which is O(4^n/sqrt(n))*(n))
+space catalan(n)
 """
 
 
@@ -32,21 +28,21 @@ class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
         result = []
 
-        def helper(res, left=0, right=0):
-            nonlocal result
-            if len(res) == n * 2:
-                result.append(res)
-            if left >= n and right >= n:
+        def backtrack(left, right, curr):
+            # print('left=%s right=%s curr=%s' % (left, right, curr))
+            if len(curr) == n * 2:
+                result.append(curr)
                 return
             if left < n:
-                helper(res + '(', left + 1, right)
-            if right < left:
-                helper(res + ')', left, right + 1)
+                backtrack(left + 1, right, curr + '(')
+            if right < left and right < n:
+                backtrack(left, right + 1, curr + ')')
 
-        helper('', left=0, right=0)
+        backtrack(0, 0, '')
+
+        # print(result)
 
         return result
-
 
 def main():
     sol = Solution()
