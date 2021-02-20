@@ -24,6 +24,10 @@ class Trie:
     def insert(self, word: str) -> None:
         """
         Inserts a word into the trie.
+
+        # If not present, inserts key into trie
+        # If the key is prefix of trie node,
+        # just marks leaf node
         """
         p = self.root
         length = len(word)
