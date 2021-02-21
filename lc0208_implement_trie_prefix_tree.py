@@ -5,15 +5,16 @@ Medium
 https://leetcode.com/problems/implement-trie-prefix-tree/
 
 """
+import collections
 
 
-class TrieNode:
+class TrieNode0:
     def __init__(self):
         self.children = [None for _ in range(26)]
         self.is_word = False
 
 
-class Trie:
+class Trie0:
 
     def __init__(self):
         """
@@ -71,6 +72,60 @@ class Trie:
 # param_2 = obj.search(word)
 # param_3 = obj.startsWith(prefix)
 
+"""
+use defaultdict to store children makes code simplier (might be slower than array)
+"""
+class TrieNode:
+    def __init__(self):
+        self.children = collections.defaultdict(TrieNode)
+        self.is_word = False
+
+class Trie:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        """
+        Inserts a word into the trie.
+
+        # If not present, inserts key into trie
+        # If the key is prefix of trie node,
+        # just marks leaf node
+        """
+        p = self.root
+        for ch in word:
+            p = p.children[ch]
+
+        p.is_word = True
+
+    def search(self, word: str) -> bool:
+        """
+        Returns True if the word is in the trie.
+        """
+        p = self.root
+        for ch in word:
+            p = p.children.get(ch)
+            if p is None:
+                return False
+
+        return p is not None and p.is_word == True
+
+    def startsWith(self, prefix: str) -> bool:
+        """
+        Returns if there is any word in the trie that starts with the given prefix.
+        """
+        p = self.root
+        for ch in prefix:
+            p = p.children.get(ch)
+            if p is None:
+                return False
+
+        return p is not None
+
 
 def main():
     trie = Trie()
@@ -81,6 +136,9 @@ def main():
     assert trie.startsWith("app") is True
     trie.insert("app")
     assert trie.search("app") is True
+
+    trie = Trie()
+    assert trie.startsWith('a') is False
 
 if __name__ == '__main__':
    main()
