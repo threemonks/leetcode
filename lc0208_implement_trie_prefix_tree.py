@@ -74,6 +74,10 @@ class Trie0:
 
 """
 use defaultdict to store children makes code simplier (might be slower than array)
+
+mistakes:
+1. to create a new node p.children[c] = TrieNode()
+2. defaultdict dct[key] creates non-existing using default value of the type, dct.get(key) will return None for non-existing key
 """
 class TrieNode:
     def __init__(self):
@@ -97,8 +101,10 @@ class Trie:
         # just marks leaf node
         """
         p = self.root
-        for ch in word:
-            p = p.children[ch]
+        for c in word:
+            if p.children.get(c) is None:
+                p.children[c] = TrieNode()
+            p = p.children.get(c)
 
         p.is_word = True
 
