@@ -95,10 +95,10 @@ class Solution1:
                     else:
                         p = p.zero  # next optimal, will give smaller XOR result with num, but we still need to traverse down to end
                 # at each step, we also try to update max xor in case this is the last (max) xor counterparty we can find for num
-                if p and p.value:
+                if p and p.value is not None:
                     max_xor = max(max_xor, num ^ p.value)
             # at end of trie/leaf node, if there's a number, it is the max XOR counterparty for num we find
-            if p and p.value:
+            if p and p.value is not None:
                 max_xor = max(max_xor, num ^ p.value)
 
         # when we are done searching all num's XOR counterparty, we find the max_xor among all in nums
