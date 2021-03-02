@@ -35,7 +35,7 @@ p != q
 p and q will exist in the BST.
 """
 """
-Binary Search Tree
+Lowest Common Ancestor (LCA) of Binary Search Tree
 """
 
 
