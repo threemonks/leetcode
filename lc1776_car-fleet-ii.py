@@ -34,21 +34,22 @@ import math
 from typing import List
 
 """
-Monotonic Stack
+Mononotic Stack
 
 Key observation:
-1. The collision time for a car won't be affected by the cars on its left. Thus if going from right to left, we can fix the collision time along the way.
-2. The collision time for a car will only be affected by the cars on its right. Again among all the cars on current car's right, there are certain cars that won't affect current car's collision time. Namely, if the car has a higher speed than the current car, or, if the car's collision time is earlier than the current car's collision time with this car, then such cars won't affect current car's collision time, and can be ignored. The mono stack should only kept those cars that can possibly affect the current car.
+1. Only collision time of the cars in front of current car impacts current car's collision time
+2. Thus iteratre from the right most car to left
+3. we maintain a stack of car indices, where their collision time is strict decreasing.
+
+* The collision time for a car won't be affected by the cars on its left. Thus if going from right to left, we can fix the collision time along the way.
+*. The collision time for a car will only be affected by the cars on its right. Again among all the cars on current car's right, there are certain cars that won't affect current car's collision time. Namely, if the car has a higher speed than the current car, or, if the car's collision time is earlier than the current car's collision time with this car, then such cars won't affect current car's collision time, and can be ignored. The mono stack should only kept those cars that can possibly affect the current car.
 
 collision time between c1 and c2 (assuming c1[0] < c2[0], i.e., c2 is in front) is calculated as
     (c2-c1)/(s1-s2)
 
-time O(N)
-
 mistakes:
 1. car i collides into i+1, then i's position should be updated to i+1's position after that move
 """
-
 class Solution:
     def getCollisionTimes(self, cars: List[List[int]]) -> List[float]:
         n = len(cars)
@@ -59,11 +60,11 @@ class Solution:
         # init with last car, which has no car to right to collide into
         stack = [(cars[-1][0], cars[-1][1], math.inf)]
 
-        for i in range(n - 2, -1, -1):
+        for i in range(n-2,-1,-1):
             pos, speed = cars[i]
             # any car in stack with faster speed, or with a collision time earlier than the potential collision time between that car and current car
             # will have no impact on current car's collision time, therefore could be popped out from stack
-            while stack and (speed <= stack[-1][1] or stack[-1][2] <= (stack[-1][0] - pos) / (speed - stack[-1][1])):
+            while stack and (speed <= stack[-1][1] or  stack[-1][2] <= (stack[-1][0] - pos)/(speed - stack[-1][1])):
                 stack.pop()
 
             # if stack is empty, current car will never collide to next car in front
@@ -71,7 +72,7 @@ class Solution:
                 stack.append((pos, speed, math.inf))
             else:
                 # now calculate this car's collision time and put it into stack with the collision time
-                collide_time = (stack[-1][0] - pos) / (speed - stack[-1][1])
+                collide_time = (stack[-1][0] - pos)/(speed - stack[-1][1])
                 stack.append((pos, speed, collide_time))
                 answer[i] = collide_time
 
