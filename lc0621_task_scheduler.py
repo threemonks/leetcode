@@ -9,7 +9,7 @@ from collections import Counter
 import heapq
 
 """
-Priority Queue
+Priority Queue / Greedy
 
 basic idea:
 1 use priority queue to store -count, task
