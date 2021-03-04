@@ -10,7 +10,7 @@ from collections import defaultdict
 from functools import lru_cache
 
 """
-Backtrack / Recursion with memoization
+DFS / Recursion with memoization
 
 Note:
     base case index = len(nums)
