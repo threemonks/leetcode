@@ -16,6 +16,7 @@ Note: The length of given array won't exceed 10000.
 from typing import List
 
 """
+Stack
 observation
 1. to get next greater number from circular array (i.e., item before this index), loop through index 0 through 2*n, and use index % length as index instead of index to access value
 2. using stack to hold all numbers whose next greater number hasn't been identified yet, pop out stack top when next value is greater than stack top value 
