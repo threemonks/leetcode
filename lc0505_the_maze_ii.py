@@ -58,6 +58,8 @@ The maze contains at least 2 empty spaces, and both the width and height of the 
 from typing import List
 
 """
+BFS
+
 single source shortest path, weighted => Dijkstra's algorithm
 the weight is the number of empty spaces the ball would roll until it stops (hit wall or boundary)
 """
