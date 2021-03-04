@@ -45,6 +45,8 @@ class Solution1:
         return res
 
 """
+Stack
+
 use a dict with element val as key, its next greater element as value
 use stack to hold elements of nums2 that have not found its next greater element
 time O(len(nums2)+len(nums1))
