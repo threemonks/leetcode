@@ -25,7 +25,12 @@ Constraints:
 1 <= m, n <= 110
 0 <= heightMap[i][j] <= 20000
 """
+from typing import List
+import heapq
+import collections
 """
+BFS / Heap
+
 following trapping rain water I, where we find leftmax and rightmax for a given point i, the water this point can hold is min(leftmax, rightmax) - height[i]
 
 we would extend this to a 2D situation,  so the water that can be held by any point i is min(all bounaries of this point) - height[i]
@@ -38,9 +43,6 @@ we start with all four borders as the lake borders, store them into a minheap, s
 time O(mn*log(mn)) - every node is pushed into minheap and popped out  exeactly once
 
 """
-import heapq
-import collections
-
 
 class Solution:
     def trapRainWater(self, heightMap: List[List[int]]) -> int:
