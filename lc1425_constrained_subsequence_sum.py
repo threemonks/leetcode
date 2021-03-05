@@ -37,6 +37,7 @@ from functools import lru_cache
 from typing import List
 
 """
+DP Sliding Window/Two Pointers
 two pointers - brutal force to get max sum
 dp[i] := max sum of valid subsequence with element ending at i
 dp[i] = nums[i] + max([0, dp[i-k], dp[i-k+1], dp[i-1]])
@@ -62,6 +63,7 @@ class Solution0:
 
 
 """
+DP Sliding Window/Two Pointers
 two pointers
 dp[i] := max sum of valid subsequence with element ending at i
 dp[i] = nums[i] + max([0, dp[i-k], dp[i-k+1], dp[i-1]])
