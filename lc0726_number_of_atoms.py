@@ -1,5 +1,6 @@
 """
 726. Number of Atoms
+Hard
 
 Given a chemical formula (given as a string), return the count of each atom.
 
@@ -43,6 +44,8 @@ formula is always valid.
 """
 
 """
+Stack / HashMap
+
 observation:
 if '(' => push cur_str to stack, start new cur_str
 elif ')' => recursive call on cur_str
