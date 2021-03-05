@@ -22,6 +22,8 @@ Note:
 str1 and str2 consist of lowercase English letters.
 """
 """
+Dynamic Programming
+
 Using dp 2-d to find longest common subsequence (lcs), then constructe common supersequence by iterating lcs, for each char in lcs, iterate each char in s1, if not matching lcs char, add to result, until find the matching char in s1, similar, iterate each char in s2, if not matching lcs char, add to result, then add the lcs into result, repeat until lcs is exhausted
 
 after exhausing lcs, if there's remaining chars in s1 or s2, append to result
