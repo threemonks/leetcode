@@ -93,6 +93,8 @@ class Solution0:
 """
 Tree traverse - Two Pointers
 
+Seen the parent inside each TreeNode, this is a Linked List question.
+
 similar to intersection point of two linked lists (lc0160), traverse along parents list, when reaching root, set the pointer to start node of the other node's (path) starting point, when they eventually meet, it will be at the lowest common ancestor
 
 time O(M+N)
