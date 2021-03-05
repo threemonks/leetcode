@@ -1,5 +1,5 @@
 """
-8865. Smallest Subtree with all the Deepest Nodes
+865. Smallest Subtree with all the Deepest Nodes
 Medium
 
 Given the root of a binary tree, the depth of each node is the shortest distance to the root.
@@ -52,6 +52,7 @@ class TreeNode:
         self.right = right
 
 """
+DFS
 DFS traverse tree with depth, record ancestors list along the traverse
 
 When DFS traverse is done, we know the maximum depth, then we can go back to the ancestors list and retrieve only the ancestors list for nodes at maximum depth
@@ -96,6 +97,8 @@ class Solution:
 
 
 """
+BFS
+
 first find maximum depth, then find LCA of all nodes of that depth
 
 to find LCA of all nodes of deepest depth:
