@@ -47,7 +47,8 @@ from functools import lru_cache
 from typing import List
 
 """
-dp two strings (two pointers)
+DP  String
+two pointers
 time O(n^2)
 space O(n^2)
 """
