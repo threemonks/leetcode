@@ -40,6 +40,7 @@ expression is a valid expression representing a boolean, as given in the descrip
 """
 
 """
+Stack
 operator precedence: () > ! > &|
 logic
 
