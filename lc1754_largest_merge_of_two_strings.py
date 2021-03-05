@@ -37,6 +37,7 @@ word1 and word2 consist only of lowercase English letters.
 """
 
 """
+Two Pointers
 use two pointers, one point at first char of word1, one point at first char of word2,
 whichever is larger, put into res,
 if the two chars at word1[i] and word2[j] is the same, compare remaining string (word1[i:] and word2[j:]) to see which one is large to decide which one to put into res first.
