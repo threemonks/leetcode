@@ -2,13 +2,6 @@
 1039. Minimum Score Triangulation of Polygon
 Medium
 
-531
-
-63
-
-Add to List
-
-Share
 Given N, consider a convex N-sided polygon with vertices labelled A[0], A[i], ..., A[N-1] in clockwise order.
 
 Suppose you triangulate the polygon into N-2 triangles.  For each triangle, the value of that triangle is the product of the labels of the vertices, and the total score of the triangulation is the sum of these values over all N-2 triangles in the triangulation.
@@ -42,8 +35,12 @@ Note:
 1 <= A[i] <= 100
 
 """
+from functools import lru_cache
 from typing import List
 
+"""
+DP
+"""
 
 class Solution:
     def minScoreTriangulation(self, A: List[int]) -> int:
