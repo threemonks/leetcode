@@ -31,6 +31,7 @@ Note:
 from typing import List
 
 """
+Mono Stack 
 observation:
 given array [3,1,2,4], we check the subarrays whose minimum is a given element arr[i]
 subarray with minimum point 3 are [3], so to its left, there are 0 subarray with minimum at 3, and to its right, there are also 0 subarray with minimum at 3, so total number of subarray with 3 as minimum is (0+1)*(1+0), and the contribution from this to sum of min(B) is (0+1)*3*(1+0)
@@ -42,8 +43,6 @@ for arr[i], assume there are L consecutive numbers greater than arr[i] to the le
 
 note when the minimum numbers appear more than once, we need to use <= on one side to avoid double counting, i.e., for previous larger number we use less strict greater than (>=), and for next larger number we then use strict greater than (>).
 
-"""
-"""
 observation
 use stack to hold monotonic decreasing values and their indexes, as for any larger value appears later, the ramp from a later value to this one could be extended to an earlier smaller value, thus this value does not need to be added into the stack
 """
@@ -73,6 +72,8 @@ class Solution:
 
 
 """
+Binary Search
+
 use binary search to get maximum ramp width from the stack to current element we are checking
 why is this even slower than the above brutal force search?
 """
