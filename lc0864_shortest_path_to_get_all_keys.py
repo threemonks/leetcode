@@ -31,6 +31,8 @@ import heapq
 from typing import List
 
 """
+BFS / Heap
+
 find shorted path using modified BFS algorithm with number of steps as distance, but mark node along with keys on hand when visiting, so that we might revisit a node if we now have new keys
 
 Note: usually, we should not visit a node again that has been visited. But in this problem, we have to go back and forth to get keys for the lock because we need to get keys before we can unlock locks and then go through the locked nodes.
