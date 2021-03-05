@@ -60,6 +60,8 @@ from functools import lru_cache
 from typing import List
 
 """
+Topological Sort
+
 build graph of coures from prerequisite to the course
 and traverse the graph by starting at any node i, and along the path of nodes visited, build a boolean array is_reachable[i][j]
 then for each query, just check is_reachable[i][j]
@@ -69,7 +71,6 @@ then for each query, just check is_reachable[i][j]
 class Solution:
     def checkIfPrerequisite(self, n: int, prerequisites: List[List[int]], queries: List[List[int]]) -> List[bool]:
         adj_list = collections.defaultdict(list)
-        children = collections.defaultdict(list)
         indegree = collections.defaultdict(int)
 
         for i in range(n):
