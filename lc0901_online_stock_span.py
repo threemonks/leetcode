@@ -35,6 +35,7 @@ There will be at most 150000 calls to StockSpanner.next across all test cases.
 The total time limit for this problem has been reduced by 75% for C++, and 50% for all other languages.
 """
 """
+Stack
 observation using stack
 push into (stack, spanner) if price lower than top of stack, if higher, calculate spanner by accumulating smaller numbers (associated spanners) popped out.
 """
