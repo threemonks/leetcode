@@ -23,6 +23,8 @@ from functools import lru_cache
 from typing import List
 
 """
+DP
+
 idea:
 1. first we can remove all consecutively repeating chars except for the first one, as they don't require extra turn to print
 
