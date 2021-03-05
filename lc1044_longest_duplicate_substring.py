@@ -24,7 +24,7 @@ s consists of lowercase English letters.
 
 """
 """
-binary search + rolling hash / Rabin-Karp
+Binary Search + Rolling Hash / Rabin-Karp
 
 Note: given input string length 2<=s.length<=3*10^4, we need to use mod 2**63-1, as 10**9+7 is not big enough
 """
