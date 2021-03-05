@@ -35,6 +35,7 @@ s consists of English letters, digits, symbols and spaces.
 
 """
 """
+Hash Table
 use a hashmap to store last occurence and last las occurence of each character
 so longest substring determined would be from minimum of previous previous occurence of this letter to the current index i, for all possible characters
 """
@@ -60,6 +61,7 @@ class Solution:
 
 
 """
+Two Pointers
 use two pointers denote start (i) and end (j) of substring investigating, also store last seen position of each character to identify duplicate, update start(i) is char seen already and last seen index is within the substring we are evaluating checking, if char not seen, or last seen outside start, then add this new char into current substring, and update ans (max length)
 """
 
