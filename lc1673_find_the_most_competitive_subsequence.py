@@ -31,6 +31,7 @@ Constraints:
 from typing import List
 
 """
+Stack
 observation
 keep stack of size k stack[k], scan through nums[k:], if a number nums[i] is smaller than stack[-1], pop stack[-1] until stack[-1] >= nums[i] and there are enough remaining numbers to make k-size subsequence, then append nums[i] into stack
 """
