@@ -57,6 +57,8 @@ import math
 from functools import lru_cache
 from typing import List
 """
+DP top down / recursive
+
 observation
 
 dp[i] : result (boolean must win or lose) of the current player when there's i stone left 
@@ -85,7 +87,7 @@ class Solution1:
 
 
 """
-dp bottom up
+DP bottom up
 dp[i] : given i stone remains, the current play must win or must lose?
 
 since one can only remove square numbers
