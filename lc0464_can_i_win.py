@@ -39,7 +39,7 @@ Constraints:
 
 
 """
-DP
+DP Minmax
 
 idea: if A can choose a number and force B to lose, than A is sure to win, otherwise A cannot force B to lose, than A has no sure win, so return False
 
