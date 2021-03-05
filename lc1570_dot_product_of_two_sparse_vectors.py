@@ -37,7 +37,9 @@ n == nums1.length == nums2.length
 """
 from typing import List
 
-
+"""
+Hash Table
+"""
 class SparseVector:
     def __init__(self, nums: List[int]):
         self.nums = nums
