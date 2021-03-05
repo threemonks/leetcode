@@ -17,6 +17,8 @@ Explanation: t is "aabbb" which its length is 5.
 
 """
 """
+Two Pointers / Sliding Window
+
 two pointers, iterate right pointer, keep track of all characters inside current substring, and last seen position of each char
 if new char is in seen chars inside substring, just add it to right end of substring
 if new char is not seen, move left index of substring until it drops out one char (min(chars.values())+1) completely, then add new char into it
