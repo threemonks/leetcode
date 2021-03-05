@@ -29,9 +29,12 @@ Constraints:
 1 <= k <= nums.length
 
 """
+from typing import List
+
 """
+Two Pointers
 replace even with 0, odd with 1, so we are counting number of subarrays with exactly k ones.
-two pointers
+
 we first solve for less than k ones,
 iterate (fix) left pointer, explore right pointer, to keep a windows with k ones in it, or to find last 0 or 1 that has just k ones, or find first 1 that causes k+1 ones
 
