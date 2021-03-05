@@ -35,6 +35,7 @@ grid[i][j] is either 0 or 1.
 from typing import List
 
 """
+Union-Find
 use union find to find all islands, and turn all visited node to 2, then loop all node of 0, see which one can be turned to connect its neighboring islands on four sizes (could be less than four islands, since some island might join with this cell on more than one side)
 
 time O(N^2) - loop to discover island and get sizes
