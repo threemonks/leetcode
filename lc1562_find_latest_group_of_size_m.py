@@ -69,7 +69,6 @@ TLE
 """
 from functools import lru_cache
 
-
 class Solution0:
     def findLatestStep(self, arr: List[int], m: int) -> int:
         n = len(arr)
@@ -99,6 +98,8 @@ class Solution0:
 
 
 """
+Sliding Window Max / Union-Find
+
 observation:
 arr[3] = 4 # at step 3, we set digit 4 to one
 <=> steps[4] = 3 # digit 4 is set to one at step 3
@@ -164,7 +165,7 @@ class Solution:
 
 def main():
     sol = Solution()
-    assert sol.findLatestStep([3,5,1,2,4], 1) == 47, 'fails'
+    assert sol.findLatestStep([3,5,1,2,4], 1) == 4, 'fails'
 
     assert sol.findLatestStep([3,1,5,4,2], 2) == -1, 'fails'
 
