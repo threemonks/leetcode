@@ -41,6 +41,7 @@ There are no repeated edges.
 from typing import List
 
 """
+Graph BFS
 brutal force - build adjacency list, calculate degrees of each nodes (node value from edges, not n)
 
 using example/ base case, we know that degree of a trio (u, v, w) is degree[u] + degree[v] + degree [w] - 6, where 6 counts for the edges (undirected means two edges between each node pair) between three nodes of the trio
