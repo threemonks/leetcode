@@ -52,6 +52,8 @@ from typing import List
 from itertools import product
 
 """
+Graph SCC Tarjan's
+
 note that we should only need to flip either 0, or 1, or 2 (at most 2) cells, because we can always find a corner piece and flip its two neighbors to make it a new island
 so the answer should be 0, 1, or 2
 with the above knowledge, we do this
