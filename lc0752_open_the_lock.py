@@ -51,6 +51,7 @@ import collections
 from typing import List
 
 """
+BFS
 standard BFS traverse graph with no weight for single source shortest path 
 
 Note: 1. convert deadends to set
