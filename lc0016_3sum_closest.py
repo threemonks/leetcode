@@ -23,16 +23,11 @@ Constraints:
 import math
 from typing import List
 
-"""
-observation:
-brutal force would be O(N^3), so we can sort it using O(Nlog(N)) to speed up inner loop/twosum without increasing overall time complexity
-
-time O(N^2)
-space O(N)
 
 """
 
-"""
+Two Pointers + Binary Search
+
 observation:
 brutal force would be O(N^3), so we can sort it using O(Nlog(N)) to speed up inner loop/twosum without increasing overall time complexity
 
