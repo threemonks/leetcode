@@ -4,13 +4,6 @@ https://leetcode.com/problems/palindrome-partitioning-iv/
 1745. Palindrome Partitioning IV
 Hard
 
-104
-
-1
-
-Add to List
-
-Share
 Given a string s, return true if it is possible to split the string s into three non-empty palindromic substrings. Otherwise, return false.​​​​​
 
 A string is said to be palindrome if it the same string when reversed.
@@ -38,6 +31,7 @@ s​​​​​​ consists only of lowercase English letters.
 from functools import lru_cache
 
 """
+DP String
 use dp to break this into check for one regular string palindrome checking (varying all possible string lengths), and another palindrome partitioning problem of 2 partitions
 and recursively break the palindrome partitioning of 2 partitions into two regular palindrome checking problems
 
