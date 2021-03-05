@@ -33,6 +33,7 @@ A[i] is 0 or 1
 from typing import List
 
 """
+Two Pointers / Sliding Window
 use two pointers, when left pointer fixes, move right pointer to right and keep track of number of zeros (j-(i-1) - (presum[j]-presum[i-1])) <= K
 
 time O(N*K)
@@ -59,6 +60,7 @@ class Solution0:
 
 
 """
+DP
 dp[i][k] maximum length of array at i-th element and done k'th flip 0 to 1
 
 if A[i] == 1, then no need to flip 0 to 1, dp[i][k] = dp[i-1][k]+1
@@ -68,7 +70,6 @@ if A[i] == 0, then we need to flip 0 to 1 for i-th, dp[i][k] = dp[i-1][k-1]+1
 time O(N*K)
 TLE
 """
-
 
 class Solution1:
     def longestOnes(self, A: List[int], K: int) -> int:
@@ -99,6 +100,7 @@ class Solution1:
 
 
 """
+Two Pointers / Sliding Window
 
 subarray问题，通常用双指针，固定(遍历)左边界，探索右边界。假设固定左边界是i，要右边界j最远，但保证区间[i,j]内最多有K个0(K次反转)。右边界j应该停在0上，因为1不需要翻转，subarray总可以包括右边的1而不影响使用的翻转次数。
 
@@ -133,6 +135,8 @@ class Solution2:
 
 
 """
+Two Pointers / Sliding Window
+
 双指针，固定(遍历)右边界，探索左边界
 X X [i X X X X j]
 X X [i X X X X X 0] count += 1
@@ -165,6 +169,8 @@ class Solution:
 
 
 """
+Two Pointers / Sliding Window
+
 双指针，固定(遍历)右边界，探索左边界
 左边界探索优化（因为寻找最大窗口，不需要缩小窗口，所以在右边界是遍历（每次移动1）的情况下，左边界其实只在需要的时候（K<0）往右移动1
 
