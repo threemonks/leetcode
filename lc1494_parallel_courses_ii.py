@@ -49,6 +49,7 @@ from functools import lru_cache
 from typing import List
 
 """
+BFS
 observation:
 
 we need to keep track whether a given courses' prerequisite has all been met or not
