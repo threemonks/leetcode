@@ -46,13 +46,12 @@ Constraints:
 from typing import List
 
 """
-observation - binary search
+Binary Search
 
+observation
 How do we come to binary search
 *) minimize/maximize problems can also be solved with binary search as long as the predicate function is monotonic. When the problem is asking to maximize/minimize something, you may think of using binary search or dp. If the predicate function is monotonic, i.e., if we can split with penalty X, we can also split it with penalty X+1, X+2, then we can use binary search.
-
 *) One would first try to directly calculate the answer (brutal force). Usually if it works, it is a dp. But the range here is 10^9, even with dp, time complexity would be number of recursive calls of 10^5, that results in TLE. So we try  binary search.
-
 *) If the problem has a brutal force with pattern false,false....true,true...true or the contrary, i.e., all False until some value, then all True, or all True and then all False, (monotonic), then one can use binary search.
 
 approach:
