@@ -33,6 +33,7 @@ import collections
 from typing import List
 
 """
+Union-Find Kruskal's algorithm
 adding a virtual house, 0, so that from any house i to this house's pipe cost is wells[i-1]
 
 Then this is to find minmum spanning tree for all n+1 houses/vertices
