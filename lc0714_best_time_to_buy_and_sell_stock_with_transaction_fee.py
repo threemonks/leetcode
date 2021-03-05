@@ -27,6 +27,8 @@ Note:
 from typing import List
 
 """
+DP
+
 dp0[i] := value on day i, with no stock at hand
 dp1[i] := value on day i, with stock at hand
 
