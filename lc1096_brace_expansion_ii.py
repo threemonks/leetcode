@@ -22,8 +22,6 @@ For expressions e_1, e_2, ... , e_k with k >= 2, we have R({e_1,e_2,...}) = R(e_
 For expressions e_1 and e_2, we have R(e_1 + e_2) = {a + b for (a, b) in R(e_1) × R(e_2)}, where + denotes concatenation, and × denotes the cartesian product.
 Given an expression representing a set of words under the given grammar, return the sorted list of words that the expression represents.
 
-
-
 Example 1:
 
 Input: "{a,b}{c,{d,e}}"
@@ -34,7 +32,6 @@ Input: "{{a,z},a{b,c},{ab,z}}"
 Output: ["a","ab","ac","z"]
 Explanation: Each distinct word is written only once in the final answer.
 
-
 Constraints:
 
 1 <= expression.length <= 60
@@ -43,6 +40,7 @@ The given expression represents a set of words based on the grammar given in the
 
 """
 """
+String
 generic infix to prefix expression
 
 observation:
