@@ -37,6 +37,8 @@ from functools import lru_cache
 from typing import List
 
 """
+Two Pointers
+
 observation:
 let total=sum(nums), min operation to reduce X to zero, is equivalent to find longest subarray with sum equal to K=total-X
 
