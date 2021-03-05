@@ -87,6 +87,7 @@ class Solution0:
 
 
 """
+DP
 observation, its a knapsack problem, for each rod, we can add its height to left, or right, or not used, so the problem can be considered as:
 
 Given a list of numbers, multiple each number with 1, or 0, or -1, make the sum of all numbers to 0. Find a combination which has largest sum of all positive numbers.
