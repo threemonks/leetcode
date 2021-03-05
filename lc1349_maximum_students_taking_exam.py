@@ -53,6 +53,8 @@ from functools import lru_cache
 from typing import List
 
 """
+DP bitmask
+
 bitmask cheatsheets
 1. (x >> i) & 1 to get i-th bit in state x
    x & (1 << i)
