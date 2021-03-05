@@ -22,6 +22,8 @@ import math
 from typing import List
 
 """
+Two Pointers
+
 take log of nums, so product of nums[i:j] become sum of nums[i:j], finding subarray of product < k, become finding longest subarray that sum nums[i:j] < k, then count how many subarray in this longest subarray
 we can use prefix[i] means sum nums[0:i], then sum of subarray nums[i:j] = prefix[j] - prefix[i]
 """
@@ -57,6 +59,8 @@ class Solution1:
 
 
 """
+Sliding Window
+
 use a sliding window that is minimum length with prod (or sums on log of nums[i]) >= k
 https://github.com/wisdompeak/LeetCode/tree/master/Two_Pointers/713.Subarray-Product-Less-Than-K
 
