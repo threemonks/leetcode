@@ -8,6 +8,8 @@ https://leetcode.com/problems/maximize-palindrome-length-from-subsequences/
 from functools import lru_cache
 
 """
+DP String
+
 concat word1 and word2, find longest palindrome subsequence, and then filter to keep only valid ones
 
 how to check if we have at least one char from each word?
