@@ -49,6 +49,8 @@ from functools import lru_cache
 from typing import List
 
 """
+DP
+
 1. BitMask主要用于表示组合(的状态)
 0表示该位置(idx)没有被取
 1表示该位置(idx)已经被取
