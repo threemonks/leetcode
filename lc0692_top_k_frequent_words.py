@@ -26,6 +26,7 @@ import heapq
 import collections
 from typing import List
 """
+Heap
 using builtin lib Counter and heapq
 """
 
@@ -37,7 +38,9 @@ class Solution:
         return [word for count, word in topk]
 
 """
-using Counter
+using Counter / HashMap
+
+could also use Trie
 """
 class Solution:
     def topKFrequent(self, words: List[str], k: int) -> List[str]:
