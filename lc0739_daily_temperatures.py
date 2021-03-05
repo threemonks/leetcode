@@ -12,6 +12,7 @@ Note: The length of temperatures will be in the range [1, 30000]. Each temperatu
 from typing import List
 
 """
+Stack
 observation 
 use stack to hold temperatures that have not have a later warmer day yet, and store result of days til a warmer day whenever we found a new temperature higher than the top of the stack temperature
 
