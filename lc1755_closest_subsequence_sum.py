@@ -39,8 +39,10 @@ Constraints:
 import bisect
 import math
 from typing import List
+import bisect
 
 """
+Divide & Conquer / Binary Search
 observation, if goal falls beyong max sum of all elements in sum, or below min sum of all elements in sum, then the best we can have is maxsum or minsum
 
 otherwise, calculate all possible subsets in nums (nums.length < 40), calculate the sum for the subsets, sort these sums, use binary search to search the one that is closest to goal
@@ -60,16 +62,16 @@ class Solution0:
 
         res = [[]]
 
-        def dfs(numbers, subset, res):
+        def helper(numbers, subset, res):
             res.append(subset)
             for i in range(len(numbers)):
-                dfs(numbers[i + 1:], subset + [numbers[i]], res)
+                helper(numbers[i + 1:], subset + [numbers[i]], res)
 
         n2 = n // 2  # half of n
         nums1 = []
-        dfs(nums[:n2], [], nums1)
+        helper(nums[:n2], [], nums1)
         nums2 = []
-        dfs(nums[n2:], [], nums2)
+        helper(nums[n2:], [], nums2)
 
         sums1 = [sum(s) for s in nums1]
         sums2 = [sum(s) for s in nums2]
@@ -87,6 +89,11 @@ class Solution0:
                 ans = min(ans, abs(r1 - sums2[l - 1]))
 
         return ans
+
+
+"""
+Divide & Conquer / Binary Search
+"""
 
 
 class Solution:
