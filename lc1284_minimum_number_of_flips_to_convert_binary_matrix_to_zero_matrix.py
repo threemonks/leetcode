@@ -48,7 +48,7 @@ import heapq
 from typing import List
 
 """
-modified BFS/dijsktra's algorithm with bitmask compression
+modified BFS / Dijsktra's algorithm with bitmask compression
 
 use number of steps as metrics to pick which next state to explore first
 
