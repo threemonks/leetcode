@@ -38,6 +38,8 @@ from functools import lru_cache, partial
 from typing import List
 
 """
+Topological sort
+
 build two graphs one for item, one for group
 topological sort the item within each group, then topological sort each group
 Note:
