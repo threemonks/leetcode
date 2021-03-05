@@ -31,6 +31,8 @@ from functools import lru_cache
 from typing import List
 
 """
+Backtrack
+
 for chars outside bracket, append to each result
 for chars inside bracket, build a separate list, until end of bracket, then multiple current result sets by appending each char of bracket content into result to get a new result
 """
