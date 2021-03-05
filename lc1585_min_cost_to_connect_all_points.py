@@ -44,6 +44,7 @@ import math
 from typing import List
 
 """
+MST Prim
 connecting each pair of points with weighted edge, the weight is the manhattan distance
 
 MST dense graph using Prim naive implementation (稠密图用Prim naive)
