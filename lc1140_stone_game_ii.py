@@ -35,6 +35,8 @@ from functools import lru_cache
 from typing import List
 
 """
+
+DP
 observation
 
 M = 1, [1, 2], X = 2
