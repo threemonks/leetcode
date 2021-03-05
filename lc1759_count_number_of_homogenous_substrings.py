@@ -39,6 +39,7 @@ s consists of lowercase letters.
 
 """
 """
+Greedy String
 a continuous substring of n # of 'a's contribute sum(1+...+n) = n*(n+1)/2 homogenous substrings
 
 time O(N)
