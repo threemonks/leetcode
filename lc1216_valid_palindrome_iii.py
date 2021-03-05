@@ -28,7 +28,7 @@ from functools import lru_cache
 from typing import List
 
 """
-dp two string s and s[::-1] / two pointers
+DP String
 
 dp topdown recursive w/ memoization
 
