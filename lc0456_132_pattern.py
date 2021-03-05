@@ -36,6 +36,7 @@ import math
 from typing import List
 
 """
+Stack
 observation
 
 to find pattern n1<n3<n2, we need to find the maximum n3 with n3<n2, and the smallest n1 to its left, scan through array and use decreasing stack to keep track of n3<n2 pattern
