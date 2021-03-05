@@ -39,6 +39,8 @@ import math
 from typing import List
 
 """
+BFS
+
 BFS traverse graph with weight (traveltime/delay from starting node to current node along this path)
 queue里记录的是(node, arrivaltime) - arrivaltime is time to travel to this node from starting node along this path
 then we have a global earliest_arrivaltime to record the earliest arrival time for each node from the starting node
