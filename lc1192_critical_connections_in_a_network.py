@@ -2,13 +2,6 @@
 1192. Critical Connections in a Network
 Hard
 
-1967
-
-108
-
-Add to List
-
-Share
 There are n servers numbered from 0 to n-1 connected by undirected server-to-server connections forming a network where connections[i] = [a, b] represents a connection between servers a and b. Any server can reach any other server directly or indirectly through the network.
 
 A critical connection is a connection that, if removed, will make some server unable to reach some other server.
@@ -38,7 +31,8 @@ import collections
 from typing import List
 
 """
-use Tarjan's algorithm to find bridge
+SCC (Strongly Connected Components)
+use Tarjan's algorithm / DFS to find bridge
 """
 
 
