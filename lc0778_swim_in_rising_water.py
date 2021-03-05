@@ -43,6 +43,8 @@ import heapq
 import collections
 
 """
+BFS Dijkstra's 
+
 Dijkstra's algorithm where the distance between two vertices is the maximum of the two vertices' values.
 
 time O(N^2*log(N))
@@ -79,6 +81,7 @@ class Solution:
         return res
 
 """
+BFS / Heap
 use similar idea as 407 trapping rain water ii
 
 we can think this as sea water rises, goes from start node (0, 0) , through the lowest height around its neighbors (we use a minheap to keep all its neighbor barriers, so we can always proceed the lowest point first), and once it gets through this lowest point, we recursively explore all neighbors to see where the water can go to (use deque to keep track of all points that we want to further explore neighbors on), if new point with higher height, it becomes of part of the barrier that water level needs to raise above to pass, we push it into the minheap queue, if new point with lower height, it becomes part of the inner lake where water can flow into, we push it into deque to further explore.
@@ -127,6 +130,7 @@ class Solution1:
 
 
 """
+MST / Union-Find
 Minimal Spanning Tree algorithm / Union-Find
 
 - note we are not finding the entire spanning tree, rather only to find spanning that connect starting and ending points
