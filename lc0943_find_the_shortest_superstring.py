@@ -29,6 +29,8 @@ from functools import lru_cache
 from typing import List
 
 """
+
+DP Bitmask
 observation
 
 this is basically a travel salesman problem, strings array is list of cities, overlaps between any two string A[i] and A[j], is the distance of travel from city i to j
