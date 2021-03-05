@@ -46,6 +46,8 @@ Constraints:
 from typing import List
 
 """
+Stack
+
 observation:
 given array [3,1,2,4], we check the subarrays whose minimum is a given element arr[i]
 subarray with minimum point 3 are [3], so to its left, there are 0 subarray with minimum at 3, and to its right, there are also 0 subarray with minimum at 3, so total number of subarray with 3 as minimum is (0+1)*(1+0), and the contribution from this to sum of min(B) is (0+1)*3*(1+0)
