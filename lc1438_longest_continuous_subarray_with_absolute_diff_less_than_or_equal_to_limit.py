@@ -76,6 +76,7 @@ class Solution0:
 
 
 """
+Sliding Window Max / Two Pointers
 two pointers + sliding window max and min
 subarray => two pointers
 two pointers, iterate (fix) one pointer i, explore pointer j to see how far it can go, and record the longest valid j for each i, and keep updating this value as i iterates to end
