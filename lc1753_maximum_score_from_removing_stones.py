@@ -44,6 +44,7 @@ Constraints:
 1 <= a, b, c <= 105
 """
 """
+Math
 Let the pile with most be hi, the other two (lower) ones be lo1, lo2, there could be two situations
 1. if lo1+lo2 <= hi, then we can at most take lo1+lo2 stones, with some (or 0) on hi left
 2. if lo1+lo2 > hi, it can be proved that there will be two possible outcomes
