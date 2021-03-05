@@ -43,6 +43,7 @@ import math
 from typing import List
 
 """
+BFS Dijkstra's algorithm
 SSSP (single source shortest path) in graph with positive weight => Dijkstra's algorithm
 
 use minheap to store nodes to explore
