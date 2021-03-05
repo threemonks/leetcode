@@ -37,6 +37,7 @@ Note:
 connections[i][0] != connections[i][1]
 
 """
+import collections
 import heapq
 from typing import List
 
@@ -74,8 +75,6 @@ class Solution0:
 
         return costs if len(visited) == N else -1
 
-
-import heapq
 
 """
 MST minimum Spanning Tree - Kruskal's algorithm
