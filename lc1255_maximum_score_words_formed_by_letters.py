@@ -9,7 +9,7 @@ from collections import Counter
 from functools import lru_cache
 
 """
-Backtrack / DFS recursion with memoization
+Backtrack recursion with memoization
 
 We need to check each of the word (index=i) in words, to decide whether we should include it or not, so we use backtrack, each time for the current word, we have two choices:
 1. we use this word if possible, add its score to current score result
@@ -63,7 +63,7 @@ class Solution0:
 
 
 """
-Backtrack / DFS recursion with memoization
+Backtrack with memoization
 
 We need to check each of the word (index=i) in words, to decide whether we should include it or not, so we use backtrack, each time for the current word, we have two choices:
 1. we use this word if possible, add its score to current score result
@@ -120,7 +120,7 @@ class Solution1:
 
 
 """
-Backtracking
+Backtrack
 
 At each current word (of words), we can choose to
 1. use it (if it fits with remaining letters), and add the word score, and recursive call into next index
