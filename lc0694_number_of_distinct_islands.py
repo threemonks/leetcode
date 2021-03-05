@@ -31,6 +31,7 @@ Note: The length of each dimension in the given grid does not exceed 50.
 from typing import List
 
 """
+HashMap BFS / DFS
 Hash by path signature
 use BFS to find each inidividual island
 two islands are the same if they have the same shape, since we use the same DFS method to traverse it, if we record the traversing path, then the two islands would be the same if only if the path representation are the same
