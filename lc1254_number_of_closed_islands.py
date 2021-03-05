@@ -37,6 +37,7 @@ Constraints:
 from typing import List
 
 """
+Union-Find
 use DFS to find all islands, and identify if each of the island touches boundary, if so, it is not closed, we only count closed islands
 
 time O(R*C)
