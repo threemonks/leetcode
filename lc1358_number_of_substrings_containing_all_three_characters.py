@@ -34,7 +34,7 @@ s only consists of a, b or c characters.
 from typing import List
 
 """
-two pointers
+Two Pointers
 loop (fixed) right index j, increase left index i to as right as possible so that substring s[i:j] dost not contain all 'abc' while s[i-1:j] does contain all 'abc',
 then we got valid subarray that ranges s[i-1:j], and every character before s[i-1] can also be prepended to make a new qualified subarray. so we have
     res += (i-1) - 0 + 1 = i (number of different subarray starting at 0, 1, ..., i-1)
