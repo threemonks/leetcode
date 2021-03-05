@@ -10,8 +10,6 @@ Return the final string after all such duplicate removals have been made.
 
 It is guaranteed that the answer is unique.
 
-
-
 Example 1:
 
 Input: s = "abcd", k = 2
@@ -43,6 +41,7 @@ from functools import lru_cache
 from typing import List
 
 """
+Stack
 use stack to keep track last checked letter and its count
 if new character matches stack top, and its count adds 1 becomes k, then delete this char, i.e., pop stack
 if new character matches stack top, but its count adds 1 is less than k, then increase the count by 1
