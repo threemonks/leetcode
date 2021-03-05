@@ -28,7 +28,6 @@ precaculate prefix sum to simplify calculating sum of current subarray
 TLE
 """
 
-
 class Solution0:
     def subarraysDivByK(self, A: List[int], K: int) -> int:
         n = len(A)
@@ -47,6 +46,7 @@ class Solution0:
 
 
 """
+Array HashMap / Prefix-Sum
 obsevation:
 1. sum of subarray sum[A[i:j+1]] = presum[j] - presum[i-1] where presum[i] is prefix sum from index 0 to i
 2. sum of subarray divisible by K, is equivalent to presum[i-1] divided by K has same remainder as presum[j] i.e., (presum[j] - presum[i-1]) % K == 0
