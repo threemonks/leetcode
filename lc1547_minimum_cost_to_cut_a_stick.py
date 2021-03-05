@@ -44,6 +44,7 @@ from functools import lru_cache
 from typing import List
 
 """
+DP
 dp[i][j] := cost to perform all cuts between cuts index i and j
 
 dp[i][j] = min(dp[i][k] + dp[k][j] + j-i for k in [i+1,j-1]), where j-i+1 is cost for the cut at k
