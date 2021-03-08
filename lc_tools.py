@@ -13,15 +13,23 @@ class TreeNode:
         return 'TreeNode({})'.format(self.val)
 
 
-def isSameTree(p: TreeNode, q: TreeNode) -> bool:
+def is_same_tree(p: TreeNode, q: TreeNode) -> bool:
     if not p and not q: return True
     if (p and not q) or (not p and q): return False
-    return p.val == q.val and isSameTree(p.left, q.left) and isSameTree(p.right, q.right)
+    return p.val == q.val and is_same_tree(p.left, q.left) and is_same_tree(p.right, q.right)
 
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
+
+    def equal(self, other):
+        while self and other and self.val == other.val:
+            self = self.next
+            other = other.next
+        if not self and not other:
+            return True
+        return False
 
 def print_linked_list(head):
     output = []
