@@ -89,7 +89,7 @@ for example，a=[1 2 3 4 6 9]and, b=[1 1 5 6 9 10 11]，total numbers are 13， 
 """
 
 
-class Solution:
+class Solution1:
     def findMedianSortedArrays(self, A: List[int], B: List[int]) -> float:
         m, n = len(A), len(B)
         if (m + n) % 2 == 1:
@@ -122,6 +122,78 @@ class Solution:
                 return self.find_kth(a[:ka], b, k)  # exclude a's second half, but don't change k
             else:  # a's median is smaller than b's, then b's second half can be ignored
                 return self.find_kth(a, b[:kb], k)  # exclude b's second half, but don't change k
+
+
+"""
+Binary Search
+
+Property of median:
+1. same number of elements to left and to right
+2. all numbers to left are smaller than all numbers to right
+
+Key observation:
+1. in the final situation after median is found, it should consist of some (or none) numbers from nums1, and some (or none) numbers from nums2
+2. so we basically need to find a way to split nums1, and nums2, into nums1_left, nums1_right, nums2_left, nums2_right, such that
+  *) len(nums1_left)+ len(nums2_left) == (len(nums1)+len(nums2)+1)//2 # add 1 so that it works with both even or odd total length
+  *) max(nums1_left) <= min(nums2_right) # both nums1 and nums2 are sorted, so max(nums1_left)<=min(nums1_right), same for nums2
+     max(nums2_left) <= min(nums1_right)
+3. if a split is chosen for nums1, then the split for nums2 is also determined, because the total number of elements on left must equal to the total number of elements on right
+
+We can use binary search to find if a given split for nums1 (and the corresponding split for nums2) is the correct split that gives us the median, the process follows:
+
+let l1 = len(nums1), l2 = len(nums2)
+
+1. lets split nums1 at index x, then nums2 must be split at index y=(l1+l2+1)//2 - x, this split gives the median if:
+    max(nums1_left) <= min(nums2_right)
+    max(nums2_left) <= min(nums1_right)
+    e.g., 
+      nums1[x-1] <= nums2[y]
+      nums2[y-1] <= nums1[x]
+2. if nums1[x-1] > nums2[y], that means we have too many items from left of nums1, so we move x to left, and move y to right
+    x => move to left
+    y => move to right
+3. repeat this until we find a split that can give the median
+
+Note:
+    we do binary search on shorter array, which will be faster
+
+"""
+
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        l1, l2 = len(nums1), len(nums2)
+        if l1 > l2:  # swap if necessary
+            return self.findMedianSortedArrays(nums2, nums1)
+
+        # print('l1=%s l2=%s' % (l1, l2))
+        lo, hi = 0, l1  # binary search nums1 split point
+        while lo <= hi:
+            mi = lo + (hi - lo) // 2  # nums1 split point
+            y = (
+                            l1 + l2 + 1) // 2 - mi  # nums2 split point, +1 so that it works with either odd or even total number elements
+            # print('lo=%s hi=%s mi=%s y=%s' % (lo, hi, mi, y))
+            # handle one half being empty case
+            nums1_left_max = nums1[mi - 1] if 0 <= mi - 1 < l1 else -math.inf
+            nums1_right_min = nums1[mi] if mi < l1 else math.inf
+            nums2_left_max = nums2[y - 1] if 0 <= y - 1 < l2 else -math.inf
+            nums2_right_min = nums2[y] if y < l2 else math.inf
+            # print('nums1_left_max=%s nums2_right_min=%s nums2_left_max=%s nums1_right_min=%s' % (nums1_left_max, nums2_right_min, nums2_left_max, nums1_right_min))
+            if (nums1_left_max <= nums2_right_min) and (nums2_left_max <= nums1_right_min):
+                # return median depending on even or odd total number
+                if (l1 + l2) % 2 == 1:
+                    return max(nums1_left_max, nums2_left_max)
+                else:
+                    return (max(nums1_left_max, nums2_left_max) + min(nums1_right_min, nums2_right_min)) / 2
+            elif nums1_left_max >= nums2_right_min:  # too many items in left of nums1 split point, move nums1 split to left
+                hi = mi - 1
+                # print('move left hi=%s' % hi)
+            elif nums2_left_max >= nums1_right_min:  # too many items in left of nums2 split point, move nums1 split to right, nums2 split to left
+                lo = mi + 1
+                # print('move right lo=%s' % lo)
+
+        # print('error for nums1=%s nums2=%s' % (nums1, nums2))
+        raise Exception('Invalid input')
 
 
 def main():
