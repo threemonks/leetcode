@@ -20,7 +20,7 @@ space O(M+N)
 """
 
 
-class Solution:
+class Solution0:
     def intervalIntersection(self, firstList: List[List[int]], secondList: List[List[int]]) -> List[List[int]]:
         if not firstList or not secondList:
             return []
@@ -35,7 +35,7 @@ class Solution:
             # there's overlap
             if interval1[0] <= interval2[0] <= interval1[1] or interval2[0] <= interval1[0] <= interval2[1]:
                 # add intersection to result
-                result.append([max(interval1[0], interval2[0]), min(interval1[1], interval2[1])])
+                result.append((max(interval1[0], interval2[0]), min(interval1[1], interval2[1])))
                 if interval1[1] < interval2[1]:  # interval1 is smaller, used up, move its index to right
                     idx1 += 1
                 elif interval1[1] > interval2[1]:  # interval2 is smaller, used up, move its index to right
@@ -51,6 +51,33 @@ class Solution:
 
         return result
 
+
+"""
+Interval
+
+simplified
+"""
+
+
+class Solution:
+    def intervalIntersection(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
+        result = []
+        i, j = 0, 0
+        while i < len(A) and j < len(B):
+            # lo: intersection start point
+            # hi: intersection end point
+            lo = max(A[i][0], B[j][0])
+            hi = min(A[i][1], B[j][1])
+            if lo <= hi:  # overlap
+                result.append([lo, hi])
+
+            # remove interval with smaller end point
+            if A[i][1] < B[j][1]:
+                i += 1
+            else:
+                j += 1
+
+        return result
 
 def main():
     sol = Solution()
