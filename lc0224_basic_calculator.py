@@ -25,10 +25,12 @@ Do not use the eval built-in library function.
 """
 
 """
+Stack / Math
+
 1. parenthesis binds tighter than plus or minus
 2. spaces can be ignored
 
-use stack to hold tokens, closing parenthesis will trigger process of all tokens up till opening parenthesis, then replae all elements in stack up to opening parenthesis with the result value, and continue to process stack
+use stack to hold tokens, closing parenthesis will trigger process of all tokens up till opening parenthesis, then replace all elements in stack up to opening parenthesis with the result value, and continue to process stack
 """
 
 
@@ -94,7 +96,7 @@ observation:
 4. test digit .isdigit or '0' <= char <= '9'
 5. finally sum all numbers (with signs) in stack
 
-use stack to hold tokens, closing parenthesis will trigger process of all tokens up till opening parenthesis, then replae all elements in stack up to opening parenthesis with the result value, and continue to process stack
+use stack to hold tokens, closing parenthesis will trigger process of all tokens up till opening parenthesis, then replace all elements in stack up to opening parenthesis with the result value, and continue to process stack
 """
 
 
@@ -130,6 +132,89 @@ class Solution1:
             return sum(stack)
 
         return calc()
+
+
+"""
+Stack - to hold temporary values that need to hold until sub-expressions are evaluated
+
+Use stack without recursive call
+
+1. itreate the expression one char at a time, if we encounter digit, we continue to get the entire number
+2. if char is + or -, we first evaluate the expression to left, and then save this sign for the next evaluation
+3. if char is opening paren '(', we push both result so far and sign onto stack, and start a fresh as if we are calculating a new expression
+4. if char is closing paren ')', we first calculate the expression to the left, the result would be result of expression within parenthesis that just concluded. This result is then multiplied with the sign, if there is one on top of stack, because a sign is always applied to the operand to its right, and we push the sign to stack if a parenthesis (sub-expression) follows the sign. The result of this mulitplication is then added to the next element on top of stack.
+
+Note in this approach most expression are evaluated on-the-go, operands and signs are pushed to stack when sub-expression needs to be evaled first 
+
+"""
+
+
+class Solution:
+
+    def calculate(self, s: str) -> int:
+        n = len(s)
+        stack = []
+        i = 0
+        operand = 0
+        sign = 1
+        res = 0  # on-going result
+        while i < n:
+            c = s[i]
+            # print('i=%s c=%s sign=%s operand=%s stack=%s res=%s' % (i, c, sign, operand, stack, res))
+            # skip whitespace
+            if c == ' ':
+                i += 1
+                continue
+            if c.isdigit():
+                # get the entire number
+                j = i
+                while j < n and s[j].isdigit():
+                    j += 1
+                # now s[i:j] is the entire number
+                operand = int(s[i:j])
+                i = j
+            elif c == '+':
+                # evaludate expression to the left, with result, sign operand
+                res += sign * operand
+                sign = 1  # save sign for next
+                operand = 0  # reset operand
+                i += 1
+            elif c == '-':
+                # evaludate expression to the left, with result, sign operand
+                res += sign * operand
+                sign = -1  # save sign for next
+                operand = 0  # reset operand
+                i += 1
+            elif c == '(':
+                # push result and sign onto stack, for later
+                # push result first, then sign
+                stack.append(res)
+                stack.append(sign)
+
+                # then reset sign and result, as if new evaluation begins for the new sub-expression
+                sign = 1
+                res = 0
+                i += 1
+            elif c == ')':
+                # evaluate expression to left, with result, sign and operand
+                res += sign * operand
+
+                # ')' marks end of expression within a set of paren
+                # its result is multiplied with sign on top of stack
+                res *= stack.pop()  # stack pop 1, which is the sign to apply to the result of this paren
+
+                # then add the result to next operand on top of stack
+                res += stack.pop()  # stack pop 2, operand to add with result
+
+                # reset operand
+                sign = 1
+                operand = 0
+                i += 1
+
+            # print('*** i=%s c=%s sign=%s operand=%s stack=%s res=%s' % (i, c, sign, operand, stack, res))
+
+        return res + sign * operand
+
 
 def main():
     sol = Solution1()
