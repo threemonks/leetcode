@@ -40,7 +40,7 @@ space O(n) - can simplify to O(1) since each dp uses only the immediate previous
 """
 
 
-class Solution:
+class Solution0:
     def maxProfit(self, prices: List[int], fee: int) -> int:
         n = len(prices)
 
@@ -53,7 +53,38 @@ class Solution:
             dp1[i] = max(dp1[i - 1], dp0[i - 1] - prices[i])
             dp0[i] = max(dp0[i - 1], dp1[i - 1] - fee + prices[i])
 
-        return max(dp0 + dp1)
+        return max(dp0[-1], dp1[-1])
+
+
+"""
+let dp0[i] := max profit on day i without stock
+    dp1[i] := max profit on day i with stock
+
+goal is dp0[n-1]
+
+transition on day i from day i-1
+dp0[i] = max(dp0[i-1], dp1[i-1] + prices[i] - fee) # transaction fee on sell only
+dp1[i] = max(dp1[i-1], dp0[i-1] - prices[i])
+
+mistakes:
+1. dp1[i] = max(dp1[i-1], dp0[i-1] - prices[i]) since it is purchased on day i, so the price is prices[i]
+"""
+
+
+class Solution:
+    def maxProfit(self, prices: List[int], fee: int) -> int:
+        n = len(prices)
+        dp0 = [0 for _ in range(n)]
+        dp1 = [0 for _ in range(n)]
+        dp0[0] = 0
+        dp1[0] = -prices[0]
+
+        for i in range(1, n):
+            dp0[i] = max(dp0[i - 1], dp1[i - 1] + prices[i] - fee)
+            dp1[i] = max(dp1[i - 1], dp0[i - 1] - prices[i])
+            # print('i=%s dp0[i]=%s dp1[i]=%s' % (i, dp0[i], dp1[i]))
+
+        return max(dp0[n - 1], dp1[n - 1])
 
 
 def main():
