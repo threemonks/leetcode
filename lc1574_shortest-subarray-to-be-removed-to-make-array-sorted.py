@@ -55,7 +55,7 @@ space O(1)
 """
 
 
-class Solution:
+class Solution0:
     def findLengthOfShortestSubarray(self, arr: List[int]) -> int:
         if len(arr) == 1:
             return 0
@@ -80,7 +80,7 @@ class Solution:
         res = min(r, n - l - 1)  # min # of nodes to remove
         # i.e., keep either only all non-decreasing prefix, or keep only all non-increasing suffix
         # binary search to find 0<=i<=l and r<=j<=n-1 make sure arr[i] <= arr[j]
-        # and minimize j-i+1
+        # and minimize j-i-1
         i, j = 0, r
         while i <= l and j <= n - 1:
             if arr[i] <= arr[j]:  # need to remove more
@@ -92,7 +92,51 @@ class Solution:
         # print('i=%s j=%s' % (i, j))
         return res
 
-from lc_tools import deserialize
+
+"""
+different way to merger (shorten) the subarray to be removed
+search i,j to minize j-i-1 while maintaining arr[i]<=arr[j]
+for each j, find largest i that would minimize j-i-1 while still keep arr[i]<=arr[j] True
+once done searching all j, we have global min for j-i-1, the shortest subarray to be removed to make remaining array sorted
+"""
+
+
+class Solution:
+    def findLengthOfShortestSubarray(self, arr: List[int]) -> int:
+        if len(arr) == 1:
+            return 0
+
+        n = len(arr)
+
+        l = 0
+        while l < n - 1 and arr[l] <= arr[l + 1]:
+            l += 1
+        if l == n - 1:  # sorted ascending
+            return 0
+
+        r = n - 1
+        while r > 0 and arr[r] >= arr[r - 1]:
+            r -= 1
+        if r == 0:  # sorted descending
+            return 0
+
+        # now l is last element of non-decreasing subarray starting at 1
+        # r is first element of non-decreasing suffix array ending at n-1
+
+        res = min(r, n - l - 1)  # min # of nodes to remove
+        # i.e., keep either only all non-decreasing prefix, or keep only all non-increasing suffix
+        # to try to search i, j to minimize j-i-1
+        # for each j (from r to n-1), we find max possible i that minimize j-i-1, but not break arr[i]<=arr[j]
+        # once arr[i]>arr[j], further increase of i will keep arr[i]>arr[j]
+        # so we then need to increase j
+        i = 0
+        for j in range(r, n):
+            while i < l + 1 and arr[i] <= arr[j]:  # for each j, find max i that minizie j-i-1 while keep arr[i]<=arr[j]
+                res = min(res, j - i - 1)
+                i += 1
+
+        return res
+
 def main():
     sol = Solution()
     assert sol.findLengthOfShortestSubarray(arr = [1,2,3,10,4,2,3,5]) == 3, 'fails'
