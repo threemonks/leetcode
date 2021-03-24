@@ -29,46 +29,44 @@ from functools import lru_cache
 from typing import List
 
 """
-cascading / bitmasking
-iterate through nums, for each element, append it to each set in result, to form new sets, the old sets also stay as is (for not adding this new element)
+Subset Backtrack
 """
 
 
 class Solution0:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        ans = [[]]
-        for num in nums:
-            ans += [cur + [num] for cur in ans]
-            # print('num=%s ans=%s' % (num, ans))
+        n = len(nums)
+        res = []
 
-        return ans
+        # Python3 program to find all subsets by backtracking.
+        # In the array nums at every step we have two choices for each element
+        # either we can ignore the element
+        # or we can include the element in our subset
+        def dfs(idx, subset):
+            nonlocal nums
+            res.append(subset[:])
+            for i in range(idx, n):
+                # include the nums[i] in subset.
+
+                # move onto explore next element.
+                dfs(i + 1, subset + [nums[i]])
+
+                # exclude the nums[i] from subset and
+                # triggers backtracking.
+            return
+
+        # keeps track of current element in vector nums
+        dfs(0, [])
+
+        return res
 
 
 """
-backtrack / dfs
-Recursively call a dfs search that removes first element from remaining nums to explore, append it to end of resulting path
-since path+[nums[i]] is creating new object (list) to pass into recursive call, we don't need to pop (backtrack)
+Backtrack
 """
 
 
 class Solution1:
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        def dfs(start, path):  # backtrack
-            nonlocal nums
-            ans = [path]
-            for i in range(start, len(nums)):
-                ans += dfs(i + 1, path + [nums[i]])
-
-            # print('ans=%s' % ans)
-            return ans
-
-        return dfs(0, [])
-
-"""
-backtrack/dfs
-pass remaining part of nums to be explored/processed into recusrive call, use third argument to return result 
-"""
-class Solution2:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         def dfs(nums, path, res):  # backtrack
             """
@@ -80,7 +78,7 @@ class Solution2:
             """
             res.append(path)
             for i in range(len(nums)):
-                dfs(nums[i+1:], path + [nums[i]], res)
+                dfs(nums[i + 1:], path + [nums[i]], res)
 
         res = []
         dfs(nums, [], res)
@@ -88,26 +86,43 @@ class Solution2:
 
 
 """
-binary sorted / bitmask
+Generate subset via iterative
+每次考虑一个新的元素，在考虑k-1个元素的所有结果里加上这个新的元素nums[k]
+
+"""
+
+
+class Solution2:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        res = [[]]  # init to empty subset
+        for i in range(n):
+            newres = []
+            # for each element is existing result
+            for r in res:
+                newres.append(r + [nums[i]])  # create a new result by appending new item nums[i]
+            res += newres
+
+        return res
+
+
+"""
+Cascading / Bitmasking / Iterative
+iterate through nums, for each element, append it to each set in current result, to form new sets, the old sets also stay as is (for not adding this new element)
 """
 
 
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        n = len(nums)
-        output = []
-        for i in range(1 << n):
-            # if j-th bit of i is set, append nums[j] (index starts at 0)
-            # for bit test for i, its index starts at 1
-            output.append([nums[j] for j in range(n) if (i & (1 << ((j + 1) - 1)))])
+        ans = [[]]
+        for num in nums:
+            ans += [cur + [num] for cur in ans]
 
-        # print(output)
-        return output
+        return ans
 
 
 def main():
     sol = Solution()
-    #assert sol.subsets([1,2,3]) == [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]], 'fails'
     assert sol.subsets([1,2,3]) == [[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]], 'fails'
 
     assert sol.subsets([0]) == [[],[0]], 'fails'
