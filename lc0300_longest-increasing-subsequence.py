@@ -42,26 +42,33 @@ dp[i] = 1 # any single element is a increasing subseq
 transition:
 dp[i] = max(dp[j]+1|nums[i]>nums[j] for j 0...i-1)
 
-ans is max(dp)
+ans is max(dp) because longest lis might end anywhere
+
+sample run
+    [6, 0, 5, 7, 4, 3]
+     1  1  1  1  1  1
+  dp    1  2  3  3  3
 
 time O(N^2)
 """
+
+
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         n = len(nums)
 
-        dp = [0 for _ in range(n+1)]
+        dp = [0 for _ in range(n + 1)]
 
-        #base case
-        for i in range(1, n+1):
-            dp[i] = 1 # one element is valid increasing subsequence
+        # base case
+        for i in range(1, n + 1):
+            dp[i] = 1  # one element is valid increasing subsequence
 
-        for i in range(1, n+1):
+        for i in range(1, n + 1):
             for j in range(1, i):
-                if nums[i-1] > nums[j-1]:
-                    dp[i] = max(dp[i], dp[j]+1)
+                if nums[i - 1] > nums[j - 1]:
+                    dp[i] = max(dp[i], dp[j] + 1)
 
-        return max(dp) # longest increasng subseq may not end at last char
+        return max(dp)  # longest increasng subseq may not end at last char
 
 
 def main():
