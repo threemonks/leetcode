@@ -42,25 +42,41 @@ its also better than split into f-1+1 as (f-2)*2 > (f-1)*1 for f > 4
 So we should have only 3 and 2 left in the borken down integers, and we want as many as 3 as possible except for n=4
 
 """
-
-
 class Solution:
     def integerBreak(self, n: int) -> int:
-        MOD = 100000007
         if n == 2: return 1
         if n == 3: return 2
         num_3 = n // 3
         remainder = n % 3
         # n = 3*a+1
-        if remainder == 0:  # we multiple remainder after this, so we change 0 to 1
-            remainder = 1
-        elif remainder == 1:  # we prefer 2*2 over 3*1 for 4
+        if remainder == 0: # we multiple remainder after this, so we change 0 to 1
+            remainder =1
+        elif remainder == 1: # we prefer 2*2 over 3*1 for 4
             remainder = 4
-            num_3 -= 1
+            num_3 -=1
         elif remainder == 2:
             pass
 
         return pow(3, num_3) * remainder
+
+"""
+DP
+
+dp[j] = max(dp[j], max(dp[i], i)*(j-i))
+
+for each number at j, we can take it as it is, or break it into i+(j-i)
+and for i, we can either use i, or use dp[i]
+
+"""
+class Solution1:
+    def integerBreak(self, n: int) -> int:
+        dp = [0 for _ in range(n+1)]
+
+        for j in range(2, n+1):
+            for i in range(1, j):
+                dp[j] = max(dp[j], max(dp[i], i)*(j-i))
+
+        return dp[-1]
 
 
 def main():
