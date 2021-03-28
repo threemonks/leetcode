@@ -62,22 +62,22 @@ class Solution:
 """
 DP
 
-dp[j] = max(dp[j], max(dp[i], i)*(j-i))
+dp[i] = max(dp[i], max(dp[j], j)*(i-j))
 
 for each number at j, we can take it as it is, or break it into i+(j-i)
 and for i, we can either use i, or use dp[i]
 
 """
-class Solution1:
+class Solution:
     def integerBreak(self, n: int) -> int:
+        MOD = 10**9+7
         dp = [0 for _ in range(n+1)]
 
-        for j in range(2, n+1):
-            for i in range(1, j):
-                dp[j] = max(dp[j], max(dp[i], i)*(j-i))
+        for i in range(2, n+1):
+            for j in range(i):
+                dp[i] = (max(dp[i], max(j, dp[j])*(i-j)))
 
         return dp[-1]
-
 
 def main():
     sol = Solution()
