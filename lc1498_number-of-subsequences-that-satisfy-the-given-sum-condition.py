@@ -54,34 +54,32 @@ Since each subsequence is valid only depending on its min and max, after sorting
 
 Use a sliding window A[l]~A[r], with A[l]+A[r] <= target, with A[l] (smallest) included, each of A[l+1] ... A[r] can be picked or not picked, so that is a total of 2^(r-l) number of valid subsequence.
 
-So at each step, if A[l]+A[r]<=target, there will be 2^(r-l) of valid new subsequence (all including A[l])
+So at each step, if A[l]+A[r]<=target, there will be 2^(r-l) of valid new subsequence (all including A[l], for remaining A[l+1] to A[r], each element can be included or not, so that is total of 2^(r-l) ways)
 
 How do you know whether to sort or not?
 
 Normally subsequences mean that their order does matter. The fact that min/max element location is not fixed in the subsequences makes them subsets.
 After sorting, we decrement r, because that's the only way to bring A[l] + A[r] > target down.
 
-
 key points:
 1. a valid subsequence in the sliding window must include l, since the sum(A[l]+A[r]) < target will stay valid with r shrinks, and it might becomes invalid only if l increases. However, increasing l will generate a new set of subsequences, because each subsequence must include l (for A[l]+A[r]<=target)
 2. We need to iterate r, because after sorting, only reducing r would make change condition from A[l]+A[r]>target to valid again A[l]+A[r]<=target
-3. we update result for each different l because 
+3. we update result for each different l because in sorted array, each l would give new set of subsequences starting from this left index l.
 
 time O(N)
 space O(1)
 """
-
 class Solution:
     def numSubseq(self, nums: List[int], target: int) -> int:
         n = len(nums)
-        MOD = 10 ** 9 + 7
+        MOD = 10**9+7
         nums.sort()
 
         ans = 0
-        l, r = 0, n - 1
-        for r in range(n - 1, -1, -1):
+        l, r = 0, n-1
+        for r in range(n-1, -1, -1):
             while l <= r and nums[l] + nums[r] <= target:
-                ans += pow(2, r - l, MOD)
+                ans += pow(2, r-l, MOD)
                 l += 1
 
         return ans % MOD
