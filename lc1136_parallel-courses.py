@@ -42,11 +42,11 @@ BFS traverse and calclculate max depth
 detect cycle using len(visited) == len(vertices)
 
 mistakes:
-1. after visiting node i, reduce indegrees of its adj target node
+1. after visiting vertex i, reduce indegrees of its adj target vertex
     for d in adj_list[i]:
         indegrees[d]-=1
 2. when do we update indegrees[d]-=1?
-    should be after node i is visited (popped out from queue), not after discovered
+    should be after vertex i is visited (popped out from queue), not after discovered
 """
 
 
