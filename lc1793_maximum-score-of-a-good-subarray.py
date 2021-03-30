@@ -41,9 +41,9 @@ class Solution:
         # print('rightmin=%s' % rightmin)
 
         i, j = k, k
-        ans = -math.inf
+        score = -math.inf
         while i >= 0 and j < n:
-            ans = max(ans, min(leftmin[i], rightmin[j])*(j-i+1))
+            score = max(score, min(leftmin[i], rightmin[j])*(j-i+1))
             # if (nums[i-1] if i-1>=0 else 0) > (nums[j+1] if j+1<n else 0):
             if min((leftmin[i-1] if i-1>=0 else 0), rightmin[j])*(j-(i-1)+1) > min(leftmin[i], (rightmin[j+1] if j+1<n else 0))*((j+1)-i+1):
                 # be greedy at each step
@@ -52,7 +52,7 @@ class Solution:
             else:
                 j += 1
 
-        return ans
+        return score
 
 
 def main():
