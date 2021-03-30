@@ -9,10 +9,14 @@ from typing import List
 """
 Two Pointers / Greedy
 
-calculate min value of nums[i] from k to 1 as left, and min value of nums[j] from k to n as right
-then use two pointers to calculate score[i][j] as min(left, right) * (j-i+1)
-at each step, we move the pointer that would give largest value at next step, since the one step will result length increase by 1 for either pointer move, so we want move the one that would result in larger value after move
+calculate min value of nums[i] from k to 1 as leftmin, and min value of nums[j] from k to n as rightmin
+then use two pointers to calculate score[i][j] as min(leftmin[i], rightmin[j]) * (j-i+1)
+at each step, we move the pointer that would give largest value at next step (greedy), since the one step will result length increase by 1 for either pointer move, so we want move the one that would result in larger value after move
 
+       [1,4,3,7,4,5] k = 3
+              K
+leftmin 1 3 3 7
+rightmin      7 4  4
 time O(N)
 space O(N)
 """
@@ -20,35 +24,35 @@ space O(N)
 class Solution:
     def maximumScore(self, nums: List[int], k: int) -> int:
         n = len(nums)
-        left = [0 for _ in range(k + 1)]
-        right = [0 for _ in range(n)]  # only use k...n part
+        leftmin = [-1 for _ in range(n)]
+        rightmin = [-1 for _ in range(n)]
 
         mn = math.inf
-        for i in range(k, -1, -1):  # from middle to front
-            left[i] = min(mn, nums[i])
-            mn = left[i]
-        # print(left)
+        for i in range(k, -1, -1):
+            mn = min(mn, nums[i])
+            leftmin[i] = mn
 
-        mn = math.inf
-        for j in range(k, n):  # from middle to front
-            right[j] = min(mn, nums[j])
-            mn = right[j]
-        # print(right)
+        mx = math.inf
+        for j in range(k, n):
+            mx = min(mx, nums[j])
+            rightmin[j] = mx
+
+        # print('leftmin=%s' % leftmin)
+        # print('rightmin=%s' % rightmin)
 
         i, j = k, k
-        score = -math.inf
+        ans = -math.inf
         while i >= 0 and j < n:
-            # print('i=%s j=%s' % (i, j))
-            score = max(score, min(left[i], right[j]) * (j - i + 1))
-            # if left[i] < right[j], use left[i] to calculate score, and move i to left
-            if (left[i - 1] if i - 1 >= 0 else 0) < (right[j + 1] if j + 1 < n else 0):
-                # print('use right[%s]=%s score=%s' % (j, right[j], score))
-                j += 1
-            else:
-                # print('use left[%s]=%s score=%s' % (i, left[i], score))
+            ans = max(ans, min(leftmin[i], rightmin[j])*(j-i+1))
+            # if (nums[i-1] if i-1>=0 else 0) > (nums[j+1] if j+1<n else 0):
+            if min((leftmin[i-1] if i-1>=0 else 0), rightmin[j])*(j-(i-1)+1) > min(leftmin[i], (rightmin[j+1] if j+1<n else 0))*((j+1)-i+1):
+                # be greedy at each step
+                # if decrease i gives larger result in next step, we decrease i
                 i -= 1
+            else:
+                j += 1
 
-        return score
+        return ans
 
 
 def main():
