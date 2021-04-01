@@ -56,21 +56,19 @@ mistakes:
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
 
-        def can_finish(k):
-            # can he finish with speed k per hour
-            # for each pile of size p>0, the hours he need would be math.ceil(p/k) = ((p-1)//k)+1 hours
-            return sum([((p - 1) // k + 1) for p in piles]) <= h
-
         left, right = 1, max(piles)
         while left < right:
             mid = left + (right - left) // 2
             # print('left=%s right=%s mid=%s' % (left, right, mid))
-            if can_finish(mid):
+            # can he finish with speed k per hour
+            # for each pile of size p>0, the hours he need would be math.ceil(p/k) = ((p-1)//k)+1 hours
+            if sum([((p - 1) // mid + 1) for p in piles]) <= h:
                 right = mid
             else:
                 left = mid + 1
 
         return left
+
 
 def main():
     sol = Solution()
