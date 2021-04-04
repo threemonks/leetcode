@@ -34,72 +34,42 @@ Output: 18
 
 Constraints:
 
-1 <= primeFactors <= 109
+1 <= primeFactors <= 10^9
 """
-from functools import lru_cache
+from collections import Counter
+from typing import List
 
-"""
-Math
-
-Observation:
-number of nice divisors is equal to product of the count of each prime factor. So the problem is reduced to: given n, find a sequence of numbers whose sum equals n, and whose product is maximized.
-
-It can be proved that the sequence numbers should be no larger than 4.
-
-So we basically try to decompose number into as many 3 as possible, until remainder <=4.
 """
 
+nums[i] + rev(nums[j]) == nums[j] + rev(nums[i])
+=> nums[i]-rev(nums[i]) == nums[j]-rev(nums[j])
+this would make the solution O(N) instead of O(N^2)
+
+so we loop and see if this diff k=nums[i]-rev(nums[i]) already appear or not, if so, count[k]+=1, and res += count[k]
+
+Note: each new k would add count[k] pairs as it would form a pair with each existing diff k
+
+time (N)
+"""
 
 class Solution:
-    def maxNiceDivisors(self, n: int) -> int:
-        if n <= 3: return n
+    def countNicePairs(self, nums: List[int]) -> int:
         MOD = 10 ** 9 + 7
+        n = len(nums)
+        count = Counter()
+        res = 0
+        for i in range(n):
+            k = nums[i] - int(str(nums[i])[::-1])
+            res = (res + count[k]) % MOD
+            count[k] += 1
 
-        num_3 = n // 3
-        remainder = n % 3
-
-        # 3*a+1
-        if remainder == 1:
-            remainder = 4
-            num_3 -= 1
-        # 3*a+2
-        elif remainder == 2:
-            pass
-        # 3*a+0
-        elif remainder == 0:  # we will multiply by remainder, so change 0 to 1
-            remainder = 1
-
-        return (pow(3, num_3, MOD) * remainder) % MOD
-
-
-"""
-DP bottom up
-
-dp[i] = max(dp[i], max(j, dp[j])*(i-j))
-
-TLE <= input range 10^9 too large for DP
-"""
-
-
-class Solution1:
-    def maxNiceDivisors(self, n: int) -> int:
-        if n <= 3: return n
-        MOD = 10 ** 9 + 7
-        dp = [0 for _ in range(n + 1)]
-
-        for i in range(1, n + 1):
-            for j in range(i):
-                dp[i] = (max(dp[i], (max(j, dp[j]) * (i - j))) % MOD)
-
-        # print(dp[-1])
-        return dp[-1] % MOD
+        return res
 
 def main():
     sol = Solution()
-    assert sol.maxNiceDivisors(5) == 6, 'fails'
+    assert sol.countNicePairs(nums = [42,11,1,97]) == 2, 'fails'
 
-    assert sol.maxNiceDivisors(8) == 18, 'fails'
-
+    assert sol.countNicePairs(nums = [13,10,35,24,76]) == 4, 'fails'
 
 if __name__ == '__main__':
    main()
