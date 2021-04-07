@@ -58,7 +58,7 @@ time O(log(N))
 """
 
 
-class Solution:
+class Solution0:
     def search(self, nums: List[int], target: int) -> int:
         n = len(nums)
 
@@ -98,6 +98,69 @@ class Solution:
 
         return -1
 
+
+"""
+Binary Search
+
+One pass
+
+idea is to add some additional check during the normail binary search in order to better narrow down the scope of the search
+
+revised binary search:
+mid = start + (end - start)//2
+
+if nums[mid] == target: return mid
+elif nums[start] < nums[mid]: # first half is ordered
+    # if target in first half
+    if nums[start]<=target<=nums[mid]:
+        # go left
+        end = mid-1
+    else:
+        # go right
+        start = mid+1
+elif nums[start] > nums[mid]: # second half is ordered
+    # if target in second half
+    if nums[mid] <= target <= nums[end]:
+        # go right
+        start = mid+1
+    else:
+        # go left
+        end = mid-1
+
+time O(log(N))
+"""
+
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        n = len(nums)
+
+        if n == 1:
+            return 0 if nums[0] == target else -1
+
+        left, right = 0, n - 1
+        while left <= right:
+            mi = left + (right - left) // 2
+            if nums[mi] == target:
+                return mi
+            elif nums[left] > nums[mi]:  # second half is sorted
+                if nums[mi] <= target <= nums[right]:
+                    # target in second half
+                    # move to right
+                    left = mi + 1
+                else:
+                    # move to left
+                    right = mi - 1
+            else:  # first half is sorted
+                if nums[left] <= target <= nums[mi]:
+                    # target in first half
+                    # move to left
+                    right = mi - 1
+                else:
+                    # move to right
+                    left = mi + 1
+
+        return -1
 
 def main():
     sol = Solution()
