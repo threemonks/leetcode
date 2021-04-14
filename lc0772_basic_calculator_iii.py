@@ -128,7 +128,7 @@ class Solution:
 
             return nums.pop()
 
-        return helper(list(s))
+        return helper(s)
 
 
 """
