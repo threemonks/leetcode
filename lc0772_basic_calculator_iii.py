@@ -41,27 +41,113 @@ s consists of digits, '+', '-', '*', '/', '(', ')' and ' '.
 s is a valid expression.
 
 """
+"""
+calculator or expression with paren/brace eval
+
+双栈，分别存数字，和，符号
+1. 遇到数字，入数字栈
+2. 遇到开括号(，入符号栈
+3. 遇到闭括号，将符号栈顶所有非开括号(的符号都弹出，和数字栈顶元素结合处理，结果重新入数字栈，直到遇到开括号(
+4. 遇到其他符号+-/*，将符号栈顶所有优先级相同或者低的符号都弹出，和数字栈顶元素结合处理，结果重新入数字栈
+5. 依次弹出并处理所有符号栈顶的符号
+
+结束时，数字栈顶就是结果nums[0]
+
+treat open paren ( as an operator with lowest precedence
+close paren ) will trigger processing until find matching open paren (
+operator precedence: '*/' > '+-' > '('
+*/: 2
++-: 1
+(: 0
+
+when encounter closing paren ')', we process all operators from ops stack top (with num from stack nums) until the matching open paren (
+
+Note: (but not applicable here as we don't have such test case)
+To deal with "-1+4*3/3/3": add 0 to num stack if the first char is '-';
+To deal with "1-(-7)": add 0 to num stack if the first char after '(' is '-'.
+"""
+
+
+class Solution:
+    def calculate(self, s: str) -> int:
+        # operator precedence
+        precedence = {'*': 2, '/': 2, '+': 1, '-': 1, '(': 0}
+
+        def calc(op, num2, num1):
+            # when we pop num from stack nums, we get num2, then num1
+            if op == '+':
+                return num1 + num2
+            elif op == '-':
+                return num1 - num2
+            elif op == '*':
+                return num1 * num2
+            elif op == '/':
+                return num1 // num2 if num1 > 0 else -((-num1) // num2)
+
+        def helper(s):
+            ops, nums = [], []
+            num = ''
+            i = 0
+            while i < len(s):
+                c = s[i]
+                # print('i=%s c=%s ops=%s nums=%s num=%s' % (i, c, ops, nums, num))
+                if c == ' ':  # skip whitespace
+                    continue
+                elif c.isdigit():
+                    while c.isdigit():  # get entire number
+                        num += c
+                        i += 1
+                        if i < len(s):
+                            c = s[i]
+                        else:
+                            c = ''
+                    nums.append(int(num))
+                    num = ''
+                    if i < len(s):
+                        # put back this none-digit
+                        i -= 1
+                elif c == '(':
+                    ops.append(c)
+                elif c == ')':
+                    # if we encounter ), do math until (
+                    while ops[-1] != '(':
+                        nums.append(calc(ops.pop(), nums.pop(), nums.pop()))
+                    # remove (
+                    ops.pop()
+                elif c in '+-/*':
+                    while ops and precedence[ops[-1]] >= precedence[c]:
+                        nums.append(calc(ops.pop(), nums.pop(), nums.pop()))
+                    ops.append(c)
+
+                i += 1
+
+            # process all remaining items in ops and nums
+            while ops:
+                # print('ops=%s nums=%s' % (ops, nums))
+                nums.append(calc(ops.pop(), nums.pop(), nums.pop()))
+
+            return nums.pop()
+
+        return helper(list(s))
+
 
 """
 calculator or expression with paren/brace eval
 
-use recursive with string stack for elements of expression to handle parenthesis
-then use stack to handle sub-express without parenthesis
-
 use stack
-( => push cur_str into stack, clear cur_str
-) => eval cur_str, concatenate with stack.pop()
+( => push into stack, clear cusStr
+) => eval curStr, concatenate with stack.pop()
 else:
   curStr + s[i]
 
 func eval needs to handle (no paren, but number could have sign)
-*/ has higher precedence, needs to pop one from stack, eval with next val, then push back result, needs to handle when result has leading +- sign
+*/ has higher precedence, needs to pop one from stack, eval with next val, then push back result
 +5--433+3*-210-2-3-+3+-5
 +5, --433, +3*(-210), -2, -3, -+3, -5,
 """
 
 
-class Solution:
+class Solution1:
     def calculate(self, s: str) -> int:
 
         # remove white space
@@ -80,26 +166,26 @@ class Solution:
                 c = s[i]
                 print('i=%s c=%s' % (i, c))
                 if c == '+' or c == '-':
-                    j = i+1
-                    if s[j] == '+' or s[j] == '-': # this is sign of number
-                        j+=1
+                    j = i + 1
+                    if s[j] == '+' or s[j] == '-':  # this is sign of number
+                        j += 1
                     while j < len(s) and s[j].isdigit():
-                        j+=1
-                    num = s[i+1:j]
-                    i = j-1
+                        j += 1
+                    num = s[i + 1:j]
+                    i = j - 1
                     if c == '-':
                         stack.append(-int(num))
                     else:
                         stack.append(int(num))
                     num = ''
                 elif c == '*' or c == '/':
-                    j = i+1
-                    if s[j] == '+' or s[j] == '-': # this is sign of number
-                        j+=1
+                    j = i + 1
+                    if s[j] == '+' or s[j] == '-':  # this is sign of number
+                        j += 1
                     while j < len(s) and s[j].isdigit():
-                        j+=1
-                    num = s[i+1:j]
-                    i = j-1
+                        j += 1
+                    num = s[i + 1:j]
+                    i = j - 1
                     prev_num = stack.pop()
                     if c == '*':
                         stack.append(prev_num * int(num))
@@ -110,7 +196,7 @@ class Solution:
                 print('stack=%s' % str(stack))
                 i += 1
 
-            if num: # last number
+            if num:  # last number
                 stack.append(int(num))
 
             return sum(stack)
@@ -141,7 +227,7 @@ space O(N)
 """
 
 
-class Solution1:
+class Solution2:
     def calculate(self, s: str) -> int:
         i = 0
 
@@ -160,24 +246,24 @@ class Solution1:
                 if c in '+-*/)' or i >= len(s):  # operator, closing paren or end of string
                     if operator == '+':
                         stack.append(num)
-                        print('after + %s' % str(stack))
+                        # print('after + %s' % str(stack))
                     elif operator == '-':
                         stack.append(-num)
-                        print('after - %s' % str(stack))
+                        # print('after - %s' % str(stack))
                     elif operator == '*':
                         t = stack.pop()
                         stack.append(t * num)
-                        print('after * %s' % str(stack))
+                        # print('after * %s' % str(stack))
                     elif operator == '/':
                         numerate = stack.pop()
                         print('numerate=%s num=%s' % (numerate, num))
                         stack.append(-(-numerate // num) if numerate < 0 else numerate // num)  # round towards zero
-                        print('after / %s' % str(stack))
+                        # print('after / %s' % str(stack))
                     operator = c
                     if c == ')':
                         break
                     num = 0
-                print(stack)
+                # print(stack)
 
             return sum(stack)
 
