@@ -50,6 +50,13 @@ If all integer numbers from the stream are in the range [0, 100], how would you 
 If 99% of all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
 
 """
+
+"""
+Follow question:
+1. we know value within range [0, 100], we can use bucket sort, or store all values in array num[0...100], with value being the count of that index
+2. if 99% value are within range [0, 100]? 99 buckets, and plus the count of numbers > 100
+"""
+
 """
 SortedList
 
