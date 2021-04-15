@@ -38,7 +38,7 @@ randomizedSet.getRandom(); // Since 2 is the only number in the set, getRandom()
 
 Constraints:
 
--231 <= val <= 231 - 1
+-2^31 <= val <= 2^31 - 1
 At most 105 calls will be made to insert, remove, and getRandom.
 There will be at least one element in the data structure when getRandom is called.
 
@@ -54,8 +54,17 @@ and we can swap and remove from end of list, which is also O(1)
 
 With dict storing {val: index}, getRandom can use random.choice(list), which is also O(1)
 """
+
 import random
 
+"""
+python dict/set would give O(1) for insert and remove, but not getRandom.
+
+So we would use a list to and store list index into dict, this will allow us still insert in O(1) into dict, append to list is also O(1)
+and we can swap and remove from end of list, which is also O(1)
+
+With dict storing {val: index}, getRandom can use random.choice(list), which is also O(1)
+"""
 
 class RandomizedSet:
 
@@ -82,10 +91,15 @@ class RandomizedSet:
         Removes a value from the set. Returns true if the set contained the specified element.
         """
         if val in self.indices:
+            # get hold of index of val, and last value in self.nums (to swap and pop last)
             idx, last = self.indices[val], self.nums[-1]
+            # store last value into position idx
             self.nums[idx] = last
+            # update index for value last
             self.indices[last] = idx
+            # remove last value (val) from list
             self.nums.pop()
+            # remove index of val
             del self.indices[val]
             return True
         else:
@@ -101,9 +115,6 @@ class RandomizedSet:
 """
 python set, and O(N) time to getRandom()
 """
-
-import random
-
 
 class RandomizedSet1:
 
@@ -138,6 +149,7 @@ class RandomizedSet1:
         Get a random element from the set.
         """
         return list(self.nums)[random.randint(0, len(self.nums) - 1)]
+
 
 # Your RandomizedSet object will be instantiated and called as such:
 # obj = RandomizedSet()
