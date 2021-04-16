@@ -116,11 +116,6 @@ class RandomizedCollection:
 # param_2 = obj.remove(val)
 # param_3 = obj.getRandom()
 
-"""
-["RandomizedCollection", "insert", "insert", "insert", "getRandom", "remove", "getRandom"]
-[[], [1], [1], [2], [], [1], []]
-"""
-
 def main():
 
     obj = RandomizedCollection()
