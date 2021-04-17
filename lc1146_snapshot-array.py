@@ -38,6 +38,44 @@ At most 50000 calls will be made to set, snap, and get.
 0 <= snap_id < (the total number of times we call snap())
 0 <= val <= 10^9
 """
+import bisect
+
+"""
+Design Array
+
+nums stores {index: [(snap_id, val)]}
+for lookup, do binary search for snap_id in array nums[index], the right most idx where snap_id<= target snap_id has the value we are looking for
+
+"""
+class SnapshotArray:
+
+    def __init__(self, length: int):
+        self.nums = {}
+        self.snap_id = 0
+
+    def set(self, index: int, val: int) -> None:
+        if index in self.nums:
+            self.nums[index].append((self.snap_id, val))
+        else:
+            self.nums[index] = [(self.snap_id, val)]
+
+    def snap(self) -> int:
+        self.snap_id += 1
+        return self.snap_id-1
+
+    def get(self, index: int, snap_id: int) -> int:
+        # print('get index=%s snap_id=%s self.nums=%s' % (index, snap_id, self.nums))
+        if index not in self.nums:
+            return 0
+        # search for last self.nums[index] index where snap_id <= target_snap_id
+        # or search for left most index idx where nums[index][idx][0] >= snap_id+1, then return idx-1
+        idx = bisect.bisect(self.nums[index], (snap_id + 1, 0)) - 1
+        # print('idx=%s' % idx)
+        if idx == -1: # no value at this snapshot
+            return 0
+        else:
+            return self.nums[index][idx][1]
+
 """
 Design Array
 
@@ -46,7 +84,7 @@ set(index, val) will update index in dict nums with value val
 take snapshot, store all values of nums into dict {snap_id: {idx: val}}
 get(index, snap_id) => dct[snap_id].get(index, 0)
 """
-class SnapshotArray:
+class SnapshotArray1:
 
     def __init__(self, length: int):
         self.nums = {}
