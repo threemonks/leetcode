@@ -88,12 +88,13 @@ use OrderedDict to store last_access_ts and key, in OrderedDict, item is ordered
 OrderedDict uses DoublyLinkedList underlying
 
 """
+from collections import OrderedDict
 
 class LRUCache0:
 
     def __init__(self, capacity: int):
         self.capacity = capacity
-        self.nums = collections.OrderedDict()  # store key: val, but order by last add time/access time
+        self.nums = OrderedDict() # store key: val, but order by last add time/access time
 
     def get(self, key: int) -> int:
         if key in self.nums:
@@ -104,10 +105,9 @@ class LRUCache0:
 
     def put(self, key: int, value: int) -> None:
         self.nums[key] = value
-        self.nums.move_to_end(key)  # in case it is already in middle
+        self.nums.move_to_end(key) # in case it is already in middle
         if len(self.nums) > self.capacity:
             self.nums.popitem(last=False)
-
 
 """
 Design
@@ -116,9 +116,12 @@ implement DoublyLinkedList, the head is the least recently used, that will be ev
 newly added item will be added at end
 use dummy head/tail to make add/remove operation easier
 
+mistakes1:
+1. we use len(self.cache) > self.capacity to check if exceeding limit, so we always need to add key into self.cache first before adding the double linked list, so that check for exceeding capacity inside _add_node can properly detect exceeding capacity.
+2. _add_node calls _remove_node if exceeding capacity
+3. _add_node handles adding to self.cache
+4. _remove_node handles removing from self.cache
 """
-
-
 class DLinkedNode:
     def __init__(self, key, val, prev=None, nxt=None):
         self.key = key
@@ -129,77 +132,67 @@ class DLinkedNode:
     def __repr__(self):
         return '{%s: %s}' % (self.key, self.val)
 
-
 class LRUCache:
 
     def _move_to_end(self, node):
         # move key to end of dlink
         # node.prev <-> node <-> node.next
         # => node.prev <-> node.nxt
-        node = self._remove_node(node)
+        self._remove_node(node)
         # and dummy_tail.prev <-> node <-> dummy_tail
         self._add_node(node)
 
     def _add_node(self, node):
         # add node at end, right before dummy tail
         # and dummy_tail.prev <-> node <-> dummy_tail
-        dummy_tail_prev = self.dummy_tail.prev
-        dummy_tail_prev.nxt, node.prev = node, dummy_tail_prev
-        node.nxt, self.dummy_tail.prev = self.dummy_tail, node
+        node.prev, node.nxt = self.tail.prev, self.tail
+        self.tail.prev.nxt = node
+        self.tail.prev = node
+        self.cache[node.key] = node
 
         # make sure not exceeding capacity
-        if len(self.nums) > self.capacity:
+        if len(self.cache) > self.capacity:
             # remove first value from dlink
-            del_node = self.dummy_head.nxt
-            self.dummy_head.nxt = del_node.nxt
-            # remove from self.nums
-            del self.nums[del_node.key]
+            self._remove_node(self.head.nxt)
 
     def _remove_node(self, node):
         # remove specific node
         # node.prev <-> node <-> node.next
         # => node.prev <-> node.nxt
-        node_prev, node_nxt = node.prev, node.nxt
-        node_prev.nxt = node_nxt
-        node_nxt.prev = node_prev
-        return node
+        node.prev.nxt, node.nxt.prev = node.nxt, node.prev
+        # remove from self.cache
+        del self.cache[node.key]
 
     def __init__(self, capacity: int):
         self.capacity = capacity
-        self.nums = {}  # dictionary hold {key: node} with value
+        self.cache = {} # dictionary hold {key: node} with value
 
         # dummy head/tail
-        self.dummy_head = DLinkedNode(0, 0)
-        self.dummy_tail = DLinkedNode(0, 0)
-        self.dummy_head.next = self.dummy_tail
-        self.dummy_tail.prev = self.dummy_head
+        self.head = DLinkedNode(0, 0)
+        self.tail = DLinkedNode(0, 0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
 
     def get(self, key: int) -> int:
-        # print('get key=%s nums=%s' % (key, self.nums))
-        if key not in self.nums:
+        # print('get key=%s cache=%s' % (key, self.cache))
+        if key not in self.cache:
             return -1
         else:
             # move to end
-            self._move_to_end(self.nums[key])
-            return self.nums[key].val
+            self._move_to_end(self.cache[key])
+            return self.cache[key].val
 
     def put(self, key: int, value: int) -> None:
-        # print('put key=%s value=%s nums=%s' % (key, value, self.nums))
-        if key in self.nums:
-            # move to end and update value
-            self.nums[key].val = value
-            self._move_to_end(self.nums[key])
+        # print('put key=%s value=%s cache=%s' % (key, value, self.cache))
+        if key in self.cache:
+            # update value and move node to end
+            self.cache[key].val = value
+            self._move_to_end(self.cache[key])
         else:
             # add a new one
             node = DLinkedNode(key, value)
-            self.nums[key] = node
             self._add_node(node)
 
-
-# Your LRUCache object will be instantiated and called as such:
-# obj = LRUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
 
 def main():
     obj = LRUCache(2)
