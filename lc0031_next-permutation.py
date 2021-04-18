@@ -52,8 +52,8 @@ Next Permutation (lexcigological order)
 4. Reverse the sub-array nums[k + 1:]
 
 how to understand it:
-step-1: easy, find the first digit that can be swapped to make permutation bigger (pivot element before longest non-increasing suffix)
-step-2: easy, find the digit bigger but closest to nums[k]
+step-1: easy, find the first digit (pivot) that can be swapped to make permutation bigger (pivot element before longest non-increasing suffix)
+step-2: easy, find the digit bigger but closest to nums[k] (right most successor to pivot)
 step-3: swap(nums[k], nums[l])
 step-4: sort the subarray nums[k+1:end], why we can just reverse instead of sort?
         because we know nums[k+1:end] must be non-increasing, reason:
