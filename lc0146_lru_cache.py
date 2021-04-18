@@ -44,6 +44,7 @@ import collections
 from datetime import datetime
 
 """
+Design
 brutal force Least Recently Used
 """
 
@@ -78,106 +79,127 @@ class LRUCache0:
 
         # Your LRUCache object will be instantiated and called as such:
 
+"""
+Design
 
-# obj = LRUCache(capacity)
-# param_1 = obj.get(key)
-# obj.put(key,value)
+use dict to store {key: val}
+use OrderedDict to store last_access_ts and key, in OrderedDict, item is ordered by insert time, so there's a O(1) time method move_to_end(key) that would update last_access_ts for a given key to last (latest).
 
-from collections import OrderedDict
+OrderedDict uses DoublyLinkedList underlying
 
 """
-using OrderedDict
-"""
 
-
-class LRUCache1(OrderedDict):
+class LRUCache0:
 
     def __init__(self, capacity: int):
         self.capacity = capacity
+        self.nums = collections.OrderedDict()  # store key: val, but order by last add time/access time
 
     def get(self, key: int) -> int:
-        if key not in self:
+        if key in self.nums:
+            self.nums.move_to_end(key)
+            return self.nums[key]
+        else:
             return -1
 
-        self.move_to_end(key)
+    def put(self, key: int, value: int) -> None:
+        self.nums[key] = value
+        self.nums.move_to_end(key)  # in case it is already in middle
+        if len(self.nums) > self.capacity:
+            self.nums.popitem(last=False)
 
-        return self[key]
+
+"""
+Design
+
+implement DoublyLinkedList, the head is the least recently used, that will be evicted first
+newly added item will be added at end
+use dummy head/tail to make add/remove operation easier
+
+"""
+
+
+class DLinkedNode:
+    def __init__(self, key, val, prev=None, nxt=None):
+        self.key = key
+        self.val = val
+        self.prev = prev
+        self.nxt = nxt
+
+    def __repr__(self):
+        return '{%s: %s}' % (self.key, self.val)
+
+
+class LRUCache:
+
+    def _move_to_end(self, node):
+        # move key to end of dlink
+        # node.prev <-> node <-> node.next
+        # => node.prev <-> node.nxt
+        node = self._remove_node(node)
+        # and dummy_tail.prev <-> node <-> dummy_tail
+        self._add_node(node)
+
+    def _add_node(self, node):
+        # add node at end, right before dummy tail
+        # and dummy_tail.prev <-> node <-> dummy_tail
+        dummy_tail_prev = self.dummy_tail.prev
+        dummy_tail_prev.nxt, node.prev = node, dummy_tail_prev
+        node.nxt, self.dummy_tail.prev = self.dummy_tail, node
+
+        # make sure not exceeding capacity
+        if len(self.nums) > self.capacity:
+            # remove first value from dlink
+            del_node = self.dummy_head.nxt
+            self.dummy_head.nxt = del_node.nxt
+            # remove from self.nums
+            del self.nums[del_node.key]
+
+    def _remove_node(self, node):
+        # remove specific node
+        # node.prev <-> node <-> node.next
+        # => node.prev <-> node.nxt
+        node_prev, node_nxt = node.prev, node.nxt
+        node_prev.nxt = node_nxt
+        node_nxt.prev = node_prev
+        return node
+
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.nums = {}  # dictionary hold {key: node} with value
+
+        # dummy head/tail
+        self.dummy_head = DLinkedNode(0, 0)
+        self.dummy_tail = DLinkedNode(0, 0)
+        self.dummy_head.next = self.dummy_tail
+        self.dummy_tail.prev = self.dummy_head
+
+    def get(self, key: int) -> int:
+        # print('get key=%s nums=%s' % (key, self.nums))
+        if key not in self.nums:
+            return -1
+        else:
+            # move to end
+            self._move_to_end(self.nums[key])
+            return self.nums[key].val
 
     def put(self, key: int, value: int) -> None:
-        if key in self:
-            self.move_to_end(key)
-        self[key] = value
-        if len(self) > self.capacity:
-            self.popitem(last=False)
+        # print('put key=%s value=%s nums=%s' % (key, value, self.nums))
+        if key in self.nums:
+            # move to end and update value
+            self.nums[key].val = value
+            self._move_to_end(self.nums[key])
+        else:
+            # add a new one
+            node = DLinkedNode(key, value)
+            self.nums[key] = node
+            self._add_node(node)
 
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
 # param_1 = obj.get(key)
 # obj.put(key,value)
-
-"""
-using Dict and DoubleLinkedList
-"""
-
-
-class DLinkedNode(object):
-    def __init__(self, key=0, value=0):
-        self.key = key
-        self.value = value
-        self.prev = None
-        self.next = None
-
-
-class LRUCache(OrderedDict):
-
-    def _add_node(self, node):
-        """
-        always add node right after the dummy head
-        """
-        node.prev, node.next = self.head, self.head.next
-        self.head.next.prev = node
-        self.head.next = node
-        self.cache[node.key] = node
-        self.size += 1
-        if self.size > self.capacity:
-            self._remove_node(self.tail.prev)
-
-    def _remove_node(self, node):
-        node.prev.next, node.next.prev = node.next, node.prev
-        del self.cache[node.key]
-        self.size -= 1
-
-    def _move_to_head(self, node):
-        self._remove_node(node)
-        self._add_node(node)
-
-    def __init__(self, capacity: int):
-        self.capacity = capacity
-        self.cache = {}
-        self.size = 0
-
-        # dummy head and tail
-        self.head, self.tail = DLinkedNode(), DLinkedNode()
-        self.head.next = self.tail
-        self.tail.prev = self.head
-
-    def get(self, key: int) -> int:
-        if key not in self.cache:
-            return -1
-
-        self._move_to_head(self.cache[key])
-
-        return self.cache[key].value
-
-    def put(self, key: int, value: int) -> None:
-        if key in self.cache:
-            self.cache[key].value = value  # update value
-            self._move_to_head(self.cache[key])
-        else:
-            node = DLinkedNode(key=key, value=value)
-            self._add_node(node)
-
 
 def main():
     obj = LRUCache(2)
