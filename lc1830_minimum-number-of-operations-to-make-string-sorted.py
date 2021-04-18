@@ -52,6 +52,7 @@ Constraints:
 s​​​​​​ consists only of lowercase English letters.
 """
 import math
+from functools import lru_cache
 
 """
 The problem is given string understand what is the lexicographical order of this string
@@ -71,6 +72,34 @@ cba
 
 
 class Solution:
+    def makeStringSorted(self, s: str) -> int:
+        MOD = 10 ** 9 + 7
+        n = len(s)
+
+        @lru_cache(None)
+        def f(n):
+            return 1 if n <= 1 else n * f(n - 1) % MOD
+
+        def get_denom(cnt):  # 分母
+            denom = 1
+            for j in range(26):
+                denom *= f(cnt[j])
+
+            return denom
+
+        ans = 0
+        cnt = [0] * 26  # total 26 chars
+        for i in range(n - 1, -1, -1):  # iterate back, so we know the chars and counts after i-th position
+            idx = ord(s[i]) - ord('a')
+            cnt[idx] += 1
+            smaller = sum(cnt[:idx])  # number of elements smaller than current one
+            ans += smaller * f(n - i - 1) * pow(get_denom(cnt), MOD - 2, MOD) % MOD
+            ans %= MOD
+
+        return ans
+
+
+class Solution1:
     def makeStringSorted(self, s: str) -> int:
         MOD = 10 ** 9 + 7
         n = len(s)
