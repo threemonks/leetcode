@@ -10,39 +10,37 @@ class Node:
         self.start = start
         self.end = end
         self.sum = None
-        self.left = None
-        self.right = None
+        self.left = None  # left child
+        self.right = None  # right child
 
 
 class SegmentTree:
     def __init__(self, nums):
-        self.nums = nums
         self.root = self.build_tree(nums, 0, len(nums) - 1)
 
     def build_tree(self, nums, start, end):
-        if start > end:  # nothing to build
+        if start > end:
             return None
         node = Node(start, end)
         if start == end:
             node.sum = nums[start]
-            return node
-        else:  # split and call build_tree on left and right range recursively
+        else:  # recusrively build tree on left and right subtree
             mid = start + (end - start) // 2
             node.left = self.build_tree(nums, start, mid)
             node.right = self.build_tree(nums, mid + 1, end)
             node.sum = node.left.sum + node.right.sum
-            return node
+        return node
 
     def update(self, node, index, val):
-        if node.start == node.end:  # leaf node, update directly
+        if node.start == node.end:
             node.sum = val
             return
+        # recursively try to locate index and update in left or right subtree
         mid = node.start + (node.end - node.start) // 2
         if index <= mid:  # only in left subtree
             self.update(node.left, index, val)
-        else:  # index > mid # only in right subtree
+        else:  # only in right subtree
             self.update(node.right, index, val)
-
         # update sum of this node
         node.sum = node.left.sum + node.right.sum
 
@@ -52,17 +50,12 @@ class SegmentTree:
         if node.start == start and node.end == end:
             return node.sum
         mid = node.start + (node.end - node.start) // 2
-        if end <= mid:  # only in left subtree
+        if end <= mid:  # all in left subtree
             return self.sum_range(node.left, start, end)
-        elif start > mid:  # only in right subtree
+        elif start > mid:  # all in right subtree
             return self.sum_range(node.right, start, end)
-        else:  # query both left and right subtree, then combine the result
+        else:  # spans both left and right subtree, needs to query both
             return self.sum_range(node.left, start, mid) + self.sum_range(node.right, mid + 1, end)
-
-
-"""
-Segment Tree
-"""
 
 
 class NumArray0:
@@ -76,6 +69,11 @@ class NumArray0:
     def sumRange(self, left: int, right: int) -> int:
         return self.segtree.sum_range(self.segtree.root, left, right)
 
+
+# Your NumArray object will be instantiated and called as such:
+# obj = NumArray(nums)
+# obj.update(index,val)
+# param_2 = obj.sumRange(left,right)
 
 """
 Binary Index Tree (BIT)
