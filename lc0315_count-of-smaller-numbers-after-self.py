@@ -131,18 +131,22 @@ class SegmentTree:
         node.val = node.left.val + node.right.val
 
     def range_sum(self, node, start, end):
-        if end < node.start or start > node.end:  # node falls outside [start, end]
-            return 0
-        if start <= node.start and end >= node.end:  # [start, end] covers node.(start,end)
-            return node.val
-        mid = node.start + (node.end - node.start) // 2
-        if end <= mid:
-            return self.range_sum(node.left, start, end)
-        elif start >= mid + 1:
-            return self.range_sum(node.right, start, end)
-        else:  # need sum from both side
-            return self.range_sum(node.left, start, mid) + self.range_sum(node.right, mid + 1, end)
-
+        def range_sum(self, node, start, end):
+            # empty range
+            if start > end:
+                return 0
+            # exact range match
+            if start == node.start and end == node.end:
+                return node.val
+            mid = node.start + (node.end - node.start) // 2
+            # only in left subtree:
+            if end <= mid:
+                return self.range_sum(node.left, start, end)
+            # only in right subtree:
+            elif start >= mid + 1:
+                return self.range_sum(node.right, start, end)
+            else:  # need sum from both side
+                return self.range_sum(node.left, start, mid) + self.range_sum(node.right, mid + 1, end)
 
 class Solution:
     def countSmaller(self, nums: List[int]) -> List[int]:
