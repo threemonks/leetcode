@@ -74,7 +74,6 @@ Segment Tree
 1. as we process the original array from right to left, we store counts of each number in an hash table (could use array if we shift numbers range from -10^4 to 10^4 to 0 to 2*10^4)
 2. we store this counts hashtable in segment tree, as we update the hashtable, we call range sum on segment tree, which will return count of numbers smaller than current number to right (since we only processed numbers on right so far)
 
-TLE
 
 time O(Nlog(N))
 
@@ -110,10 +109,11 @@ class SegmentTree:
         root = Node(start, end, val=0)
         if start == end:
             return root
-        mid = start + (end - start) // 2
-        root.left = self.build_tree(start, mid)
-        root.right = self.build_tree(mid + 1, end)
-        return root
+        else:
+            mid = start + (end - start) // 2
+            root.left = self.build_tree(start, mid)
+            root.right = self.build_tree(mid + 1, end)
+            return root
 
     def update(self, node, idx, val):
         # if out of bound, do nothing
@@ -131,22 +131,154 @@ class SegmentTree:
         node.val = node.left.val + node.right.val
 
     def range_sum(self, node, start, end):
-        def range_sum(self, node, start, end):
-            # empty range
-            if start > end:
-                return 0
-            # exact range match
-            if start == node.start and end == node.end:
-                return node.val
-            mid = node.start + (node.end - node.start) // 2
-            # only in left subtree:
-            if end <= mid:
-                return self.range_sum(node.left, start, end)
-            # only in right subtree:
-            elif start >= mid + 1:
-                return self.range_sum(node.right, start, end)
-            else:  # need sum from both side
-                return self.range_sum(node.left, start, mid) + self.range_sum(node.right, mid + 1, end)
+        # empty range
+        if start > end:
+            return 0
+        # exact range match
+        if start == node.start and end == node.end:
+            return node.val
+        mid = node.start + (node.end - node.start) // 2
+        # only in left subtree:
+        if end <= mid:
+            return self.range_sum(node.left, start, end)
+        # only in right subtree:
+        elif start >= mid + 1:
+            return self.range_sum(node.right, start, end)
+        else:  # need sum from both side
+            return self.range_sum(node.left, start, mid) + self.range_sum(node.right, mid + 1, end)
+
+
+class Solution1:
+    def countSmaller(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        indices = {v: i for i, v in enumerate(sorted(set(nums)))}
+        st = SegmentTree(len(indices))
+
+        ans = []
+        counts = defaultdict(int)  # stores counts of each number occurance from right end till current number
+        for i in range(n - 1, -1, -1):
+            ans.append(st.range_sum(st.root, 0, indices[nums[i]] - 1))
+            counts[nums[i]] += 1
+            st.update(st.root, indices[nums[i]], counts[nums[i]])
+
+        return ans[::-1]
+
+
+"""
+ZKW Segment Tree (more efficient seg tree)
+
+similar as above
+
+Note: ZKW tree tree[0] is not used, node tree[i]'s parent is at tree[i//2], its left and right child is at tree[2*i], tree[2*i+1]
+
+time O(Nlog(N))
+mistakes1:
+1. no need build method since all init to zero, value set by update.
+2. 
+"""
+from collections import defaultdict
+
+
+class ZKWSegmentTree:
+    def __init__(self, n):
+        self.n = n  # index shift, since leaf node index is from n to 2*n-1
+        self.tree = [0] * (2 * n)  # all zero, no need to build
+        # self.tree = self.build_tree([0]*n)
+
+    #     def build_tree(self, nums):
+    #         # insert nums at leaf node
+    #         for i in range(self.n):
+    #             self.tree[self.n+i] = nums[i]
+
+    #         # build tree by calculating parent
+    #         for i in range(self.n):
+    #             self.tree[i] = self.tree[i<<1] + self.tree[(i<<1)|1]
+
+    def update(self, i, val):
+        # set value at position idx
+        i += self.n
+        self.tree[i] = val
+
+        # update parent up to root
+        while i > 1:
+            self.tree[i >> 1] = self.tree[i] + self.tree[i ^ 1]  # i^1 turns 0 to 1, 1 to 1, etc, get left/right child
+            i >>= 1
+
+    def range_sum1(self, left, right):
+        """range is [left, right), i.e., right is exclusive """
+        left, right = left + self.n, right + self.n
+
+        res = 0
+        while left < right:
+            if left & 1:
+                res += self.tree[left]
+                left += 1
+            if right & 1:
+                right -= 1
+                res += self.tree[right]
+
+            left >>= 1
+            right >>= 1
+
+        return res
+
+    def range_sum(self, left, right):
+        """range is [left, right], i.e., both left and right are inclusive """
+        left, right = left + self.n, right + self.n
+
+        res = 0
+        while left <= right:
+            if left & 1:
+                res += self.tree[left]
+                left += 1
+            if right & 1 == 0:
+                res += self.tree[right]
+                right -= 1
+
+            left >>= 1
+            right >>= 1
+
+        return res
+
+
+class Solution:
+    def countSmaller(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        indices = {v: i for i, v in enumerate(sorted(set(nums)))}
+        st = ZKWSegmentTree(len(indices))
+
+        ans = []
+        counts = defaultdict(int)  # stores counts of each number occurance from right end till current number
+        for i in range(n - 1, -1, -1):
+            # ans.append(st.range_sum1(0, indices[nums[i]]))
+            ans.append(st.range_sum(0, indices[nums[i]] - 1))
+            counts[nums[i]] += 1
+            st.update(indices[nums[i]], counts[nums[i]])
+
+        return ans[::-1]
+
+
+"""
+Sort and Binary Search
+
+iterate array from right to left, for visited nums, add into new array, before add, search its insertion location using binary search, the insertion location index is # of numbers smaller to right
+
+"""
+
+
+class Solution3:
+    def countSmaller(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        arr = []
+        ans = [0 for _ in range(n)]
+        for i in range(n - 1, -1, -1):
+            num = nums[i]
+            idx = bisect.bisect_left(arr,
+                                     num)  # when insert num at idx, all val to left < num, and all val to right >= num
+            arr.insert(idx, num)
+            ans[i] = idx
+
+        return ans
 
 class Solution:
     def countSmaller(self, nums: List[int]) -> List[int]:
