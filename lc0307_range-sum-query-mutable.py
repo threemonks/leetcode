@@ -110,6 +110,59 @@ class NumArray0:
         return self.segtree.sum_range(self.segtree.root, left, right)
 
 
+"""
+ZKW Segment tree
+
+always construct complete binary tree, use 2*n size array to hold data, all values are stored at leaf node, parent nodes (0...l-1) holds range query sum/min/max,
+
+"""
+
+
+class ZKWSegmentTree:
+    def __init__(self, nums):
+        self.l = len(nums)
+        self.tree = [0] * self.l + nums  # insert numbers at leaf node
+        # update parent nodes
+        for i in range(self.l - 1, -1, -1):
+            self.tree[i] = self.tree[i << 1] + self.tree[
+                (i << 1) | 1]  # sum two child nodes, (i<<1)|1 gets silbing node
+
+    def update(self, i, val):
+        n = self.l + i  # shift index
+        self.tree[n] = val
+        # update parent
+        while n > 1:
+            self.tree[n >> 1] = self.tree[n] + self.tree[n ^ 1]  # n^1 gets its sibling 0<->1
+            n >>= 1
+
+    def sum_range(self, left, right):
+        left, right = self.l + left, self.l + right  # shift index
+        ans = 0
+        while left <= right:
+            if left & 1:  # 左边偶节点加入和
+                ans += self.tree[left]
+                left += 1
+            left >>= 1
+            if right & 1 == 0:  # 右边奇数节点加入和
+                ans += self.tree[right]
+                right -= 1
+            right >>= 1
+
+        return ans
+
+
+class NumArray1:
+
+    def __init__(self, nums: List[int]):
+        self.st = ZKWSegmentTree(nums)
+
+    def update(self, index: int, val: int) -> None:
+        self.st.update(index, val)
+
+    def sumRange(self, left: int, right: int) -> int:
+        return self.st.sum_range(left, right)
+
+
 # Your NumArray object will be instantiated and called as such:
 # obj = NumArray(nums)
 # obj.update(index,val)
