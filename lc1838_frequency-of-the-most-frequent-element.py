@@ -39,9 +39,9 @@ Output: 1
 
 Constraints:
 
-1 <= nums.length <= 105
-1 <= nums[i] <= 105
-1 <= k <= 105
+1 <= nums.length <= 10^5
+1 <= nums[i] <= 10^5
+1 <= k <= 10^5
 """
 from typing import List
 
@@ -114,7 +114,7 @@ time O(N)
 """
 
 
-class Solution:
+class Solution1:
     def maxFrequency(self, nums: List[int], k: int) -> int:
         n = len(nums)
         nums = sorted(nums)
@@ -130,6 +130,39 @@ class Solution:
                 j += 1
             # exit while when (i-j)*nums[i-1] - (presum[i-1]-presum[j-1]) <= k
             res = max(res, i - j + 1)
+
+        return res
+
+
+"""
+Sliding Window / Two Pointers / 双指针 滑动窗口
+
+用指针i遍历排序后的数组nums，j是滑动窗口的左边界，在滑动窗口nums[j]...nums[i]内，保证 需要不多于k次操作可以将所有nums[j], nums[j+1], ..., nums[i-1]变成nums[i]
+当i右移时，滑动窗口扩大，nums[i]变大，需要的操作次数增加(i-j)*(nums[i]-nums[i-1])次，上述条件可能变得不满足，需要右移j，缩短窗口，需要操作的次数减少nums[i]-nums[j]次，使上述条件重新得到满足
+
+no prefix sum
+
+time O(N)
+"""
+
+
+class Solution:
+    def maxFrequency(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+        nums = sorted(nums)
+        ops = 0
+
+        i, j = 0, 0
+        res = 1
+        while i < n:
+            if i > 0 and nums[i] != nums[i - 1]:
+                ops += (i - j) * (nums[i] - nums[i - 1])
+            while ops > k:
+                ops -= nums[i] - nums[j]
+                j += 1
+            # exit while when (i-j)*nums[i-1] - (presum[i-1]-presum[j-1]) <= k
+            res = max(res, i - j + 1)
+            i += 1
 
         return res
 
