@@ -241,7 +241,7 @@ class ZKWSegmentTree:
         return res
 
 
-class Solution:
+class Solution2:
     def countSmaller(self, nums: List[int]) -> List[int]:
         n = len(nums)
         indices = {v: i for i, v in enumerate(sorted(set(nums)))}
@@ -263,6 +263,7 @@ Sort and Binary Search
 
 iterate array from right to left, for visited nums, add into new array, before add, search its insertion location using binary search, the insertion location index is # of numbers smaller to right
 
+time O(Nlog(N))
 """
 
 
@@ -280,43 +281,65 @@ class Solution3:
 
         return ans
 
+
+"""
+MergeSort and Counting Inversions
+
+It's a count of the number of elements to the right of each element that get moved to the left of that element when merge sorting.
+This is also called count the inversions for each element.
+
+Since during merge sort, when both left and right half are already sorted (recursively), when we are going to merge them, for each number in the left half, we keep track how many numbers in right half has been added into merged array, and add it to the corresponding element in the answer (which we track back to index of element in original array, by merge sorting element value with index in original array)
+
+time: O(Nlog(N)) - merge sort
+
+"""
+
+
 class Solution:
     def countSmaller(self, nums: List[int]) -> List[int]:
         n = len(nums)
-        indices = {v: i for i, v in enumerate(sorted(set(nums)))}
-        st = SegmentTree(len(indices))
+        inversions = [0] * n
 
-        ans = []
-        counts = defaultdict(int)  # stores counts of each number occurance from right end till current number
-        for i in range(n - 1, -1, -1):
-            ans.append(st.range_sum(st.root, 0, indices[nums[i]] - 1))
-            counts[nums[i]] += 1
-            st.update(st.root, indices[nums[i]], counts[nums[i]])
+        def merge_sort(enums):
+            nonlocal inversions
+            # merge sort [(val, idx) ...], and update inversion counts for each val at idx
+            # print('enums=%s' % str(enums))
+            m = len(enums) // 2
+            res = []
+            if m > 0:
+                # split into two half, sort each half recursively
+                left, right = merge_sort(enums[:m]), merge_sort(enums[m:])
 
-        return ans[::-1]
+                # merge the two sorted half, and update result with inversion count
+                i, j = 0, 0
+                while i < len(left) and j < len(right):
+                    # print('left=%s right=%s' % (left, right))
+                    if left[i][0] <= right[j][0]:
+                        # update inversion count for left[i][1], there's already j nums from right array added into sorted result
+                        inversions[left[i][1]] += j
+                        res.append(left[i])
+                        i += 1
+                    else:
+                        res.append(right[j])
+                        j += 1
+                    # print('inversions=%s' % inversions)
 
+                # copy remaining left[i:] or right[j:] into result
+                # and update inversions if left[i:] is not empty
+                if left[i:]:
+                    while i < len(left):
+                        inversions[left[i][1]] += j
+                        res.append(left[i])
+                        i += 1
+                elif right[j:]:
+                    res.extend(right[j:])
+                return res
+            else:  # single element
+                return enums
 
-"""
-Sort and Binary Search
+        merge_sort([(n, i) for i, n in enumerate(nums)])
 
-iterate array from right to left, for visited nums, add into new array, before add, search its insertion location using binary search, the insertion location index is # of numbers smaller to right
-
-"""
-
-
-class Solution2:
-    def countSmaller(self, nums: List[int]) -> List[int]:
-        n = len(nums)
-        arr = []
-        ans = [0 for _ in range(n)]
-        for i in range(n - 1, -1, -1):
-            num = nums[i]
-            idx = bisect.bisect_left(arr,
-                                     num)  # when insert num at idx, all val to left < num, and all val to right >= num
-            arr.insert(idx, num)
-            ans[i] = idx
-
-        return ans
+        return inversions
 
 
 def main():
