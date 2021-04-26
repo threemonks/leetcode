@@ -295,7 +295,7 @@ time: O(Nlog(N)) - merge sort
 """
 
 
-class Solution:
+class Solution4:
     def countSmaller(self, nums: List[int]) -> List[int]:
         n = len(nums)
         inversions = [0] * n
@@ -340,6 +340,78 @@ class Solution:
         merge_sort([(n, i) for i, n in enumerate(nums)])
 
         return inversions
+
+
+"""
+Fenwick Tree
+
+Thoughts:
+ 1. backward
+ 2. simulate
+
+Approaches:
+ 1. insert /bisect.insort - O(N)
+ 2. SortedList O(logN)
+ 3. Fenwick tree
+
+Example:
+    5, 2, 6, 1
+
+visit nums from right to left
+
+initial
+fw  0. 0. 0. 0.
+    1, 2, 3, 4 (this is index inside fenwick tree)
+
+after visting 1:
+fw  1. 0. 0. 0.
+    1, 2, 3, 4
+
+when visiting 6:
+we query fenwick tree for query(4) to get sum(1...3), range sum of count from index 1, to 3
+query(3) = 1
+fw 1. 0. 0. 1.
+   1, 2, 3, 4
+
+later we will compress index since -10^4nums[i]<10^4, and we don't have all numbers
+
+"""
+
+
+class FenwickTree:
+    def __init__(self, n):
+        self.sums = [0] * (n + 1)
+
+    def update(self, i, delta):
+        while i < len(self.sums):
+            self.sums[i] += delta
+            i += self._lowbit(i)
+
+    def query(self, i):
+        s = 0
+        while i > 0:
+            s += self.sums[i]
+            i -= self._lowbit(i)
+        return s
+
+    def _lowbit(self, i):
+        return i & (-i)
+
+
+class Solution:
+    def countSmaller(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        all_nums = list(set(nums))
+        # compress indicies from entire nums[i] range to 0 to len(all_nums)
+        rank = {val: i + 1 for i, val in enumerate(sorted(all_nums))}
+
+        ans = [0] * n
+        fwt = FenwickTree(n)
+        for i in range(n - 1, -1, -1):
+            ans[i] = fwt.query(rank[nums[i]] - 1)  # get counts of all smaller numbers already visited
+            fwt.update(rank[nums[i]], 1)  # update count of rank[nums[i]] in the tree +1
+
+        return ans
 
 
 def main():
