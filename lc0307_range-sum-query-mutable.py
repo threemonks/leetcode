@@ -205,7 +205,7 @@ class BIT:
             idx += idx & -idx  # go to parent
 
 
-class NumArray:
+class NumArray2:
 
     def __init__(self, nums: List[int]):
         self.nums = nums
@@ -219,6 +219,51 @@ class NumArray:
     def sumRange(self, left: int, right: int) -> int:
         return self.bittree.sum(right) - self.bittree.sum(left - 1)
     # Your NumArray object will be instantiated and called as such:
+
+
+"""
+Fenwick Tree / BIT
+
+Fenwick Tree stores sums
+
+"""
+
+
+class FenwickTree:
+    def __init__(self, n):
+        self.sums = [0] * (n + 1)
+
+    def update(self, i, delta):
+        while i < len(self.sums):
+            self.sums[i] += delta
+            i += self._lowbit(i)  # go to right sibling (add lowbit)
+
+    def query(self, i):  # this sums from elements from 1, 2, ..., i
+        s = 0
+        while i > 0:
+            s += self.sums[i]
+            i -= self._lowbit(i)  # go to parent
+        return s
+
+    def _lowbit(self, i):
+        return i & (-i)
+
+
+class NumArray:
+
+    def __init__(self, nums: List[int]):
+        self.nums = nums
+        self.fwt = FenwickTree(len(nums))
+        for i, num in enumerate(nums):
+            self.fwt.update(i + 1, num)
+
+    def update(self, index: int, val: int) -> None:
+        self.fwt.update(index + 1, val - self.nums[index])
+        self.nums[index] = val  # update self.nums as well so we can get delta properly later on
+
+    def sumRange(self, left: int, right: int) -> int:
+        # print('sumrange left=%s right=%s' % (left, right))
+        return self.fwt.query(right + 1) - self.fwt.query(left + 1 - 1)
 
 
 # obj = NumArray(nums)
