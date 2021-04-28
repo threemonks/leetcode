@@ -50,23 +50,23 @@ class Solution:
         if n == 1:
             return nums[0]
         l, r = 0, n-1
-        while l < r-1:
+        while l < r:
             m = l+(r-l)//2
             # print('l=%s r=%s m=%s' % (l, r, m))
-            if m-1>= 0 and nums[m-1] != nums[m] and m+1<n and nums[m] != nums[m+1]:
-                return nums[m]
-            elif m+1<n and nums[m] == nums[m+1]: # then nums[m] == nums[m-1]
+            if nums[m] == nums[m+1]: # then nums[m] == nums[m-1]
                 # if m is odd, 0...m-1 is odd count, so single number is to left
                 if m % 2 == 1:
                     r = m
                 else:
                     l = m+2
-            elif m-1>=0 and nums[m-1] == nums[m]:
+            elif nums[m-1] == nums[m]:
                 # if m-1 is odd, 0 ... m-2 is odd count, so single number is to left
                 if (m-1) % 2 == 1:
                     r = m-1
                 else:
                     l = m+1
+            else: # nums[m-1] != nums[m] and m+1<n and nums[m] != nums[m+1]
+                return nums[m]
 
         return nums[l]
 
