@@ -51,6 +51,9 @@ from typing import List
 """
 the array gives level order traverse
 so we need to build tree from level order traverse, then sum all paths
+We need to construct the tree from input array
+
+For node xy? its left child is (x+1)(y*2-1)? and right child is (x+1)(y*2)?
 """
 
 
