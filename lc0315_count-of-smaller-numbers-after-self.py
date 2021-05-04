@@ -259,9 +259,9 @@ class Solution2:
 
 
 """
-Sort and Binary Search
+Sort Binary Search
 
-iterate array from right to left, for visited nums, add into new array, before add, search its insertion location using binary search, the insertion location index is # of numbers smaller to right
+iterate array from right to left, for visited nums, insert into sorted new array in right position (keep ordered), before add, search its insertion location using binary search, the insertion location index is # of numbers smaller to right
 
 time O(Nlog(N))
 """
@@ -287,7 +287,6 @@ MergeSort and Counting Inversions
 
 It's a count of the number of elements to the right of each element that get moved to the left of that element when merge sorting.
 This is also called count the inversions for each element.
-
 Since during merge sort, when both left and right half are already sorted (recursively), when we are going to merge them, for each number in the left half, we keep track how many numbers in right half has been added into merged array, and add it to the corresponding element in the answer (which we track back to index of element in original array, by merge sorting element value with index in original array)
 
 time: O(Nlog(N)) - merge sort
@@ -314,7 +313,7 @@ class Solution4:
                 i, j = 0, 0
                 while i < len(left) and j < len(right):
                     # print('left=%s right=%s' % (left, right))
-                    if left[i][0] <= right[j][0]:
+                    if left[i][0] <= right[j][0]: # this is inversion since any numbers from right already inserted into res are smaller than left[i[0]
                         # update inversion count for left[i][1], there's already j nums from right array added into sorted result
                         inversions[left[i][1]] += j
                         res.append(left[i])
@@ -352,7 +351,7 @@ Thoughts:
 Approaches:
  1. insert /bisect.insort - O(N)
  2. SortedList O(logN)
- 3. Fenwick tree
+ 3. Fenwick tree - stores count of number occurances, so prefix sum is to find how many numbers have appeared, we then query(rank[nums[i]]-1) to get count of smaller numbers appeared so far.
 
 Example:
     5, 2, 6, 1
@@ -373,7 +372,7 @@ query(3) = 1
 fw 1. 0. 0. 1.
    1, 2, 3, 4
 
-later we will compress index since -10^4nums[i]<10^4, and we don't have all numbers
+later we will compress index since -10^4<nums[i]<10^4, and we don't have all numbers
 
 """
 
@@ -383,11 +382,13 @@ class FenwickTree:
         self.sums = [0] * (n + 1)
 
     def update(self, i, delta):
+        i += 1
         while i < len(self.sums):
             self.sums[i] += delta
             i += self._lowbit(i)
 
-    def query(self, i):
+    def query(self, i):  # prefix sum query
+        i += 1
         s = 0
         while i > 0:
             s += self.sums[i]
@@ -400,17 +401,17 @@ class FenwickTree:
 
 class Solution:
     def countSmaller(self, nums: List[int]) -> List[int]:
-        n = len(nums)
+        # we want to store count of each number when inserting them one by one from right to left
         all_nums = list(set(nums))
-        # compress indicies from entire nums[i] range to 0 to len(all_nums)
-        rank = {val: i + 1 for i, val in enumerate(sorted(all_nums))}
+        rank = {v: i for i, v in enumerate(
+            sorted(all_nums))}  # number to its index in sorted(all_nums), or index we will store in fenwick tree
 
+        n = len(nums)
+        fw_tree = FenwickTree(len(all_nums))
         ans = [0] * n
-        fwt = FenwickTree(n)
         for i in range(n - 1, -1, -1):
-            ans[i] = fwt.query(rank[nums[i]] - 1)  # get counts of all smaller numbers already visited
-            fwt.update(rank[nums[i]], 1)  # update count of rank[nums[i]] in the tree +1
-
+            ans[i] = fw_tree.query(rank[nums[i]] - 1)  # all smaller number counts inserted so far, so -1
+            fw_tree.update(rank[nums[i]], 1)  # one more nums[i], increase count we stored in fw tree
         return ans
 
 
