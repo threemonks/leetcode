@@ -48,6 +48,8 @@ The timestamps for all TimeMap.set operations are strictly increasing.
 1 <= timestamp <= 10^7
 TimeMap.set and TimeMap.get functions will be called a total of 120000 times (combined) per test case.
 """
+from collections import defaultdict
+
 """
 Design+Binary Search
 
@@ -55,7 +57,6 @@ Basic key value stores in dictionary. For each key, store {timestamp, value} as 
 when we get a certain timestamp, we do binary search to return value on that timestamp if exists, else return immediate left one
 
 """
-from collections import defaultdict
 class TimeMap:
 
     def __init__(self):
@@ -72,24 +73,24 @@ class TimeMap:
         if key not in self.data:
             return ""
         vals = self.data[key]
+        # if before first timestamp return "", or after last one, return last one
         if vals[-1][0] <= timestamp:
             return vals[-1][1]
         elif timestamp < vals[0][0]:
             return ""
         # print(vals)
         lo, hi = 0, len(vals)
-        # binary search template
         while lo < hi:
             mid = (lo + hi) // 2
             # print('lo=%s hi=%s mid=%s' % (lo, hi, mid))
-            if vals[mid][0] < timestamp:
+            if vals[mid][0] == timestamp:
+                return vals[mid][1]
+            elif vals[mid][0] < timestamp: # we increase lo to mid+1 when target found, so after exit while, lo is larger than matching value
                 lo = mid + 1
             else:
                 hi = mid
-        if vals[lo][0] == timestamp:
-            return vals[lo][1]
-        else: # if not found, return next on left, or "" if nothing on left
-            return vals[lo-1][1] if lo-1>=0 else ""
+        # if not found, return next on left of lo, or "" if nothing on left
+        return vals[lo-1][1] if lo-1>=0 else ""
 
 # Your TimeMap object will be instantiated and called as such:
 # obj = TimeMap()
