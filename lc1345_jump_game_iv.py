@@ -53,54 +53,48 @@ from typing import List
 """
 BFS
 
-start from starting element, explore all directly accessible elements (-1, +1, j for arr[j]==arr[i]), put all valid next element into minheap queue, with number of steps to get to this element as weight, mark and process nodes with smaller weight/cost first, recursively process all nodes in the queue until queue is empty or end elements is reached.
+from index i can jump to
+1. i+1
+2. i-1
+3. arr[i] == arr[j] where i != j => all index with same value would be adjacent to each other
 
-Note: to speed up search, we eliminate a value from peers dict once used as all other edges come to this group would try to re-add these same sets of nodes into queue, and skipping this can improve performance.
+in BFS, once a peer group of nodes are added into queue, we clear the set since later it might be added again and again, and we want to avoid this.
 
 time O(N)
+
+mistakes:
+1. have to clear each peer set once all its nodes have been added to BFS queue, as they will be re-added later on, thus causing each of its node being added m-1 times (for a set of size m members)
 """
+from collections import defaultdict, deque
 
 
 class Solution:
     def minJumps(self, arr: List[int]) -> int:
-        if not arr: return 0
-
         n = len(arr)
-        peers = collections.defaultdict(list)
-
-        if len(peers.keys()) == 1:  # one unique number only
+        if n == 1:  # single element, no need to jump
+            return 0
+        if len(set(arr)) == 1 or arr[0] == arr[n - 1]:  # all values being same, just one step
             return 1
+        peers = defaultdict(set)
 
         for i, a in enumerate(arr):
-            peers[a].append(i)
+            peers[a].add(i)
 
-        q = [(0,
-              0)]  # store all active index to consider its next step (-1, +1, and all same value peers), with steps to get to this node
-        heapq.heapify(q)
-        visited = set()
-        visited.add(0)
+        q = deque([(0, 0)])
+        visited = set([0])
 
         while q:
-            steps, idx = heapq.heappop(q)
-            # print('idx=%s steps=%s' % (idx, steps))
-            if idx == n - 1:
-                return steps
-            neighbors = [i for i in peers[arr[idx]] if i != idx]
-
-            # clear the list to prevent redudant search on this same value
-            peers[arr[idx]].clear()
-
-            neighbors = neighbors[::-1]  # reverse so that index towards end is checked first
-            if idx - 1 not in neighbors:
-                neighbors.append(idx - 1)
-            if idx + 1 not in neighbors:
-                neighbors.append(idx + 1)
-            # print('neighbors=%s' % neighbors)
-            for nei in neighbors:
-                if nei < 0 or nei >= n or nei in visited:
+            cur, step = q.popleft()
+            if cur == n - 1:
+                return step
+            neighbors = [v for v in set([cur - 1, cur + 1] + list(peers[arr[cur]])) if v != cur and 0 < v < n]
+            peers[arr[cur]] = {}  # clear this peer set since all its member nodes are now already visited
+            for nxt in sorted(neighbors)[::-1]:  # sort neighbors and try largest index first
+                if nxt < 0 or nxt >= n:
                     continue
-                heapq.heappush(q, (steps + 1, nei))
-                visited.add(nei)
+                if nxt not in visited:
+                    q.append((nxt, step + 1))
+                    visited.add(nxt)
 
         return -1
 
