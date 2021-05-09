@@ -93,42 +93,43 @@ class Solution2:
 """
 Stack -- index of monotonic increasing bar height
 
-Use a stack to record index of monotonic increasing bars, if a new bar height is higher than stack top index bar height, push it in, 
-if the new bar is lower, we pop out the stack top, and the just popped out bar height would be highest bar inside the rectangle we want to consider max area for, and the new bar would be the right boundary of the rectangle, the stack top (after pop) would be the left boundary of the rectangle, update max area with this one if this one is larger. We keep pop out stack top until the stack top index's bar height is less than the new bar, then we push the new bar index into stack
+1. Use a stack to record index of monotonic increasing bars.
+2. If a new bar height is higher than stack top index bar height, push it into stack.
+3. If the new bar is lower, we pop out the stack top, and the just popped out bar height would be height of the rectangle we want to consider max area for, and the new bar (R) would be the right boundary of the rectangle (excluding this bar), the stack top (after pop) (L) would be the left boundary of the rectangle (again excluding), so the width of the bar of height stack[-1] would be R-L-1, area would be heights[stack[-1]]*(R-L-1) update max area with this one if this one is larger.
+4. We keep pop out stack top until the stack top index's bar height is less than the new bar, then we push the new bar index into stack
 
 Note:
-    the rectangle in consideration has width i-stack[-1]-1
+    the rectangle in consideration is of height heights[stack[-1]], its left boundary (not including) is the one before it in stack, and the right boundary (exclusive) is the currently new bar (lower than) stack[-1]
+    
+mistakes:
+1. the rectangle we try to form uses current element as it right boundary (exclusive), heights[stack[-1]] is the height, and stack[-2] is the left boundary (exclusive)
+
+links:https://leetcode.com/problems/largest-rectangle-in-histogram/solution/
+reply by TravellingSalesman
+
 """
-
-
 class Solution:
     def largestRectangleArea(self, heights: List[int]) -> int:
-        heights = heights
-        stack = []
-        max_area = 0
-        for i in range(len(heights)):
-            # print('i=%s stack=%s' % (i, stack))
-            while stack and heights[stack[-1]] > heights[i]:
-                h = heights[stack[-1]]
-                w = i - (stack[-2] if len(stack) >= 2 else -1) - 1
-                max_area = max(max_area,
-                               w * h)  # new rectangle with height h, right boundary i (exclusive) and left boundary stack[-1] (exclusive)
-                # print('h=%s w=%s w*h=%s stack=%s' % (h, w, w*h, stack))
-                stack.pop()
+        n = len(heights)
 
-            # now heights[i] > heights[stack[-1]]
+        ans = 0
+        stack = []
+        for i in range(n):
+            while stack and heights[i] <= heights[stack[-1]]: # if new bar lower than stack top, it becomes the exclusive right boundary of the rectangle formed with height being stack[-1], and left boundary (exclusive) is the one before stack[-1], or -1 if stack empty
+                height = heights[stack[-1]]
+                width = i - (stack[-2] if len(stack)>=2 else -1) + 1 - 2
+                ans = max(ans, height*width)
+                stack.pop()
             stack.append(i)
 
-        # print(stack)
-        # remaining index on stack, these bars have no shorter bar to right
+        # process any pending item in stack, no right boundary anymore
         while stack:
-            h = heights[stack.pop()]
-            w = len(heights) - (stack[-1] if stack else -1) - 1
-            max_area = max(max_area,
-                           w * h)  # new rectangle with height h, right boundary i (exclusive) and left boundary stack[-1] (exclusive)
+            height = heights[stack[-1]]
+            width = n - (stack[-2] if len(stack)>=2 else -1) + 1 -2
+            ans = max(ans, height*width)
+            stack.pop()
 
-        # print(stack)
-        return max_area
+        return ans
 
 
 """
