@@ -35,6 +35,7 @@ Constraints:
 
 """
 import collections
+import math
 from typing import List
 
 """
@@ -61,7 +62,7 @@ space O(N)
 """
 
 
-class Solution:
+class Solution0:
     def maxResult(self, nums: List[int], k: int) -> int:
         n = len(nums)
         dp = [0] * n
@@ -115,10 +116,91 @@ class Solution1:
 
 
 """
-dp with heap to get max (store -dp in heap as heap is min heap, and we need to get max dp value at top)
-    dp[i] = max(dp[i-k], dp[i-k+1], ..., dp[i-1])
-time O(NK)
-space O(N)
+DP
+
+dp[i] := max score jump to index i, all init to -math.inf
+base case:
+dp[0] = nums[0]
+
+then jump to index i+1
+dp[i+1] = max (dp[i],
+               dp[i-1],
+               ...
+               dp[i+1-k]
+) + nums[i+1]
+
+time O(NK) 10^10 TLE
+
+mistakes:
+1. dp[i] init to -math.inf
+"""
+
+
+class Solution0:
+    def maxResult(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+
+        dp = [-math.inf] * n
+        dp[0] = nums[0]
+        # print('dp[0]=%s' % dp[0])
+
+        ans = -math.inf
+        for i in range(1, n):
+            for j in range(max(0, i - k), i):
+                dp[i] = max(dp[i], dp[j] + nums[i])
+                # print('i=%s j=%s dp[%s]=%s' % (i, j, i, dp[i]))
+
+        # print(dp)
+        return dp[n - 1]
+
+
+"""
+DP + Sliding window max (Mono Deque)
+
+From above approach, we realized that dp[i] is determined by the max of dp[j] for j from i-k to i-1, so we can try to use a sliding window max monotonic decreasing deque to store dp value of window i-k to i-1, and we keep it monotonic decreasing, so it is O(1) time to get the max within window i-k to i-1.
+
+steps:
+1. for new element i, drop items from left of window if out of window size k, e.g., if dq[0] < i-k
+2. dp[i] = dp[q[0]] + nums[i]
+3. add dp[i] into dq while keep monotonic decreasing, i.e., any item in end of dq that is smaller than dp[i] should be popped before appending dp[i]
+
+time O(Nlog(K))
+"""
+from collections import deque
+
+
+class Solution:
+    def maxResult(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+
+        dp = [-math.inf] * n
+        dp[0] = nums[0]
+        # print('dp[0]=%s' % dp[0])
+        dq = deque([0])
+        for i in range(1, n):
+            # drop items from left if sliding window size > k:
+            while dq and dq[0] < i - k:
+                dq.popleft()
+
+            # update dp[i]
+            dp[i] = dp[dq[0]] + nums[i]
+
+            # append dp[i] into dq, while maintain monotonic decreasing, i.e., pop out any value from end of dq if dp[dq[-1]] < dp[i]
+            while dq and dp[dq[-1]] < dp[i]:
+                dq.pop()
+            dq.append(i)
+
+        return dp[n - 1]
+
+
+"""
+DP + Heap
+
+From above approach, we realized that dp[i] is determined by the max of dp[j] for j from i-k to i-1, so we can try to store dp[i-k] to dp[i-1] into heap with its index, thus it takes O(log(K)) time to get max(dp[i-k...i-1]) to construct dp[i].
+
+Note: we don't need to remove an item from heapq until we popped it out, then we check if it is outside i-k...i-1 window, if it does, drop it, and pop out another one from heapq.
+
+time O(Nlog(N))
 """
 import heapq
 
@@ -126,21 +208,26 @@ import heapq
 class Solution2:
     def maxResult(self, nums: List[int], k: int) -> int:
         n = len(nums)
-        dp = [0] * n
+
+        dp = [-math.inf] * n
         dp[0] = nums[0]
-        q = [(-dp[0], 0)]
-        heapq.heapify(q)
+        hq = [(-dp[0],
+               0)]  # store dp value, and its index, we need to pop biggest dp value, so store -dp value, also need to keep track of index so we can expire it after we popped out and checked, if it is out of windows size k
+        heapq.heapify(hq)
 
         for i in range(1, n):
-            while q and q[0][1] + k < i:  # q[0] out of sliding window
-                heapq.heappop(q)
-            # print('after remove out of window q=%s' % (q))
-            # -q[0][0] is max(dp[i-k], dp[i-k+1], ..., dp[i-1])
-            dp[i] = -q[0][0] + nums[i]
-            heapq.heappush(q, (-dp[i], i))
-            # print('i=%s dp=%s q=%s' % (i, dp, q))
+            # drop items from left if sliding window size > k:
+            while hq and hq[0][1] < i - k:
+                heapq.heappop(hq)
+
+            # update dp[i]
+            dp[i] = -hq[0][0] + nums[i]
+
+            # add new dp[i] into heapq
+            heapq.heappush(hq, (-dp[i], i))
 
         return dp[n - 1]
+
 
 def main():
     sol = Solution()
