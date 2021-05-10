@@ -56,8 +56,9 @@ class Solution0:
 
 
 """
+Monotonic Stack
 Using stack to keep track of bars that are bounded by higher bars, therefore may store water
- * use stack to store indices of bars
+ * use stack to store indices of bars of decreasing order, because for each bar, we need to know the first higher bar to its left to find out its water holding level
  * iterate the array:
    i) while stack is not empty and height[i] > height[stack[-1]]
       - It means that stack element can be popped, pop it as valley
@@ -68,31 +69,28 @@ Using stack to keep track of bars that are bounded by higher bars, therefore may
     ii) push current index i to top of stack
     iii) increase current index i
 
+对于一个元素作为湖底可以形成的面积，取决于湖底深度，左右两边的高度，所以需要找到左边右边最远的高于湖底的bar，从左边看需要用递减栈？
 """
 
-
-class Solution1:
+class Solution:
     def trap(self, height: List[int]) -> int:
-        if not height: return 0
-
         n = len(height)
+        presum = [0] * n
+        cursum = 0
+        for i in range(n):
+            cursum += height[i]
+            presum[i] = cursum
 
         ans = 0
-        stack = []
-
-        i = 0
-        while i < n:
-            while stack and height[i] >= height[stack[-1]]:
-                valley = stack.pop()
-                if not stack:
-                    break
-                distance = i - stack[-1] - 1
-                bounded_height = min(height[i], height[stack[-1]]) - height[valley]
-                print('i=%s valley=%s stack[-1]=%s bounded_height=%s, water=%s stack=%s' % (
-                i, valley, stack[-1], bounded_height, distance * bounded_height, str(stack)))
-                ans += distance * bounded_height
-            stack.append(i)
-            i += 1
+        st = []
+        for i in range(n):
+            while st and height[i] > height[st[-1]]:
+                bounded_height = min(height[i] - height[st[-1]],
+                                     (height[st[-2]] - height[st[-1]]) if len(st) >= 2 else 0)
+                width = (i - (st[-2] if len(st) >= 2 else -1) - 1)
+                ans += bounded_height * width
+                st.pop()
+            st.append(i)
 
         return ans
 
@@ -108,7 +106,7 @@ so we can calculate left_max and right_max and only keep the latest value, and u
 """
 
 
-class Solution:
+class Solution2:
     def trap(self, height: List[int]) -> int:
         if not height: return 0
 
