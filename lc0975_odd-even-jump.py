@@ -66,11 +66,11 @@ Constraints:
 from typing import List
 
 """
-DP + MonoStack
+DP + MonoStack on index of original array but process after sorted
 
 observation:
 last one always true
-We have to jump higher (odd step) and lower (even) alternately to the end.
+We have to jump equal or higher (odd step) and equal or lower (even) alternately to the end.
 
 so if we use two array, higher, lower to represent if we can jump same or higher or same or lower to certain index i, we can work backwards, from right to left
 
@@ -81,10 +81,13 @@ the transition would be:
 higher[i] = lower[j] where j is maximum value to right of i s.t. nums[j]<=nums[i]
 lower[i] = higher[j] where j is minimum value to right of i s.t. nums[j]>=nums[i]
 
-Note that we can pre-process arr using monotonic increasing stack to find minimum value larger than nums[i] to the right of i
+Note that we can pre-process arr using monotonic increasing stack to find minimum value larger than or equal to nums[i] to the right of i
 
-thoughts:
-maybe we can use DP with SortedDict to store the smallest larger number (or largest smaller number) on right
+** How is this monostack different from other monostack that we usually store index, but compare value:
+
+In one word, normal mono stack you used before can find the first bigger/smaller elements on the right and left(depending on increasing or decreasing mono stack you use). But this problem is a little bit different here. It doesn't ask us to find the first bigger/smaller one, instead the minimum of bigger one/ maximum of smaller one. So the normal approach of mono stack becomes invalid here. Tricks happen here. We sorted the array first and manipulate it's index after sorted. If we use mono stack on this index array(after sorted). Use decreasing mono stack here can help us find the first bigger index. However, the first bigger index is on the right and it's actually the minimum of bigger one. Since it's sorted. The more you go right, the bigger you get. so the first one you encountered that satisfied index bigger(means j>i on the right) is the smallest of bigger ones.
+Same idea on the even jump, we sorted array first in the descending order and then use increasing mono stack to find the first smaller index(which is the maximum value of smaller ones).
+
 
 time O(Nlog(N)) - sort
 """
