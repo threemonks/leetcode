@@ -108,11 +108,11 @@ class Solution0:
 
         # find index that an even jump from i can land on
         # i.e., largest number that's smaller than nums[i] on right, if multiple, take smallest index
-        next_min_le = [0] * n
+        next_max_le = [0] * n
         st = []
         for a, i in sorted([-a, i] for i, a in enumerate(nums)):
             while st and st[-1] < i:
-                next_min_le[st.pop()] = i
+                next_max_le[st.pop()] = i
             st.append(i)
 
         # now try to fill odd and even from right to left
@@ -121,7 +121,7 @@ class Solution0:
         odd[-1], even[-1] = 1, 1  # last index is always true (No need to jump)
         for i in range(n - 2, -1, -1):
             odd[i] = even[next_min_ge[i]]
-            even[i] = odd[next_min_le[i]]
+            even[i] = odd[next_max_le[i]]
 
         # we always start with odd jump (1st)
         # so odd contains the valid number of jumps to reach end
