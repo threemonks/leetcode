@@ -31,35 +31,41 @@ import collections
 from typing import List
 
 """
-SCC (Strongly Connected Components)
-use Tarjan's algorithm / DFS to find bridge
+Tarjan algorithm
+
+DFS traverse, for each node, keep track of its first visit timestamp curtime, as well as lowest timestamp it can reach (will be updated via its neighbor after DFS return)
+
+if at any point, we found curtime < lowest[nei], means curtime of this node is smaller than lowest timestamp its neighbor can reach, that means from cur to neighbor is a bridge (since its neighbor cannot reach back to cur)
+
+Note: Tarjan algorithm for bridge is defined for directed graph, but we can use it on undirected graph by considering each undirected edge as two direction edge.
+
 """
-
-
 class Solution:
     def criticalConnections(self, n: int, connections: List[List[int]]) -> List[List[int]]:
-        adj_list = collections.defaultdict(list)
+        g = collections.defaultdict(list)
 
-        for i, conn in enumerate(connections):
-            adj_list[conn[0]].append(conn[1])
-            adj_list[conn[1]].append(conn[0])
+        for c in connections:
+            g[c[0]].append(c[1])
+            g[c[1]].append(c[0])
 
         visited = set()
         lowest = dict()
         res = []
 
-        def dfs(parent, cur, curtime, visited):
+        def dfs(cur, parent, curtime):
+            nonlocal res, visited
             visited.add(cur)
             lowest[cur] = curtime
-            for nei in adj_list[cur]:
-                if nei == parent: continue  # dont go back to parent
+            for nei in g[cur]:
+                if nei == parent: # don't go back to parent
+                    continue
                 if nei not in visited:
-                    dfs(cur, nei, curtime + 1, visited)
+                    dfs(nei, cur, curtime+1)
                 lowest[cur] = min(lowest[cur], lowest[nei])
                 if curtime < lowest[nei]:
-                    res.append((cur, nei))
+                    res.append([cur, nei])
 
-        dfs(-1, 0, 0, visited)
+        dfs(0, -1, 0)
 
         return res
 
