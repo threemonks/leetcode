@@ -136,6 +136,29 @@ class Solution1:
         return costs[dst] if costs[dst] < math.inf else -1
 
 
+"""
+Bellman-Ford
+However, Dijkstra's algorithm uses a priority queue to greedily select the closest vertex that has not yet been processed, and performs this relaxation process on all of its outgoing edges; by contrast, the Bellman-Ford algorithm simply relaxes all the edges and does this {|V|-1}∣V∣−1 times, where |V|∣V∣ is the number of vertices in the graph.
+
+time O(E*K)
+"""
+
+
+class Solution:
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, K: int) -> int:
+        dist = [math.inf] * n
+        dist[src] = 0
+        for _ in range(K + 1):
+            dist2 = dist[:]
+            for u, v, w in flights:
+                if dist2[v] > dist[u] + w:
+                    dist2[v] = dist[u] + w
+            dist = dist2[:]
+        if dist[dst] < math.inf:
+            return dist[dst]
+        else:
+            return -1
+
 def main():
     sol = Solution()
     assert sol.findCheapestPrice(n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, K = 1) == 200, 'fails'
