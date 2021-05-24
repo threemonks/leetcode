@@ -34,68 +34,76 @@ Constraints:
 1 <= nums.length <= 3 * 10^4
 0 <= nums[i] <= 10^5
 """
+from functools import lru_cache
 from typing import List
 
 """
 Greedy
 
-Each element in the array represents your maximum jump length at that position.
-=> at i-th position, we can jump at most to i+nums[i] position
+farthest is max index we can reach globally. We can jump to i+nums[i] if we can reach index i.
 
-So we just need to try jump the most at each location, and keep track of a global furthest position, whenever this global furthest position is at or beyond last index, return True
-
-time O(n)
+mistakes:
+1. we can jump from i only if we can get to i
 """
 
 
 class Solution0:
     def canJump(self, nums: List[int]) -> bool:
         n = len(nums)
-
         farthest = 0
         for i in range(n):
-            if farthest >= i:  # if we can get to i, then from i we can go to i+nums[i]
+            if farthest >= i:
                 farthest = max(farthest, i + nums[i])
-            if farthest >= n - 1:  # if can get to n-1 in any steps, we reached end
+            if farthest >= n - 1:
                 return True
 
-        return False
-
+        return farthest >= n - 1
 
 """
 DP
 
-dp[i] := can reach end from i
+dp[i] := we can reach i
 
-dp[i] = dp[0] == True and  (0+nums[0] > i) # can reach i from 0
- or     dp[1] == True and (1+nums[1]>=i) # can reach i from 1
- ...
-        dp[i-1] == True and i-1+nums[i-1]>=i
+transition:
+    dp[i] = true if any dp[j]+nums[j] >=i for j = 0, ..., i-1
 
-try to jump some steps further to make it pass?
+"""
 
-TLE
 
-time O(N^2)
+class Solution1:
+    def canJump(self, nums: List[int]) -> bool:
+        n = len(nums)
+
+        @lru_cache(None)
+        def dp(i):
+            if i == 0:
+                return True
+            for j in range(i - 1, -1, -1):
+                if dp(j) and j + nums[j] >= i:
+                    return True
+
+            return False
+
+        return dp(n - 1)
+
+
+"""
+Greedy
+
+from right to left, find a good index can get us to i
+
 """
 
 
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
         n = len(nums)
+        lastpos = n - 1  # last pos that can reach end
+        for i in range(n - 2, -1, -1):
+            if i + nums[i] >= lastpos:  # can we move from i to lastpos (the previous good position that can reach end)
+                lastpos = i
 
-        dp = [False] * (n)
-        dp[0] = nums[0] >= 0
-        i = 0
-        while i < n:
-            for j in range(i):
-                if dp[j] and j + nums[j] >= i:
-                    dp[i] = True
-                    i = j + nums[j] - 1  # cancel the +1 at bottom
-                    break
-            i += 1
-
-        return dp[n - 1]
+        return lastpos == 0
 
 
 def main():
