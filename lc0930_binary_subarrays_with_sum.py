@@ -110,8 +110,7 @@ each time when right index j moves right once, if nums[j] + sums  < S, then we g
 
 """
 
-
-class Solution:
+class Solution3:
     def numSubarraysWithSum(self, A: List[int], S: int) -> int:
 
         def sum_less_than_k(k):
@@ -133,6 +132,33 @@ class Solution:
             return res
 
         return sum_less_than_k(S + 1) - sum_less_than_k(S)
+
+
+"""
+Hash Table / prefix sum
+
+to find window of size goal, we can use prefix sum, so that window of size goal = presum[i]-presum[j] == goal
+
+for each presum[i], see how many times we have seen presum[i]-goal, we use hash table to keep track of count of reach presum occurances
+
+"""
+
+
+class Solution:
+    def numSubarraysWithSum(self, nums: List[int], goal: int) -> int:
+        n = len(nums)
+        counts = collections.defaultdict(int)
+        presum = 0
+        ans = 0
+        for i in range(n):
+            presum = presum + nums[i]
+            if presum == goal:  # window starting at index 0, or we can init counts[0]=1 to include window starts at index 0
+                ans += 1
+            ans += counts[presum - goal]  # window starts at presum value presum-goal
+            counts[presum] += 1
+
+        return ans
+
 
 
 def main():
