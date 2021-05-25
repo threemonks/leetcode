@@ -43,7 +43,7 @@ from functools import lru_cache
 """
 DP DFS with memoization
 
-dp/dfs recursive call to check each index, and tracking all open paren (count or string) along the path
+dp/dfs recursive call to check each index, and tracking all open paren count (not mateched yet) along the path
 
 ( => stack
 ) => pop one from stack
@@ -51,32 +51,30 @@ dp/dfs recursive call to check each index, and tracking all open paren (count or
 
 time O(3^N)
 """
-
-
-class Solution0:
+class Solution:
     def checkValidString(self, s: str) -> bool:
         n = len(s)
 
         @lru_cache(None)
-        def helper(i, stack):
+        def helper(i, c):
+            # current index being checked, count of open parenthesis not matched yet
             if i == n:
-                return not stack
+                return not c
             if s[i] == '(':
-                return helper(i + 1, stack + '(')
+                return helper(i+1, c+1)
             elif s[i] == ')':
-                if stack:
-                    return helper(i + 1, stack[:-1])
+                if c:
+                    return helper(i+1, c-1)
                 else:
                     return False
-            else:  # *
+            else: # *
                 # treat it as (, '', or )
-                if helper(i + 1, stack + '(') or helper(i + 1, stack) or helper(i + 1, stack[:-1]):
+                if helper(i+1, c+1) or helper(i+1, c) or (c>0 and helper(i+1, c-1)):
                     return True
                 else:
                     return False
 
-        return helper(0, '')
-
+        return helper(0, 0)
 
 """
 Greedy counting open parenthesis, since * have three possibilities, so it could lead to three possible open parenthesis, we use minopen and maxopen to keep track of possible open parenthesis.
@@ -89,9 +87,7 @@ Note that the minopen and maxopen specifies the range of possible open parenthei
 
 Q: we are just counting balances, could we be balancing opening paren to closing paren that happens before it? No because we ensure maxopen >=0 all the time, and we reset minopen if it falls below zero (would be borrowing open paren from future)
 """
-
-
-class Solution:
+class Solution1:
     def checkValidString(self, s: str) -> bool:
         n = len(s)
         minopen, maxopen = 0, 0
@@ -102,13 +98,13 @@ class Solution:
             elif c == ')':
                 minopen -= 1
                 maxopen -= 1
-                if maxopen < 0:  # too many closing paren before enough open paren
+                if maxopen < 0: # too many closing paren before enough open paren
                     return False
-            else:  # *
-                minopen -= 1  # treat as )
-                maxopen += 1  # treat as (
+            else: # *
+                minopen -= 1 # treat as )
+                maxopen += 1 # treat as (
 
-            if minopen < 0:  # reset minopen if minopen < 0, so that we don't match open paren to closing paren to its left.
+            if minopen < 0: # reset minopen if minopen < 0, so that we don't match open paren to closing paren to its left.
                 minopen = 0
 
         return minopen <= 0
