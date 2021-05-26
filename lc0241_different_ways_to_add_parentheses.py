@@ -22,7 +22,7 @@ Explanation:
 (2*((3-4)*5)) = -10
 (((2*3)-4)*5) = 10
 """
-
+import operator
 from typing import List
 from functools import lru_cache
 
@@ -33,7 +33,7 @@ base case is pure digits (number)
 
 time complexity O(P(N)) - Catalan number P(N) = sum(p1*p_n-1+p2*p_n-2+ ... + p_n-1*p1)
 """
-class Solution:
+class Solution0:
     @lru_cache(None)
     def diffWaysToCompute(self, input: str) -> List[int]:
         if input.isdigit():
@@ -50,6 +50,42 @@ class Solution:
                 elif c == '*':
                     result.extend([l*r for l in left for r in right])
         return result
+
+
+"""
+Divide & Conquer - by operator
+
+divide and conquer, always split at operator, recursively solve left and right, get all possible values from left, and all possible values from right, pair each possible value in left with each possible value in right, to get all possible final values
+
+base case is pure digit
+
+divide and conquer
+
+time O(P(N)) where P(N) is Catalan number P(N) = C(2n, n) - C(2n, n+1)
+
+"""
+
+class Solution:
+    def diffWaysToCompute(self, expression: str) -> List[int]:
+        ops = {'+': operator.add, '-': operator.sub, '*': operator.mul}
+
+        def helper(s):
+            n = len(s)
+            if s.isdigit():
+                return [int(s)]
+            ans = []
+            for i in range(1, n - 1):
+                c = s[i]
+                if c in '+-*':
+                    left_result = helper(s[:i])
+                    right_result = helper(s[i + 1:])
+                    for l in left_result:
+                        for r in right_result:
+                            ans.append(ops[c](l, r))
+
+            return ans
+
+        return helper(expression)
 
 
 def main():
