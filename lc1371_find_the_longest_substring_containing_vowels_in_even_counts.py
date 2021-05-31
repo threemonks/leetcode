@@ -69,6 +69,46 @@ class Solution:
         return res
 
 
+"""
+Hash Table
+
+Use a boolean vector (1-d array) of length 5 (len('aeiou')) to store whether we see even number times of this vowel or not, keep an array of this vector as we traverse the string. If see the same vector again later, we found a window that gives even counts of all vowels. Keep the max of such window size as we iterate.
+
+
+time complexity: O(N*5)=O(N)
+
+follow up: can use bitmask to represent evenness of all five vowels at each index using one number, this will improve speed (though not time complexity)
+"""
+
+
+class Solution:
+    def findTheLongestSubstring(self, s: str) -> int:
+        n = len(s)
+        prefix_evens = []
+        evens = [True for _ in range(5)]  # do we see even counts of given vowel so far
+        vowels = {'a': 0, 'e': 1, 'i': 2, 'o': 3, 'u': 4}  # vowel index in counts
+
+        # first index of each vector, i.e., the best left boundary that could give us longest valid substring for this vector
+        seen = {(True, True, True, True, True): -1}  # all True is sentinel value
+
+        ans = 0
+        for i, c in enumerate(s):
+            if c in vowels:
+                evens[vowels[c]] = not evens[vowels[c]]
+            # now store this vector into array prefix_evens
+            evens_tuple = tuple(evens)
+            prefix_evens.append(evens_tuple)
+            # print('i=%s tuple=%s prev index=%s' % (i, evens_tuple, seen.get(evens_tuple)))
+            if evens_tuple not in seen:
+                # mark first index of this evens vector
+                seen[evens_tuple] = i
+            else:
+                # one valid window with all vowels have even counts, update ans if possible
+                ans = max(ans, i - seen[evens_tuple])
+
+        return ans
+
+
 def main():
     sol = Solution()
     assert sol.findTheLongestSubstring("eleetminicoworoep") == 13, 'fails'
