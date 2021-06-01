@@ -57,8 +57,6 @@ for the result string, from right to left, drop any extra opening parenthesis
 
 time O(N)
 """
-
-
 class Solution0:
     def minRemoveToMakeValid(self, s: str) -> str:
         # from left to right, drop any closing parenthesis
@@ -66,7 +64,7 @@ class Solution0:
         s1 = ''
         for c in s:
             if c == ')':
-                if opens == 0:  # drop extra )
+                if opens == 0: # drop extra )
                     pass
                 else:
                     opens -= 1
@@ -81,7 +79,7 @@ class Solution0:
         ans = ''
         for c in s1[::-1]:
             if c == '(':
-                if opens == 0:  # drop extra )
+                if opens == 0: # drop extra )
                     pass
                 else:
                     opens -= 1
@@ -93,20 +91,19 @@ class Solution0:
 
         return ans[::-1]
 
-
 """
 Stack
 
 Each time we see "(", we add its index to stack, each time we see ")", we remove index from stack top because ")" will match the closest "(" on top of stack. The length of the stack is equivalent of balance (unmatched "(").
 
 steps:
-1. remove ")" if it is encountered when the stack was empty (to prevent negative balance)
-2. remove "(" if it is left on stack at end (to prevent non-zero final unmatched "(")
+1. Push char index into the stack when we see '('.
+2. Pop from the stack when we see ')'.
+    2.1 If the stack is empty, then we have ')' without the pair, and it needs to be removed.
+3. In the end, the stack will contain indexes of '(' without the pair, if any. We need to remove all of them too.
 
 time O(N)
 """
-
-
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
         toremove = set()
@@ -130,7 +127,6 @@ class Solution:
                 ans += c
 
         return ans
-
 
 def main():
     sol = Solution()
