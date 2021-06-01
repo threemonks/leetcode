@@ -73,7 +73,7 @@ mistakes:
 """
 
 
-class Solution:
+class Solution0:
     def longestValidParentheses(self, s: str) -> int:
         n = len(s)
         if n <= 1:
@@ -142,8 +142,8 @@ class Solution1:
 
 
 """
-One pass
-scan left to right, keep count of left and right paren, if more right than left, reset, else when left and right being equal, mark that as an answer
+Two passes
+scan left to right, keep count of left and right paren, if more right than left, reset, else when left and right being equal, update answer with this length (2*left)
 also scan right to left, do the same
 take max answer from two passes
 
@@ -155,7 +155,7 @@ mistakes:
 """
 
 
-class Solution2:
+class Solution:
     def longestValidParentheses(self, s: str) -> int:
         n = len(s)
 
@@ -170,7 +170,7 @@ class Solution2:
 
                 if right == left:
                     ans = max(ans, 2 * left)
-                elif right >= left:  # reset
+                elif right > left:  # reset
                     left, right = 0, 0
 
             return ans
