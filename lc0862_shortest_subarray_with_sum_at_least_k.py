@@ -29,6 +29,7 @@ Note:
 1 <= K <= 10 ^ 9
 """
 import collections
+import math
 from typing import List
 """
 Queue / Deque / Binary Search
@@ -73,7 +74,7 @@ Time O(N)
 Space O(N)
 
 """
-class Solution:
+class Solution0:
     def shortestSubarray(self, A: List[int], K: int) -> int:
         if not A:
             return 0
@@ -103,6 +104,55 @@ class Solution:
 
         return res if res <= n else -1
 
+
+"""
+6/2/2021
+Sliding Window+Deque on Prefix-Sum - Sliding Window w/ negative number
+
+regular sliding window max using O(N) only positive numbers only
+with negative number, we cannot use regular sliding window, but we can use monotonic increasing deque to possible start index of a valid window, then we can keep deque as monotonic increasing based on prefix sum.
+
+Steps:
+1. for each element
+1.1 we keep poping from left(front) of deque, while maintaining presum[j]-presum[i] <=K, and update ans with min(ans, j-i)
+1.2 we keep popping from right (end) of deque so that we can keep its increasing monotonic (i.e., dq.pop(-1) if presum[dq[-1]] > presum[i])
+1.3 then append current index into dq
+
+Reference:
+https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/discuss/189039/Detailed-intuition-behind-Deque-solution
+https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/discuss/204290/Monotonic-Queue-Summary
+mistakes:
+1. add sentinel value 0 at beginning of prefix sum array
+2. ans init to math.inf, return -1 if it is math.inf
+"""
+
+
+class Solution:
+    def shortestSubarray(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+
+        presum = [0]  # presum[0] is a sentinel
+
+        for num in nums:
+            presum.append(presum[-1] + num)
+
+        # print('presum=%s' % presum)
+        dq = collections.deque()  # store index of possible valid window start (determined by presum), use -1 dummy as sentinel
+        ans = math.inf
+        for i in range(len(presum)):
+            # find shortest valid subarray/window, keep poping from deque front, while keeping window valid
+            # print('i=%s presum=%s' % (i, presum))
+            while dq and presum[i] - presum[dq[0]] >= k:
+                ans = min(ans, i - dq[0])
+                dq.popleft()
+                # print('i=%s presum=%s ans=%s' % (i, presum, ans))
+            # pop from end of deque to maintain monotonic increasing
+            while dq and presum[dq[-1]] >= presum[i]:
+                dq.pop()
+            # now we can append i as possible start pointer into deque
+            dq.append(i)
+            # print('i=%s presum=%s ans=%s dq=%s' % (i, presum, ans, dq))
+        return ans if ans < math.inf else -1
 def main():
     sol = Solution()
     assert sol.shortestSubarray([1], 1) == 1, 'fails'
