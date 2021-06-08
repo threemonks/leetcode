@@ -55,9 +55,9 @@ time O(log(N))
 
 class Solution:
     def maxValue(self, n: int, index: int, maxSum: int) -> int:
+
         target = maxSum - n
 
-        # print('target=%s' % target)
         def sums(x):
             # sum x, x-1, ..., 1, 0
             return x * (x + 1) // 2  # 等差数列求和。此处必须用//
@@ -68,11 +68,11 @@ class Solution:
             # right end is  max(0, m-((n-1)-i))
             total = m  # count value at index m only once
             if m - index >= 0:
-                total += sums(m - 1) - sums(m - index - 1)
+                total += sums(m - 1) - sums(m - index - 1)  # 求和从m-index 到 m-1
             else:
                 total += sums(m - 1)
             if index + m >= n:
-                total += sums(m - 1) - sums(m - (n - 1 - index) - 1)
+                total += sums(m - 1) - sums(m - (n - 1 - index) - 1)  # 求和从m-(n-1-index) 到 m-1
             else:
                 total += sums(m - 1)
 
