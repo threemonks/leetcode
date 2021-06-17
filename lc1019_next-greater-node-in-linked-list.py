@@ -46,6 +46,7 @@ class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
+
 """
 Stack - Monotonic Stack
 
@@ -57,16 +58,16 @@ Store the next larger into dict with index as key, final result is output of dic
 time O(N)
 """
 from collections import defaultdict
-
 class Solution:
     def nextLargerNodes(self, head: ListNode) -> List[int]:
 
         # stock holds node val with index with monotonic decreasing value,
         # so any new node_j with larger value would pop and update the next larger of all smaller nodes in the stack
         stack = []
-        ans = defaultdict(int)
+        ans = []
         pos = 0
         while head:
+            ans.append([0]) # expanding ans array for each linkedlist node
             while stack and head.val > stack[-1][0]:
                 _, idx = stack.pop()
                 ans[idx] = head.val
@@ -78,4 +79,6 @@ class Solution:
             _, idx = stack.pop()
             ans[idx] = 0
 
-        return [ans[k] for k in sorted(ans.keys())]
+        return ans
+
+
