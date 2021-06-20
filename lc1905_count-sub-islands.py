@@ -48,7 +48,7 @@ DFS
 
 Use DFS traverse island 2 starting at node[i][j], return true or count 1 if all cells 1 in grid2 is also 1 in grid1
 
-time O()
+time O(V+E)
 """
 
 
