@@ -6,7 +6,7 @@ Medium
 from typing import List
 
 """
-Interval / Sweep line
+Interval / Sweep line / Two Pointers
 
 workflow:
 1. iterate both intervals while there are still left
@@ -53,31 +53,36 @@ class Solution0:
 
 
 """
-Interval
+Two Pointers
 
-simplified
+Between next two intervals, one from A, one from B, pick max of intervals start to be result interval's start, and min of intervals end to be end of result interval. Add to result if this interval is valid
+Then move pointer on the list with smaller (earlier) end point
+
+time O(M+N)
+space O(1)
+
+mistakes:
+1. [max(start), min(end)] might be invalid intersection
 """
-
-
 class Solution:
     def intervalIntersection(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
-        result = []
-        i, j = 0, 0
-        while i < len(A) and j < len(B):
-            # lo: intersection start point
-            # hi: intersection end point
-            lo = max(A[i][0], B[j][0])
-            hi = min(A[i][1], B[j][1])
-            if lo <= hi:  # overlap
-                result.append([lo, hi])
+        m, n = len(A), len(B)
 
-            # remove interval with smaller end point
-            if A[i][1] < B[j][1]:
+        ans = []
+        i, j = 0, 0
+        while i < m and j < n:
+            # take intersection of first interval of each
+            start = max(A[i][0], B[j][0])
+            end = min(A[i][1], B[j][1])
+            if start <= end: # add to result if valid
+                ans.append([start, end])
+            if A[i][1] < B[j][1]: # remove used interval (from list with smaller end point)
                 i += 1
             else:
                 j += 1
 
-        return result
+        return ans
+
 
 def main():
     sol = Solution()
