@@ -6,47 +6,36 @@ Medium
 from typing import List
 
 """
-Interval
+Two Pointers
 
-sort both slots by start time
-merge two slots into one, see if merged interval has duration >= duration
-if yes, break and return
-if not, move one step to right on the slots that is more to left
+similar to 986, take one interval from each person, get their intersection,  if it is > duration, it is valid, if not, move forward with whoever end point is sooner
+
+time: O(M+N)
+space: O(1)
 
 mistakes:
-1. returned interval should be just length of expected duration, not just merged result interval
-2. interval [1, 2] has duration 1
-3. within inner while loop, i or j could go out of bound, needs to add check as well
-4. when inner loop finishes, index i or j could also be out of bound, needs to add check
+1. only need to return interval of length duration (even though the two person's schedule intersection is likely > duration)
+2. interval [1,1] is of length 1
 """
 
 
 class Solution:
-    def minAvailableDuration(self, slots1: List[List[int]], slots2: List[List[int]], duration: int) -> List[int]:
-        slots1 = sorted(slots1, key=lambda x: x[0])
-        slots2 = sorted(slots2, key=lambda x: x[0])
+    def minAvailableDuration(self, A: List[List[int]], B: List[List[int]], duration: int) -> List[int]:
+        A, B = sorted(A), sorted(B)  # sort A and B by start time
+        m, n = len(A), len(B)
 
-        slots = []
-        m, n = len(slots1), len(slots2)
         i, j = 0, 0
-
         while i < m and j < n:
-            # print('i=%s j=%s' % (i, j))
-            while i < m and j < n and slots1[i][1] < slots2[j][0]:  # if slots1 is to left of slots2
+            start = max(A[i][0], B[j][0])
+            end = min(A[i][1], B[j][1])
+            if start <= end and end >= start + duration:
+                return [start, start + duration]
+
+            # now skip the list with smaller end pointer
+            if A[i][1] < B[j][1]:
                 i += 1
-            while i < m and j < n and slots2[j][1] < slots1[i][0]:  # if slots2 is to left of slots1
+            else:
                 j += 1
-            # slots1 and slots2 intersect
-            # print('slots1[i]=%s slots2[j]=%s' % (slots1[i], slots2[j]))
-            if i < m and j < n and (
-                    slots2[j][0] <= slots1[i][1] <= slots2[j][1] or slots1[i][0] <= slots2[j][1] <= slots1[i][1]):
-                interval = [max(slots1[i][0], slots2[j][0]), min(slots1[i][1], slots2[j][1])]
-                if interval[1] - interval[0] >= duration:
-                    return [interval[0], interval[0] + duration]
-                if slots2[j][0] <= slots1[i][1] <= slots2[j][1]:
-                    i += 1
-                else:
-                    j += 1
 
         return []
 
