@@ -118,7 +118,7 @@ space O(N)
 """
 
 
-class Solution:
+class Solution1:
     def minOperations(self, nums1: List[int], nums2: List[int]) -> int:
         if sum(nums1) < sum(nums2):
             return self.minOperations(nums2, nums1)
@@ -162,6 +162,67 @@ class Solution:
         # now diff should be <=0 if possible, otherwise cannot achieve equal sum
         return op if diff <= 0 else -1
 
+
+"""
+Heap
+
+assume sum(nums1) > sum(nums2), so the op is to reduce numbers in nums1, or increase numbers in nums2, and try to use minimum number of ops to make the sum equal
+
+we can use heap to store the num1-1, and 6-num2, and always pick the max value of the top of heap, until either we reach equal sum (diff=0), or both queue are empty
+
+time: (N1log(N1)+N2log(N2))
+mistakes:
+1. while loop termate condition is target <= 0 or q1=q2=[]
+"""
+import heapq
+
+
+class Solution:
+    def minOperations(self, nums1: List[int], nums2: List[int]) -> int:
+        n1, n2 = len(nums1), len(nums2)
+
+        if n1 * 6 < n2 or n2 * 6 < n1:
+            return -1
+
+        sums1 = sum(nums1)
+        sums2 = sum(nums2)
+
+        if sums2 > sums1:
+            return self.minOperations(nums2, nums1)
+
+        q1 = []  # store diff in nums1 that needs to decrease, use negative since its minheap, but we need to get biggest value first
+
+        for num in nums1:
+            if num - 1 > 0:
+                heapq.heappush(q1, -(num - 1))
+
+        q2 = []
+        for num in nums2:
+            if 6 - num > 0:
+                heapq.heappush(q2, -(6 - num))
+
+        target = sums1 - sums2
+        ans = 0
+        while target > 0 and (q1 or q2):
+            if q1 and q2:
+                if q1[0] < q2[0]:
+                    v = heapq.heappop(q1)
+                    target += v  # v<0
+                    ans += 1
+                else:
+                    v = heapq.heappop(q2)
+                    target += v  # v<0
+                    ans += 1
+            elif q1:
+                v = heapq.heappop(q1)
+                target += v  # v<0
+                ans += 1
+            elif q2:  # q2
+                v = heapq.heappop(q2)
+                target += v  # v<0
+                ans += 1
+
+        return ans
 
 def main():
     sol = Solution()
