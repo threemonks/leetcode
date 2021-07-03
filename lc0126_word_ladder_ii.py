@@ -207,6 +207,49 @@ class Solution:
             return unique_res
         return []
 
+
+"""
+BFS modified
+
+basically BFS traverse, but for each word we explored, we keep track of shortest path from beginWord to this word, and keep exploring further down, until we meet endWord
+
+Since BFS traverse gives shortest distance to endWord, this gives all shortest path from beginWord to endWord.
+
+Note: needs to mark nodes as visited (or removed from wordset here) only after one level is finished.
+
+"""
+import copy
+from collections import defaultdict
+
+
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        wordset = set(wordList)
+
+        if endWord not in wordset:
+            return []
+
+        layer = defaultdict(list)  # represent words in current layer
+        layer[beginWord] = [[beginWord]]  # starting layer has just one word
+
+        while layer:
+            newlayer = defaultdict(list)
+            for word in layer:
+                if word == endWord:
+                    return layer[word]
+                for i in range(len(word)):  # try to replace each char with each of 'a...z'
+                    for c in 'abcdefghijklmnopqrstuvwxyz':
+                        newword = word[:i] + c + word[i + 1:]
+                        if newword in wordset:
+                            newlayer[newword] += [j + [newword] for j in layer[
+                                word]]  # append newword to each sequence in layer[word] to form new sequnces up to newlayer
+            wordset -= set(
+                newlayer.keys())  # remove from wordset to avoid revisiting same nodes again, similar to global seen, but is marked only after one layer/level is done.
+
+            layer = copy.copy(newlayer)  # move to next layer
+
+        return []
+
 def main():
     sol = Solution()
     assert sol.findLadders(beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]) == [ ["hit","hot","dot","dog","cog"], ["hit","hot","lot","log","cog"] ], 'fails'
