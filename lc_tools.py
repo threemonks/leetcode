@@ -13,10 +13,10 @@ class TreeNode:
         return 'TreeNode({})'.format(self.val)
 
 
-def is_same_tree(p: TreeNode, q: TreeNode) -> bool:
+def binary_tree_equal(p: TreeNode, q: TreeNode) -> bool:
     if not p and not q: return True
     if (p and not q) or (not p and q): return False
-    return p.val == q.val and is_same_tree(p.left, q.left) and is_same_tree(p.right, q.right)
+    return p.val == q.val and binary_tree_equal(p.left, q.left) and binary_tree_equal(p.right, q.right)
 
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -67,7 +67,7 @@ def serialize(root):
             queue += node.left, node.right
         else:
             s += 'null,'
-    return '[' + s.strip('nul,') + ']'
+    return '[' + s.strip('null,') + ']'
 
 def serialize1(root):
     vals = []
