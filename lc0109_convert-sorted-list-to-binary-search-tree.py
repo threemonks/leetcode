@@ -137,3 +137,12 @@ class Solution:
             head = head.next
 
         return self.arrayToBST(nums)
+
+
+def main():
+    from lc_tools import deserialize, binary_tree_equal
+    sol = Solution()
+    assert binary_tree_equal(sol.sortedListToBST(head = ListNode(-10, next=ListNode(-3, next=ListNode(0, next=ListNode(5,next=ListNode(9)))))), deserialize("[0,-3,9,-10,null,5]")), 'fails'
+
+if __name__ == '__main__':
+   main()
