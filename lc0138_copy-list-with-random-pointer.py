@@ -55,6 +55,9 @@ Constraints:
 Node.random is null or is pointing to some node in the linked list.
 """
 # Definition for a Node.
+from collections import defaultdict
+
+
 class Node:
     def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
         self.val = int(x)
