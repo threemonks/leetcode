@@ -1,0 +1,33 @@
+## Algorithms
+- Greedy
+- Binary Search
+- Dynamic Programming
+- Graph - BFS
+- Graph - Minimum Spanning Tree
+- [Graph - Shortest Path](algo_graph_shortest_path.md)
+- Graph - Strongly Connected Components
+- Graph - Topological Sort / Cycle Detection
+- Longest Common Substring
+- [Monotonic Stack/Deque](algo_monotonic_stack_deque.md)
+- Prefix Sum
+- Recursion Backtrack
+- Sliding Window / Two Pointers
+- Backtracking vs DFS
+- Bit Manipulation
+## Data Structure
+- Stack
+- Deque
+- Graph
+- Tree
+- Linked List
+- Permutation Combination Subset
+- Sort / Heap
+## Problems
+- Calculator
+- Dynamic Programming
+  - Knapsack
+- Intution Ideas
+- Longest substring
+- Parentheses
+- Hints
+- Strings using Sliding Window
