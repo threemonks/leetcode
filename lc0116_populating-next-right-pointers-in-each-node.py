@@ -51,6 +51,7 @@ class Node:
         self.right = right
         self.next = next
 
+
 """
 DFS
 
@@ -59,7 +60,7 @@ dfs recursive call with extra parameter neighbor, to explore left child with rig
 """
 
 
-class Solution:
+class Solution0:
     def recursive_connect(self, node, nbr):
         if not node:
             return node
@@ -77,3 +78,34 @@ class Solution:
         if not root:
             return
         return self.recursive_connect(root, None)
+
+
+"""
+Tree Level Order traverse
+"""
+from collections import deque
+
+
+class Solution:
+    def connect(self, root: 'Node') -> 'Node':
+        if not root:
+            return root
+        q = deque([root])
+
+        while q:
+            size = len(q)
+            newq = deque([])
+            while size:  # finish exploring one level
+                cur = q.popleft()
+                if q:
+                    cur.next = q[0]
+                if cur.left:
+                    newq.append(cur.left)
+                if cur.right:
+                    newq.append(cur.right)
+                size -= 1
+
+            while newq:  # copy newq into q for this level
+                q.append(newq.popleft())
+
+        return root
