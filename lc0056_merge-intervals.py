@@ -31,8 +31,8 @@ sort intervals by start time
 for any new interval, if start is before previous ending, then merge (extend previous ending if new interval ends after previous interval)
 else (start after previous ending), add this new interval into result
 
-time O(N)
-space O(N)
+time O(Nlog(N)) - sort
+space O(N) - depends on the sorting algorithm is inplace or not
 
 mistakes:
 1. new interval could be covered completely by last of previous interval
