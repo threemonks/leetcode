@@ -68,6 +68,8 @@ class Foo0:
 """
 Binary Semaphore
 
+https://leetcode.com/problems/print-in-order/discuss/335939/5-Python-threading-solutions-
+
 Binary Semaphore is just a wrapper on Lock, as semaphore is internally implemented via Lock
 
 Lock vs Semaphore
