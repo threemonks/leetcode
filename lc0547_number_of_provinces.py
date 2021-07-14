@@ -74,7 +74,7 @@ class DSUByRank:
                 self.rank[xp] += 1
 
 
-class Solution:
+class Solution0:
     def findCircleNum(self, isConnected: List[List[int]]) -> int:
         n = len(isConnected)
         dsu = DSUByRank(n)
@@ -88,6 +88,39 @@ class Solution:
 
         return count
 
+
+"""
+DFS
+
+input is adjacency matrix, we can view it as a graph
+so we are looking for number of connected components
+using DFS, we start from any unvisited node, recusrively visit all its connected neighbor nodes and mark them as visited, for each start of a unvisited node, we increase island count by 1
+
+"""
+from collections import defaultdict
+
+
+class Solution:
+    def dfs(self, M, visited, i):
+        n = len(M)
+        # start from node i, recursively visit all its connected neighbors
+        for j in range(n):
+            if M[i][j] == 1 and visited[j] == 0:
+                visited[j] = 1
+                self.dfs(M, visited, j)
+
+    def findCircleNum(self, M: List[List[int]]) -> int:
+        n = len(M)
+        visited = [0 for _ in range(n)]  # nodes already visited
+
+        ans = 0
+        for i in range(n):
+            if visited[i] == 0:  # not visited yet
+                visited[i] = 1
+                self.dfs(M, visited, i)
+                ans += 1
+
+        return ans
 
 def main():
     sol = Solution()
