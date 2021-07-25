@@ -52,6 +52,7 @@ It is guaranteed that there will be at least one element in the stack before cal
 Design
 
 use Hash Map to hold list of stack, with freq as key, stack of numbers at that freq as value.
+Key point here is we don't remove val from lower freq list (stack) after push this val, since we will eventually need to access that lower freq again, and all access operation is pop, which operates on maxfreq list only.
 also use a dict of {val: freq} to make lookup freq faster.
 also use maxfreq to keep track of highest freq, to make pop O(1). Note because each operation only changes maxfreq by 1, so maxfreq is continuous, thus we can do maxfreq -= 1 after pop
 
