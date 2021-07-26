@@ -70,7 +70,7 @@ class Solution:
         diff = [gas[i] - cost[i] for i in range(n)]
 
         sums = sum(diff)
-        if sum(diff) < 0:
+        if sums < 0:
             return -1
 
         for i in range(n):
