@@ -35,7 +35,7 @@ Constraints:
 """
 Array / Greedy
 
-from left to right, for each digit, find the rightmost largest digit (9, 8, ..., digits[i]) in this num that is also to its right, swap this two digits
+from left to right, for each digit i, find the index of rightmost largest digit (9, 8, ..., digits[i]), j, in this num that is also to its right, swap this two digits at index i and j
 
 2736 => 7236
 736 => 763
@@ -45,28 +45,25 @@ from left to right, for each digit, find the rightmost largest digit (9, 8, ...,
 notes:
 1. 10 needs to be extracted into two digits, so do while num > 9 ... num//=10
 """
-
-
 class Solution:
     def maximumSwap(self, num: int) -> int:
         digits = []
         while num > 9:
-            digits.append(num % 10)
-            num = num // 10
+            digits.append(num%10)
+            num = num//10
 
         digits.append(num)
 
         digits = digits[::-1]
-
         # print('digits=%s' % digits)
 
         def find_swap(digits):
             n = len(digits)
             for i in range(n):
                 for d in range(9, digits[i], -1):
-                    for j in range(n - 1, i, -1):
+                    for j in range(n-1, i, -1):
                         if digits[j] == d:
-                            digits[i], digits[j] = digits[j], digits[i]
+                            digits[i], digits[j] =  digits[j], digits[i]
                             return
 
         # print('before swap digits=%s' % digits)
@@ -76,7 +73,7 @@ class Solution:
         # convert digits back to num
         ans = 0
         for d in digits:
-            ans = ans * 10 + d
+            ans = ans*10 + d
 
         return ans
 
