@@ -61,10 +61,12 @@ Use two pointer, keep a window size of n, we want to find a start of window wher
 
 notes:
 1. use [stations] + [stations] to simulate circual stations list
+
+time: O(N^2)
 """
 
 
-class Solution:
+class Solution0:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         n = len(gas)
         diff = [gas[i] - cost[i] for i in range(n)]
@@ -89,6 +91,38 @@ class Solution:
 
         return -1
 
+
+"""
+Greedy / Math
+
+1. if total gas > total cost, there must be a solution
+2. if start at i, one cannot reach j, then start at any k (i<k<j) will not reach j either, then we should next try j+1 as a new start to explore
+
+if we start at station i, could not reach some other station j, because from i to j, accumulated tank < 0, that means we cannot start from any station between i and j to reach j. So we should next try to start at station j instead.
+
+
+time O(N)
+space O(1)
+"""
+
+
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        n = len(gas)
+
+        start = 0
+        curr_tank, total_tank = 0, 0
+        for i in range(n):
+            curr_tank += gas[i] - cost[i]
+            total_tank += gas[i] - cost[i]
+            if curr_tank < 0:
+                start = i + 1  # if current station gas < cost, it cannot be start station
+                curr_tank = 0
+
+        if total_tank < 0:
+            return -1
+        else:
+            return start
 
 def main():
     sol = Solution()
