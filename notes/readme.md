@@ -1,33 +1,38 @@
 ## Algorithms
-- Greedy
-- Binary Search
-- Dynamic Programming
-- Graph - BFS
-- Graph - Minimum Spanning Tree
+- [Greedy](algo_greedy.md)
+- [Binary Search](algo_binary_search.md)
+- [Dynamic Programming](algo_dynamic_programming.md)
+- [Graph - BFS](algo_graph_bfs.md)
+- [Graph - DFS](algo_graph_dfs.md)
+- [Graph - Minimum Spanning Tree](algo_graph_minimum_spanning_tree.md)
 - [Graph - Shortest Path](algo_graph_shortest_path.md)
-- Graph - Strongly Connected Components
-- Graph - Topological Sort / Cycle Detection
-- Longest Common Substring
+- [Graph - Strongly Connected Components](algo_graph_strongly_connected_components.md)
+- [Graph - Topological Sort / Cycle Detection](algo_graph_topological_sort_cycle_detection.md)
+- [Greedy](algo_greedy.md)
+- [Longest Common Substring](algo_longest_common_substring.md)
 - [Monotonic Stack/Deque](algo_monotonic_stack_deque.md)
-- Prefix Sum
-- Recursion Backtrack
-- Sliding Window / Two Pointers
-- Backtracking vs DFS
-- Bit Manipulation
+- [Prefix Sum](algo_monotonic_stack_deque.md)
+- [Recursion Backtrack](algo_recursion_backtrack.md)
+- [Sliding Window / Two Pointers](algo_sliding_window_two_pointers.md)
+- [Sort / Heap](algo_sort_heap.md)
+- [Backtracking vs DFS](bactracking_vs_dfs.md)
+- [Bit Manipulation](bitmask.md)
 ## Data Structure
 - Stack
-- Deque
-- Graph
-- Tree
-- Linked List
-- Permutation Combination Subset
-- Sort / Heap
+- [Deque](ds_deque.md)
+- [Graph](ds_graph.md)
+- [Linked List](ds_linked_list.md)
+- [Tree](ds_tree.md)
 ## Problems
-- Calculator
-- Dynamic Programming
-  - Knapsack
-- Intution Ideas
-- Longest substring
-- Parentheses
-- Hints
-- Strings using Sliding Window
+- [Calculator](problems/calculator.md)
+- [Dynamic Programming](problems/dynamic_programming.md)
+  - [Knapsack](problems/dp_knapsack.md)
+- [Intution Ideas](problems/intution_ideas.md)
+- [Longest substring](problems/longest_substring.md)
+- [Parentheses](problems/parentheses.md)
+- [Permutation Combination Subset](problems/permutation_combination_subset.md)
+- [Hints](problems/problem_hints.md)
+- [Strings using Sliding Window](problems/strings_using_sliding_window.md)
+## Misc
+- [time space complexity](time_space_complexity.md)
+- [SQL](sql.md)
