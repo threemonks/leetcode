@@ -40,6 +40,7 @@ word1 and word2 are in wordsDict.
 word1 != word2
 At most 5000 calls will be made to shortest.
 """
+import math
 from typing import List
 
 """
