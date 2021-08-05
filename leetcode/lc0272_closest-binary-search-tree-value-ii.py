@@ -51,6 +51,9 @@ inorder DFS + Heap
 1. in order DFS to convert BST to sorted nums, as we traverse, push node into pq, and keep pq size at k, pop extra
 2. return pq
 
+note:
+1. can use quick select to get k closet using O(N) time
+
 time: O(Nlog(k)) - tree traverse, heapq time O(Nlog(k))
 """
 import heapq
