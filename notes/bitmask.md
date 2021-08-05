@@ -1,4 +1,4 @@
-## bitmasks tricks
+## bitmasks operations
 * bitmask count number of 1 bits
   bin(n).count('1')
 
@@ -14,7 +14,14 @@
   n &= n-1
 
 * set i-th bit
-    mask |= (1<<i)
+    b |= (1<<i)
+
+* unset i-th bit
+    b &= ~(1<<i)
+
+* check if i-th bit is set
+
+   b & (1<<i) == 1
 
 * loop all subset of bits
     sub_state = state

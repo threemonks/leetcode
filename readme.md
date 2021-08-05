@@ -14,7 +14,8 @@
 ## Binary Search ([template](template/binary_search.py))
 * [0004. Median of Two Sorted Arrays](leetcode/lc0004_median_of_two_sorted_arrays.py)
 * [0033. Search in Rotated Sorted Array](leetcode/lc0033_search-in-rotated-sorted-array.py)
-* [081. Search in Rotated Sorted Array II](leetcode/lc0081_search-in-rotated-sorted-array-ii.py)
+* [0081. Search in Rotated Sorted Array II](leetcode/lc0081_search-in-rotated-sorted-array-ii.py)
+* [153. Find Minimum in Rotated Sorted Array](leetcode/lc0153_find-minimum-in-rotated-sorted-array.py)
 * [0215. Kth Largest Element in an Array](leetcode/lc0215_kth_largest_element_in_an_array.py) (QuickSelection)
 * [0410. Split Array Largest Sum](leetcode/lc0410_split-array-largest-sum.py)
 * [774. Minimize Max Distance to Gas Station](leetcode/lc0774_minimize-max-distance-to-gas-station.py) (H)
@@ -69,7 +70,8 @@
 * [1696. Jump-Game-VI](leetcode/lc1696_jump_game_vi.py) (DP+Monotonic Deque)
 
 ## DFS
-
+* [200. Number of Islands](leetcode/lc0200_number_of_islands.py)
+* [419. Battleships in a Board](leetcode/lc0419_battleships-in-a-board.py)
 ## BFS
 ### Topological Sort
 ### Dijkstra (BFS+PQ)
@@ -79,10 +81,10 @@
 * [0336. Palindrome Pairs](leetcode/lc0336_palindrome_pairs.py)
 * [0642. Design Search Autocomplete System](leetcode/lc0642_design-search-autocomplete-system.py)
 
-## [Greedy](notes/aglo_greedy.md)
+## [Greedy](notes/algo_greedy.md)
 ### LIS (Longest Increasing Subsequence)
 ### Sort
-* [0164. Maxmum Gap](leetcode/lc0164_maximum-gap.py)
+* [164. Maxmum Gap](leetcode/lc0164_maximum-gap.py)
 * [347. Top K Frequent Elements](leetcode/lc0347_top-k-frequent-elements.py)
 ### Interval / Line Sweep (Sort+Heap) [template](template/problems/array_interval_linesweep.py)
 * [218. The Skyline Problem](leetcode/lc0218_the-skyline-problem.py)
@@ -113,7 +115,10 @@
 ### 双序列 Two Sequence
 * [044. Wildcard Matching](leetcode/lc0044_wildcard-matching.py)
 * [115. Distinct Subsequences](leetcode/lc0115_distinct-subsequences.py)
-
+### 区间型 Interval
+* [132. Palindrome Partitioning II](leetcode/lc0132_palindrome-partitioning-ii.py)
+### Bit Manipulation
+* [698. Partition to K Equal Sum Subsets](leetcode/lc0698_partition-to-k-equal-sum-subsets.py)
 ## Others
 ### [Line Sweep](template/interval_line_sweep.py)
 * [0253. Meeting Rooms ii](leetcode/lc0253_meeting-rooms-ii.py)

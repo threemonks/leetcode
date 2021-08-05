@@ -31,7 +31,7 @@ An alternative question is when are they equivalent? By answering this, the answ
 
 They are equivalent when the the element to be inserted is not present in the list. Hence, they are not equivalent when the element to be inserted is in the list.
 
-## fundamentals of Binary Search
+## Fundamentals of Binary Search
 https://leetcode.com/problems/binary-search/discuss/423162/Binary-Search-101
 ### Choice of lo and hi, aka the boundary
 Normally, we set the initial boundary to the number of elements in the array
@@ -44,7 +44,7 @@ let mid = lo + Math.floor((hi - lo) / 2); // left/lower mid
 let mid = lo + Math.floor((hi - lo + 1) / 2); // right/upper mid
 
 ### How do we shrink boundary
-I always try to keep the logic as simple as possible, that is a single pair of if...else. But what kind of logic are we using here? My rule of thumb is always use a logic that you can exclude mid.
+I always try to keep the logic as simple as possible, that is a single pair of if...else. But what kind of logic are we using here? My rule of thumb is **always use a logic that you can exclude mid**.
 Let's see an example:
 
 if (target < nums[mid]) {
@@ -100,10 +100,10 @@ Always think of the case when there are 2 elements left
 ## Mechanical way to implement bug free binary search
 - The most important edge case is left=0 and right = 1
 - trick #1: for loop condition: to exit when left == right, the loop condition is “while left < right”, not “while left <= right”.
-- trick #2: for mid type: right_mid needs to go with right = mid – 1 and left_mid needs to go left = mid + 1
-  - left_mid: (left+right)>>1 or (left+right)//2
-  - right_mid: (left+right+1)>>1 or (left+right+1)//2
-- trick #3: on just having one side to exclude mid: Either left = mid + 1 or right = mid - 1, not both
+- trick #2: for mid type: **right_mid needs to go with right = mid – 1 and left_mid needs to go left = mid + 1**
+  - **left_mid: (left+right)>>1 or (left+right)//2**
+  - **right_mid: (left+right+1)>>1 or (left+right+1)//2**
+- trick #3: just having one side to exclude mid: Either left = mid + 1 or right = mid - 1, not both
 - trick #4: for the mid-inclusive moving boundary: which boundary to be the mid-exclusive boundary? It is the opposite of the boundary which will move when one occurrence of the target is met at a given middle point. Let’s call it mid-inclusive moving boundary.
 - In summary, in binary search problems, we can define left and right as inclusive boundaries and use “while left < right” as the loop condition. Then we need to consider which side of the boundary to move when one incidence of target is met, which will determine the mid-inclusive boundary and subsequently the mid-exclusive boundary and mid type using trick #4, #3, #2 above.
 ### References
