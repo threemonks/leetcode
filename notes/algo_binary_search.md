@@ -40,26 +40,31 @@ let lo = 0, hi = nums.length - 1;
 But this is not always the case.
 We need to remember: the boundary is the range of elements we will be searching from.
 ### choice of mid
+```
 let mid = lo + Math.floor((hi - lo) / 2); // left/lower mid
 let mid = lo + Math.floor((hi - lo + 1) / 2); // right/upper mid
-
+````
 ### How do we shrink boundary
 I always try to keep the logic as simple as possible, that is a single pair of if...else. But what kind of logic are we using here? My rule of thumb is **always use a logic that you can exclude mid**.
 Let's see an example:
 
+```
 if (target < nums[mid]) {
 	hi = mid - 1
 } else {
 	lo = mid;
 }
+```
 Here, if the target is less than mid, there's no way mid will be our answer, and we can exclude it very confidently using hi = mid - 1. Otherwise, mid still has the potential to be the target, thus we include it in the boundary lo = mid.
 On the other hand, we can rewrite the logic as:
 
+```
 if (target > nums[mid]) {
 	lo = mid + 1; // mid is excluded
 } else {
 	hi = mid; // mid is included
 }
+```
 
 ### while loop
 To keep the logic simple, I always use
@@ -73,21 +78,25 @@ Example:
 
 let mid = lo + ((hi - lo) / 2); // Bad! We should use right/upper mid!
 
+```
 if (target < nums[mid]) {
 	hi = mid - 1
 } else {
 	lo = mid;
 }
+```
 Now, imagine when there are only 2 elements left in the boundary. If the logic fell into the else statement, since we are using the left/lower mid, it's simply not doing anything. It just keeps shrinking itself to itself, and the program got stuck.
 We have to keep in mind that, the choice of mid and our shrinking logic has to work together in a way that every time, at least 1 element is excluded.
 
 let mid = lo + ((hi - lo + 1) / 2); // Bad! We should use left/lower mid!
 
+```
 if (target > nums[mid]) {
 	lo = mid + 1; // mid is excluded
 } else {
 	hi = mid; // mid is included
 }
+```
 So when your binary search is stuck, think of the situation when there are only 2 elements left. Did the boundary shrink correctly?
 
 ### My rule of thumb when it comes to binary search:
