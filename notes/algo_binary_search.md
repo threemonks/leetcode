@@ -33,17 +33,25 @@ They are equivalent when the the element to be inserted is not present in the li
 
 ## Fundamentals of Binary Search
 https://leetcode.com/problems/binary-search/discuss/423162/Binary-Search-101
+https://daimajiaoliu.com/daima/6cc85e7a84a2803
+https://daimajiaoliu.com/daima/487220eaf900404
+
 ### Choice of lo and hi, aka the boundary
 Normally, we set the initial boundary to the number of elements in the array
 
 let lo = 0, hi = nums.length - 1;
 But this is not always the case.
 We need to remember: the boundary is the range of elements we will be searching from.
+
+e.g., if we are search left or right boundary of a given target value, i.e., find first value > target, or last value < target, then we need to use 左闭右开 [0, n)
+因为要搜索左右侧边界，所以索引最大位置必须大于数组长度，搜索的区间为[left, right)
+
 ### choice of mid
 ```
 let mid = lo + Math.floor((hi - lo) / 2); // left/lower mid
 let mid = lo + Math.floor((hi - lo + 1) / 2); // right/upper mid
 ````
+
 ### How do we shrink boundary
 I always try to keep the logic as simple as possible, that is a single pair of if...else. But what kind of logic are we using here? My rule of thumb is **always use a logic that you can exclude mid**.
 Let's see an example:
@@ -100,11 +108,11 @@ if (target > nums[mid]) {
 So when your binary search is stuck, think of the situation when there are only 2 elements left. Did the boundary shrink correctly?
 
 ### My rule of thumb when it comes to binary search:
-Include ALL possible answers when initialize lo & hi
-Don't overflow the mid calculation
-Shrink boundary using a logic that will exclude mid
-Avoid infinity loop by picking the correct mid and shrinking logic
-Always think of the case when there are 2 elements left
+* Include ALL possible answers when initialize lo & hi
+* Don't overflow the mid calculation
+* Shrink boundary using a logic that will exclude mid
+* Avoid infinity loop by picking the correct mid and shrinking logic
+* Always think of the case when there are 2 elements left
 
 ## Mechanical way to implement bug free binary search
 - The most important edge case is left=0 and right = 1
@@ -115,6 +123,22 @@ Always think of the case when there are 2 elements left
 - trick #3: just having one side to exclude mid: Either left = mid + 1 or right = mid - 1, not both
 - trick #4: for the mid-inclusive moving boundary: which boundary to be the mid-exclusive boundary? It is the opposite of the boundary which will move when one occurrence of the target is met at a given middle point. Let’s call it mid-inclusive moving boundary.
 - In summary, in binary search problems, we can define left and right as inclusive boundaries and use “while left < right” as the loop condition. Then we need to consider which side of the boundary to move when one incidence of target is met, which will determine the mid-inclusive boundary and subsequently the mid-exclusive boundary and mid type using trick #4, #3, #2 above.
+
+## 二分查找和二分查找左右侧边界
+https://daimajiaoliu.com/daima/487220eaf900404
+* 第一个，最基本的二分查找算法：
+- 因为我们初始化 right = nums.length - 1, 所以决定了我们的「搜索区间」是 [left, right], 所以决定了 while (left <= right), 同时也决定了 left = mid+1 和 right = mid-1
+- 因为我们只需找到一个 target 的索引即可， 所以当 nums[mid] == target 时可以立即返回
+
+* 第二个，寻找左侧边界的二分查找：
+- 因为我们初始化 right = nums.length， 所以决定了我们的「搜索区间」是 [left, right)， 所以决定了 while (left < right)， 同时也决定了 left = mid+1 和 right = mid
+- 因为我们需找到 target 的最左侧索引， 所以当 nums[mid] == target 时不要立即返回， 而要收紧右侧边界以锁定左侧边界
+
+* 第三个，寻找右侧边界的二分查找：
+- 因为我们初始化 right = nums.length，所以决定了我们的「搜索区间」是 [left, right)， 所以决定了 while (left < right)， 同时也决定了 left = mid+1 和 right = mid
+- 因为我们需找到 target 的最右侧索引， 所以当 nums[mid] == target 时不要立即返回， 而要收紧左侧边界以锁定右侧边界
+- 又因为收紧左侧边界时必须 left = mid + 1，所以最后无论返回 left 还是 right，必须减一
+
 ### References
 - https://reprog.wordpress.com/2010/04/25/writing-correct-code-part-1-invariants-binary-search-part-4a/
 - https://leetcode.com/problems/binary-search/discuss/423162/Binary-Search-101
