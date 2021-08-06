@@ -49,7 +49,7 @@ Constraints:
 from typing import List
 
 """
-Greedy
+Greedy+Heap
 
 observation
 
@@ -72,7 +72,7 @@ class Solution:
 
         a, b = None, None
         ans = 0
-        while sticks and len(sticks) > 1:
+        while len(sticks) > 1:
             a = heapq.heappop(sticks)
             b = heapq.heappop(sticks)
             ans += a + b
