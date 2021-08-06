@@ -55,10 +55,12 @@ observation
 
 any sticks connected earlier, their length would add to final cost multiple times later, so we want to connect shorter sticks first
 
-basically, use a heapq, we recursively pick the shortest two, connect them and add result back to heapq, and repeat until only one is left in heapq
+basically, use a heapq, we pick the shortest two, connect them and add result back to heapq, and repeat until only one is left in heapq
 
 mistakes:
 1. one stick only, no cost to connect
+
+time O(NlogN) - while loop O(N), heappop O(logN)
 """
 import heapq
 
@@ -68,7 +70,7 @@ class Solution:
         if len(sticks) == 1:
             return 0
 
-        heapq.heapify(sticks)
+        heapq.heapify(sticks)  # time complexity O(logN)
 
         a, b = None, None
         ans = 0
