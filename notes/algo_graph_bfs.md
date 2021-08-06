@@ -13,6 +13,7 @@ similar problem
 ### BFS seen sets invariant - everything in queue is already marked as seen
 https://cs.stackexchange.com/questions/123284/visited-vs-seen-positions-in-breadth-first-search
 Keep the invariant that everything in the queue is already put in the seen queue.
+```
 seen = set()
 while q:
     cur = q.pop()
@@ -20,7 +21,7 @@ while q:
         if nxt not in seen:
             q.append(nxt)
             seen.add(nxt)
-
+```
 ### BFS vs DFS
 - https://techdifferences.com/difference-between-bfs-and-dfs.html
 

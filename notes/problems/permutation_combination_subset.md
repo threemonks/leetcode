@@ -1,5 +1,5 @@
-Permutations / Combinations / Subsets:
-  (https://leetcode.com/problems/subsets/solution/)
+##  Permutations / Combinations / Subsets:
+(https://leetcode.com/problems/subsets/solution/)
 Let us first review the problems of Permutations / Combinations / Subsets, since they are quite similar to each other and there are some common strategies to solve them.
 
 First, their solution space is often quite large:
@@ -17,8 +17,8 @@ There are generally three strategies to do it:
 i) Recursion
 
 ii) Backtracking
-    See [template](../template/algo_recursive_backtrack.py)
-
+    See [template](../../template/algo_recursive_backtrack.py)
+```
     """
     Classic exhaustive permutation pattern
 
@@ -55,26 +55,29 @@ ii) Backtracking
             recursive_subsets(sofar + rest[0], rest[1:])
             # exclude first char
             recursive_subsets(sofar, rest[1:])
-
+```
 
 iii) Lexicographic generation based on the mapping between binary bitmasks and the corresponding permutations / combinations / subsets.
+```
     []
     [[], [1]] # for each of previous result, append 1, and not append 1
     [[], [1], [2], [1, 2]] # for each of previous result, append 2, and not append 2
     ...
+```
 
     * Backtracking
     illustration for sets:
     (https://leetcode.com/problems/subsets/discuss/27301/Python-easy-to-understand-solutions-(DFS-recursively-Bit-Manipulation-Iteratively).)
     start with empty set [], take first num 1 in nums, append to [] to get a new set [[], [1]], then recursively, take 2nd element 2, append to each, to get [[], [1], [1, 2]]
     Set (only pick element in order, i.e., don't pick 1 again after you already pick 2, as that would be permutation or combination)
+```
             []
     /       |       \
   [1]      [2]       [3]
  /  \      /
 [2] [3]  [3]
-
-
+```
+```
     dfs(nums = [1,2,3], index = 0, path = [], res = [])
     |
     |__ dfs(nums = [1,2,3], index = 1 , path = [1], res = [[]])
@@ -95,8 +98,9 @@ iii) Lexicographic generation based on the mapping between binary bitmasks and t
     |__ dfs(nums = [1,2,3], index = 3, path = [3], res =  [[],[1],[1,2],[1,2,3],[1,3],[2],[2,3]])
                    // next iteration: res =  [[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]
                    // for loop will not be executed
-
+```
     For permutation, backtrack would reuse any element that was not used, and order matters, so we could have [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]
+```
                [ ]
           /     |      \
        [1]     [2]     [3]
@@ -104,7 +108,7 @@ iii) Lexicographic generation based on the mapping between binary bitmasks and t
     [2]  [3] [1] [3] [1] [2]
     |     |   |   |   |   |
     [3]  [2] [3] [1] [2] [1]
-
+```
     For combination, order does not matter
 
 *) generate all permutations iteratively
@@ -119,11 +123,10 @@ Inserting 3 in different positions of 2 1 leads to 2 1 3, 2 3 1 and 3 2 1.
 To generate permutations of size four, we consider all above six permutations of size three and insert 4 at different positions in every permutation.
 
 implemented via backtracking as:
-  with running partial as path, and remaining numbers nums, take first number from nums, insert into all possible positions in path, and recursive call with updated path[:i]+[nums[0]]+path[i:] and nums[1:]
+  with running partial as path, and remaining numbers nums, take first number from nums, insert into all possible positions in path, and recursive call with updated `path[:i]+[nums[0]]+path[i:]` and `nums[1:]`
 
 Permutation Iteratively
-class Solution:
-    def permute(self, nums):
+```
 """
 Iterative
 取下一个可用元素，插入已有部分排列结果中每一个可能的位置，构成一个新的结果
@@ -139,9 +142,9 @@ class Solution:
             results = newres
             # results = [r[:i] + [num] + r[i:] for r in results for i in range(len(r)+1)]
         return results
-
+```
 Permute iteratively with duplicates
-
+```
 class Solution:
     def permuteUnique(self, nums):
         results = [[]]
@@ -155,12 +158,13 @@ class Solution:
             results = newres
 
         return results
+```
 
 * General backtracking problems for subsets/combinations/permutations
   https://leetcode.com/problems/letter-combinations-of-a-phone-number/discuss/780232/Backtracking-Python-problems%2B-solutions-interview-prep
 
-    78. Subsets: Runtime: 16 ms, faster than 96.05%
-
+78. Subsets: Runtime: 16 ms, faster than 96.05%
+```
     class Solution(object):
         def subsets(self, nums):
             """
@@ -182,10 +186,10 @@ class Solution:
             res.append(path)
             for i in range(len(nums)):
                 dfs(nums[i+1:], path + [nums[i]], res)
+```
 
-
-    90. Subsets II: Runtime: 20 ms, faster than 96.23%
-
+90. Subsets II: Runtime: 20 ms, faster than 96.23%
+```
     class Solution(object):
         def subsetsWithDup(self, nums):
             """
@@ -210,12 +214,14 @@ class Solution:
                 if i > 0 and nums[i] == nums[i-1]:
                     continue
                 self.dfs(nums[i+1:], path + [nums[i]], res)
-      
-      # generate Subsets iteratively
+```
+
+# generate Subsets iteratively
 """
 Generate subset iteratively
-每次考虑一个新的元素，在考虑k-1个元素的所有结果里加上这个新的元素nums[k]
+每次考虑一个新的元素，在考虑k-1个元素的所有结果里加上这个新的元素`nums[k]`
 """
+```
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         n = len(nums)
@@ -225,7 +231,7 @@ class Solution:
             res += [r+[nums[i]] for r in res]
 
         return res
-
+```
 
 """
 subsets with dups, Iteratively
@@ -233,6 +239,7 @@ subsets with dups, Iteratively
 当有 n 个重复数字出现，其实就是在出现重复数字之前的所有解中，分别加 1,2,3...,n 个重复数字
 
 """
+```
 class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
         n = len(nums)
@@ -259,3 +266,4 @@ class Solution:
             i += 1
 
         return res    
+```
