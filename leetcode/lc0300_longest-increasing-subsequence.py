@@ -72,49 +72,56 @@ class Solution0:
 
 
 """
-DP with Binary Search + Monotonic decreasing array
+Greedy (monotonic increasing stack) + Binary Search
 
-tails is an array storing the smallest tail of all increasing subsequences with length i+1 in tails[i].
-For example, say we have nums = [4,5,6,3], then all the available increasing subsequences are:
+build longest increasing subsequence using this approach
 
-len = 1   :      [4], [5], [6], [3]   => tails[0] = 3
-len = 2   :      [4, 5], [5, 6]       => tails[1] = 5
-len = 3   :      [4, 5, 6]            => tails[2] = 6
+[2, 6, 8, 3, 4, 5, 1]
+[]
+[2]
+[2, 6] <= 6 > 2
+[2, 6, 8] <= 8 > 6
+[2, 6, 8] [2, 3] <= 3>2
+[2, 6, 8] [2, 3, 4] <= 4 < 8 and 4 > 3
+[2, 6, 8] [2, 3, 4, 5] <= 5 < 8 and 5 > 3
+[2, 6, 8] [2, 3, 4, 5] [1] <= 1 < 8 and 1 < 5
 
-We can easily prove that tails is a increasing array. Therefore it is possible to do a binary search in tails array to find the one needs update.
+observation: do we need to keep track of multiple subs? it turns out that we can just keep track of one subarray,
+when new number x is not greater than last element of sub, we use binary search to find smallest element in sub that is >= x, and replace it with x
 
-Each time we only do one of the two:
+[2, 6, 8, 3, 4, 5, 1]
+[]
+[2]
+[2, 6] <= 6>2
+[2, 6, 8] <= 8>6
+[2, 3, 8] <= with binary search smallest number >=3 is 6, so replace 6 with 3
+[2, 3, 4] <= with binary search smallest number >=4 is 8, so replace 8 with 4
+[2, 3, 4, 5] <= 5 > 4
+[1, 3, 4, 5] <= with binary search smallest number >=1 is 2, so replace 2 with 1
 
-(1) if x is larger than all tail element, append it at end, increase size by 1
-(2) if tails[i-1] < x <= tails[i], update tails[i]
-
-this will maintain tails invariant, and the final answer is size
-
-
-time O(Nlog(N))
+time O(nlogn)
 """
-
-
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        n = len(nums)
-        tails = [0 for _ in range(n)]
-        size = 0
+        sub = []
 
-        for x in nums:
-            # binary search and update tails[i]
-            i, j = 0, size
-            while i < j:
-                m = (i + j) // 2
-                if tails[m] < x:
-                    i = m + 1
-                else:
-                    j = m
-            # now i points at right boundary of arrays <x
-            tails[i] = x
-            size = max(i + 1, size)  # update size to i+1 if that is larger
+        for num in nums:
+            if not sub or num > sub[-1]:
+                sub.append(num)
+            elif num < sub[-1]:
+                # binary search to find smallest number in sub that >= num
+                left, right = 0, len(sub)
+                while left < right:
+                    mid = left + (right - left)//2
+                    if sub[mid] < num:
+                        left = mid + 1
+                    elif sub[mid] >= num:
+                        right = mid
+                # when search is done, sub[left] is the target?
+                sub[left] = num
 
-        return size
+        return len(sub)
+
 
 def main():
     sol = Solution()
