@@ -35,6 +35,8 @@ Constraints:
 arr[i] < arr[j] for 1 <= i < j <= arr.length
 
 """
+from typing import List
+
 """
 Brutal force
 [2,3,4,7,11]
