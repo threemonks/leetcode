@@ -62,15 +62,20 @@ Design
 
 used map to hold times for each tweetName, store all time of a given tweetName as a list, and count during get query
 
-mistakes:
+note:
 1. only tweets within startTime to endTime counts
+
+time  recordTweet O(1)
+      getTweetCountsPerFrequency O(N)
+space O(N)
 """
 
-class TweetCounts:
+
+class TweetCounts0:
 
     def __init__(self):
         self.tweets = defaultdict(list)
-        self.intervals = {'minute': 60, 'hour': 3600, 'day': 3600*24}
+        self.intervals = {'minute': 60, 'hour': 3600, 'day': 3600 * 24}
 
     def recordTweet(self, tweetName: str, time: int) -> None:
         self.tweets[tweetName].append(time)
@@ -80,13 +85,60 @@ class TweetCounts:
         if not tweets:
             return [0]
         interval = self.intervals[freq]
-        ans = [0 for _ in range(math.ceil(endTime-startTime)//interval + 1)]
+        ans = [0 for _ in range(math.ceil(endTime - startTime) // interval + 1)]
         for t in tweets:
             if startTime <= t <= endTime:
-                ans[(t - startTime)//interval] += 1
+                ans[(t - startTime) // interval] += 1
         return ans
 
-# Your TweetCounts object will be instantiated and called as such:
+
+"""
+Design
+
+used map to hold SortedList of time for each tweetName, store all time of a given tweetName as a sortedlist, assuming same tweet can appear at same time more than once
+query can be improved via binary search to O(logN) on average
+
+note:
+1. only tweets within startTime to endTime counts
+
+time recordTweet O(N) - add to SortedList
+     getTweetCountsPerFrequency O(logN) on average (binary search)
+space O(N)
+"""
+from sortedcontainers import SortedList
+import bisect
+
+
+class TweetCounts:
+
+    def __init__(self):
+        self.tweets = dict()
+        self.intervals = {'minute': 60, 'hour': 3600, 'day': 3600 * 24}
+
+    def recordTweet(self, tweetName: str, time: int) -> None:
+        if tweetName not in self.tweets:
+            self.tweets[tweetName] = SortedList()
+        self.tweets[tweetName].add(time)
+
+    def getTweetCountsPerFrequency(self, freq: str, tweetName: str, startTime: int, endTime: int) -> List[int]:
+        # print('freq=%s tweetName=%s startTime=%s endTime=%s' % (freq, tweetName, startTime, endTime))
+        tweets = self.tweets.get(tweetName)
+        if not tweets:
+            return [0]
+
+        # to get count of tweets of this name for the specified time duration and interval
+        interval = self.intervals[freq]
+        times = self.tweets[tweetName]
+        start_idx = bisect.bisect_left(times, startTime)
+        end_idx = bisect.bisect_right(times, endTime)
+
+        ans = [0 for _ in range(math.ceil(endTime - startTime) // interval + 1)]
+        for i in range(start_idx, end_idx):
+            if startTime <= times[i] <= endTime:
+                ans[(times[i] - startTime) // interval] += 1
+        return ans
+
+    # Your TweetCounts object will be instantiated and called as such:
 # obj = TweetCounts()
 # obj.recordTweet(tweetName,time)
 # param_2 = obj.getTweetCountsPerFrequency(freq,tweetName,startTime,endTime)
