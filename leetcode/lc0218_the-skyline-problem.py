@@ -38,59 +38,66 @@ buildings is sorted by lefti in non-decreasing order.
 https://leetcode.com/problems/the-skyline-problem/
 
 """
+from typing import List
+
 from sortedcontainers import SortedDict
 from collections import defaultdict
 from sortedcontainers import SortedDict
 from collections import defaultdict
 
 """
-SortedDict
+Line Sweep SortedDict {height: count of this height}
 
-把所有building拆分成左右端点，加入dict，点位置为key，value是list of (起始结束标志,高度)，按key排序。遍历dict，对每个位置点，遇到左端点，高度入栈(count+=1)，遇到右端点，高度出栈(count-=1)，当栈顶高度变化时，新栈顶高度和当前天际线高度比较，如果变化，则天际线添加新节点和新高度。
+iterate through all points, at each point, for start, increase the count of this height in SortedDict (count+=1), for end point, decrease the count of this height in SortedDict, and delete such height if its count reduces to 0, for each such operation, if the tallest height in the dict changes, we have a new skyline
 
-因为栈需要保存不同building的高度可能相同都需进入，采用SortedDict，计数每个高度的次数
+mistakes:
+1. points should be stored using dict(list), because we must process all heights at a given point, then update skyline
+   we cannot process each (point, height) and update skyline.
+
+time O(N) # N - total number of points
 """
 
+from sortedcontainers import SortedDict
+class Solution0:
+    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
+        points = defaultdict(list) # [point, start/end flag, height]
 
-class Solution(object):
-    def getSkyline(self, buildings):
-        """
-        :type buildings: List[List[int]]
-        :rtype: List[List[int]]
-        """
-        points = defaultdict(list)
-        for left, right, height in buildings:
-            points[left].append([1, height])  # start, height
-            points[right].append([0, height])  # end, height
+        for start, end, height in buildings:
+            points[start].append([1, height])
+            points[end].append([0, height])
 
-        skyline = []
         sd = SortedDict()
 
+        skyline = []
         for x in sorted(points.keys()):
             for is_start, height in points[x]:
-                if is_start:  # start of building, add to heap, and if sd top height changed, add new skyline point
+                if is_start == 1: # start building height
                     if height in sd:
                         sd[height] += 1
                     else:
                         sd[height] = 1
-                else:  # end of building, reduce height count by 1 in dict, delete if count drops to 0
-                    if height in sd:
-                        sd[height] -= 1
-                        if sd[height] == 0:
-                            del sd[height]
-            if not skyline or not sd or sd.peekitem(-1)[0] != skyline[-1][
-                1]:  # after the above update with this new building point, check if we have new skyline height
-                skyline.append([x, sd.peekitem(-1)[0] if sd else 0])
+                elif is_start == 0: # end of building height
+                    sd[height] -= 1
+                    if sd[height] == 0:
+                        del sd[height]
 
-            # print('x=%s skyline=%s' % (x, skyline))
+            if not skyline or not sd or skyline[-1][1] != sd.peekitem(-1)[0]: # new tallest height in sd different from output
+                skyline.append([x, sd.peekitem(-1)[0] if sd else 0])
 
         return skyline
 
-
-import heapq
-
 """
-Line Sweep / Heap
+
+Line Sweep / Heap [-height, end]
+
+sort all nodes, for each node, add all building starts before it into priorityqueue, (-height, end)
+remove all nodes from priorityqueue whose end point is ealier than this node.
+
+Note that in order to ad all buildings starts before this node, we need to sort buildings, use a pointer to iterate it along with points, so that it does not increase time complexity of the entire program.
+
+if height of node at top of priorityqueue is different from current skyline height, that is a new skyline
+
+note: 
 
 排序所有点，遍历所有点
 对每一个点，将所有起点在该点之前的building加入堆 (-height,end)
@@ -99,35 +106,31 @@ Line Sweep / Heap
 
 注：堆在对应一个点加入新的building point和删除已经结束的building point之后，堆首元素高度就是当前天际线高度
 """
-
-
-class Solution1(object):
-    def getSkyline(self, buildings):
-        """
-        :type buildings: List[List[int]]
-        :rtype: List[List[int]]
-        """
-        res = [[0, 0]]
-        q = []  # heap holds (-height, end) for all buildings starts before current point p
-        # get all points, and sort
+import heapq
+class Solution:
+    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
+        # buildings = sorted(buildings) # already sorted
         points = [b[0] for b in buildings] + [b[1] for b in buildings]
+
         points.sort()
-        i = 0
+
+        pq = [] # priorityqueue holding (height, end)
+        i = 0 # pointer to indicate all buildings up to this index has been pushed into pq
+        skyline = []
         for p in points:
-            print('p=%s' % p)
-            # find all buildings who starts before this point, add their (heights*(-1), end) into heap
-            while i < len(buildings) and buildings[i][0] == p:
-                heapq.heappush(q, (-buildings[i][2], buildings[i][1]))
-                print('i=%s buildings[i]=%s' % (i, buildings[i]))
+            # put heights of all buildings who starting point is before x into pq
+            while i < len(buildings) and buildings[i][0] <= p:
+                heapq.heappush(pq, [-buildings[i][2], buildings[i][1]])
                 i += 1
-            # remove from queue top all buildings ending before p
-            while q and q[0][1] <= p:
-                heapq.heappop(q)
-            # check queue top for possible new skyline height
-            h = -q[0][0] if q else 0
-            if h != res[-1][1]:
-                res.append([p, h])
-        return res[1:]
+            # remove any node from top of priorityqueue whose end point is already past
+            while pq and pq[0][1] <= p:
+                heapq.heappop(pq)
+            # now the height in top of pq is the new skyline height, is this a new height?
+            h = -pq[0][0] if pq else 0
+            if len(skyline) == 0 or h != skyline[-1][1]:
+                skyline.append([p, h])
+
+        return skyline
 
 
 def main():
