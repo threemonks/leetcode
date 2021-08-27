@@ -39,35 +39,21 @@ trips[i].length == 3
 1 <= capacity <= 100000
 
 """
-
 """
-sort events by locations, iterate through all locations, add or remove pessengers according to trips start or end at that loc.
+Sort / Simulation
 """
-
-
 class Solution:
     def carPooling(self, trips: List[List[int]], capacity: int) -> bool:
-        # sort all trips by starting location
-        trips_sorted_start = sorted(trips, key=lambda x: x[1])
-        # sort all trips by ending location
-        trips_sorted_end = sorted(trips, key=lambda x: x[2])
-        loc_pessenger_on = dict()
-        all_locs = set()
-        for tss in trips_sorted_start:
-            loc_pessenger_on[tss[1]] = tss[0] + loc_pessenger_on.get(tss[1], 0)
-            all_locs.add(tss[1])
-        loc_pessenger_off = dict()
-        for tse in trips_sorted_end:
-            loc_pessenger_off[tse[2]] = -tse[0] + loc_pessenger_off.get(tse[2], 0)
-            all_locs.add(tse[2])
+        locations = []
+        for trip in trips:
+            locations.append((trip[1], trip[0])) # pessenger on
+            locations.append((trip[2], -trip[0])) # pesenger off
 
-        all_locs = sorted(list(all_locs))
+        locations = sorted(locations, key=lambda x: (x[0], x[1])) # pessenger off first, then on
+
         pessenger_count = 0
-        for loc in all_locs:
-            if loc in loc_pessenger_on:
-                pessenger_count += loc_pessenger_on[loc]
-            if loc in loc_pessenger_off:
-                pessenger_count += loc_pessenger_off[loc]
+        for loc, pc in locations:
+            pessenger_count += pc
             if pessenger_count > capacity:
                 return False
 
