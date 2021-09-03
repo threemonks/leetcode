@@ -57,19 +57,22 @@ To deal with the fact that python allows int much larger than 32 bits, manually 
 at last, we also need to deal with when a+b is negative in 32 bit
 
 time O(b) - b = number of bits in input
+
+https://leetcode.com/problems/sum-of-two-integers/discuss/489210/Read-this-if-you-want-to-learn-about-masks
 """
 class Solution:
     def getSum(self, a: int, b: int) -> int:
         mask = 0xffffffff # 32 bit mask in hexadecimal
-        while b:
-            sums = (a^b) & mask # ^ get different bits, add
-            b = ((a&b)<<1) & mask # & gets double 1s, <<1, moves carry
-            a = sums
 
-        # if a is negative, get a's 32 bits complement positive first
-        # then get 32-bit positive's Python complement negative
-        if (a>>31) & 1:
-            return ~(a^mask)
+        # works both as while loop and single value check
+        while (b & mask) > 0:
+            carry = ( a & b ) << 1 # & gets double 1s, <<1, moves carry
+            a = (a ^ b) # ^ get different bits, add
+            b = carry
+
+        # handles overflow
+        if b > 0:
+            return a & mask
         else:
             return a
 
