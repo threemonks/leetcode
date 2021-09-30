@@ -50,6 +50,9 @@ n == tasks.length
 1 <= tasks[i] <= 10
 max(tasks[i]) <= sessionTime <= 15
 """
+import math
+from typing import List
+
 """
 Bin Pack problem
 """
