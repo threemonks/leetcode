@@ -188,7 +188,7 @@ class Solution2(object):
         nodemask = (1 << start)
         visited.add((start, nodemask))
 
-        queue = collections.deque()
+        queue = deque()
         queue.append((start, 0, val, nodemask))
 
         ans = 0
