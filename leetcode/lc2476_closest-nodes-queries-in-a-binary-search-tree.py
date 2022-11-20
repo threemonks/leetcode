@@ -46,6 +46,7 @@ n == queries.length
 """
 # Definition for a binary tree node.
 import bisect
+import math
 
 
 class TreeNode:
