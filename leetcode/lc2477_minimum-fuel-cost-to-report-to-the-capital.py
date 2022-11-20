@@ -65,6 +65,9 @@ ai != bi
 roads represents a valid tree.
 1 <= seats <= 10^5
 """
+from math import ceil
+from typing import List
+
 """
 DFS / recursive
 
