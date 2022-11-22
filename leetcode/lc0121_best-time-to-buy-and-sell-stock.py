@@ -60,6 +60,12 @@ Kadane's Algorithm
 
 Using prices, we derive diffs between adjacent days, then the max profit is to get continuous subarray that gives max sum (profit), if the profit falls below zero, we will just reset it to 0 (start a new subarray)
 
+calculate profit if always buy on day i-1, and sell on day i, profit is prices[i]-prices[i-1] = profit[i]
+then buying on day j and sell on day i, the profit is basically profit[j+1] + ... + profit[i]
+i.e., the profit for buying on day j and sell on day i, is the sum of diffs of two adjacent prices during these periods
+
+max profit during entire period is to find max consecutive subarray sum
+
 test input prices [7,1,5,3,6,4]
 diff array is [0, -6, 4, -2, 3, -2]
 max subarray sum is 4+(-2)+3 = 5
@@ -80,6 +86,26 @@ class Solution:
 
         return global_max
 
+
+"""
+Sliding window
+
+scan array once, for each number, remember min value to its left, and update max profit with that current price - min price to left
+
+"""
+
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+
+        min_price = math.inf
+        max_profit = 0
+
+        for i in range(n):
+            max_profit = max(max_profit, prices[i] - min_price)
+            min_price = min(min_price, prices[i])
+        return max_profit
 
 def main():
     sol = Solution()
