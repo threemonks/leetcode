@@ -18,8 +18,8 @@ Output: 1
 
 Constraints:
 
-1 <= intervals.length <= 104
-0 <= starti < endi <= 106
+1 <= intervals.length <= 10^4
+0 <= starti < endi <= 10^6
 """
 import collections
 from typing import List
@@ -100,6 +100,8 @@ Sort + Heap
 Sort meetings by starting time, iterate through the meetings
 for each new meeting, if its start time is later than or equal to the earliest meeting end time in heap, replace that meeting end time with this new ending time, means it reuse the same room as this previous meeting
 if this meeting start time is before the earliest meeting ending time in heap, that means this meeting needs a new room, so we push this new meeting's ending time into heap.
+
+前面会议结束时间<=当前的开始时间，那就可以用前面的会议室，否则要多加一个
 
 The size of heap at end is total room numbers needed
 

@@ -3,6 +3,7 @@
 # Leetcode Problems by Category
 
 ## Recursion and Backtracking
+* [1986. Minimum Number of Work Sessions to Finish the Tasks](leetcode/lc1986_minimum-number-of-work-sessions-to-finish-the-tasks.py)
 
 ## Two pointers
 * [042. Trapping Rain Water](leetcode/lc0042_trapping_rain_water.py)
@@ -23,6 +24,7 @@
 * [1011. Capacity To Ship Packages Within D Days](leetcode/lc1011_capacity-to-ship-packages-within-d-days.py)
 * [1283. Find the Smallest Divisor Given a Threshold](leetcode/lc1283-find-the-smallest-divisor-given-a-threshold.py)
 * [1482. Minimum Number of Days to Make m Bouquets](leetcode/lc1482_minimum-number-of-days-to-make-m-bouquets.py)
+* [1891. Cutting Ribbons]()
 
 ## Hash Table
 
@@ -47,7 +49,7 @@
 
 ## Stack
 * [1776. Car Fleet ii](leetcode/lc1776_car-fleet-ii.py)
-### [Monotonic Stack/Queue](notes/algo_monotonic_stack_deque.md)
+### [Monotonic Stack/Queue](notes/algorithm/algo_monotonic_stack_deque.md)
 * [031. Next Permutation](leetcode/lc0031_next-permutation.py)
 * [042. Trapping Rain Water](leetcode/lc0042_trapping_rain_water.py)
 * [084. Largest Rectangle in Histogram](leetcode/lc0084_largest-rectangle-in-histogram.py)
@@ -81,8 +83,9 @@
 * [0336. Palindrome Pairs](leetcode/lc0336_palindrome_pairs.py)
 * [0642. Design Search Autocomplete System](leetcode/lc0642_design-search-autocomplete-system.py)
 
-## [Greedy](notes/algo_greedy.md)
+## [Greedy](notes/algorithm/algo_greedy.md)
 ### LIS (Longest Increasing Subsequence)
+* [300. Longest Increasing Subsequence](leetcode/lc0300_longest-increasing-subsequence.py)
 ### Sort
 * [164. Maxmum Gap](leetcode/lc0164_maximum-gap.py)
 * [347. Top K Frequent Elements](leetcode/lc0347_top-k-frequent-elements.py)

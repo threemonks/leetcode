@@ -9,6 +9,14 @@
 * if predicate function is monotonic: if x < k, f(x) is False, and for all x>=k, f(x) is True, or vice versa
 * searching for some min/max value satisfying some condition/predicate, within some search space, if the predicate is mononotic, i.e., if x<k, then f(x) is False, and for all x>=k, f(x) = True
 
+## Graph problem BFS or DFS?
+* backtracking -> dfs
+* shortest path -> bfs
+* tree level ordering -> bfs
+* finding any component -> dfs
+* cycle detection can be either DFS or BFS
+** non-direction use BFS
+
 ## Greedy
     * choose locally optimal leads to global solution
     * usually has the following two properties:

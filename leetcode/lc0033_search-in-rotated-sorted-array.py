@@ -104,7 +104,7 @@ Binary Search
 
 One pass
 
-idea is to add some additional check during the normail binary search in order to better narrow down the scope of the search
+idea is to add some additional check during the normal binary search in order to better narrow down the scope of the search
 
 revised binary search:
 mid = start + (end - start)//2
@@ -144,7 +144,7 @@ class Solution:
             if nums[mi] == target:
                 return mi
             elif nums[left] > nums[mi]:  # second half is sorted
-                if nums[mi] <= target <= nums[right]:
+                if nums[mi] < target <= nums[right]:
                     # target in second half
                     # move to right
                     left = mi + 1
@@ -152,7 +152,7 @@ class Solution:
                     # move to left
                     right = mi - 1
             else:  # first half is sorted
-                if nums[left] <= target <= nums[mi]:
+                if nums[left] < target <= nums[mi]:
                     # target in first half
                     # move to left
                     right = mi - 1

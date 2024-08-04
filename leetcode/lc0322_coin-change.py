@@ -76,7 +76,7 @@ class Solution0:
 """
 DP
 
-bottom down
+bottom up
 
 transition
 dp[i] := minimum number of coins for amount i, is the min # of coins of all possible previous target amount plus another coin in coins

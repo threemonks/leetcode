@@ -1,0 +1,17 @@
+0. use excel spreadsheet to track daily leetcode problem progress, and notes (topic, key points) for each problems
+0. 1point3acres.com/bbs 面经/公司高频题汇总 - interview problems by companies tag/freq - track via spreadsheet
+
+1. leetcode daily problem and weekly contest (after a few months)
+2. one problem a day - wechat group
+3. gucheng algo weekly - wechat group
+4. jiu zhang system design video series
+5. Scott Shi system design video series
+6. grokking system design interview
+7. System Design Interview - An Insider's Guide by Alex Xu
+8. DDIA (Design Data Intensive Application) study weekly - wechat group
+9. mock algo interview - wechat group
+10. mock system design interview - wechat group
+11. interview.io mock (algo, system design, behavior question)
+12. write stories and behavior question mock
+13. summarize past projects and experience from resume/past expeience
+14. some more youtube channels for system design

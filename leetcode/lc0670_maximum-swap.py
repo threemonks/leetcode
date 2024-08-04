@@ -78,6 +78,27 @@ class Solution:
         return ans
 
 
+"""
+brutal force
+"""
+class Solution1:
+    def maximumSwap(self, num: int) -> int:
+        digits = [int(c) for c in str(num)]
+        n = len(digits)
+
+        ans = num
+
+        for i in range(n):
+            for j in range(i, n):
+                if digits[i] < digits[j]:
+                    digits[i], digits[j] = digits[j], digits[i]
+                    ans = max(ans, int(''.join([str(d) for d in digits])))
+                    # restore
+                    digits[i], digits[j] = digits[j], digits[i]
+
+        return ans
+
+
 def main():
     sol = Solution()
     assert sol.maximumSwap(num = 2736) == 7236, 'fails'

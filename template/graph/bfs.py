@@ -1,66 +1,60 @@
 from collections import deque
 
 """
-Generic BFS template
+Generic BFS traverse template
 """
 def bfs(graph, start, target):
     q = deque([start])
-    discovered = set([start])
+    seen = set([start])
 
     while q:
-        cur = q.popleft()
+        u = q.popleft()
         # do something with each node
-        # print(cur)
-        # if cur == target:
-        #     return True
-        for u in graph[cur]:
-            if u not in discovered:
-                discovered.add(u)
-                q.append(u)
+        # print(u)
+        if u == target:
+            return
+        for v in graph[u]:
+            if v not in seen:
+                seen.add(v)
+                q.append(v)
 
 
 """
-BFS level order
+shortest path by BFS level order
 """
 
 def bfs(graph, start, target):
-    q = deque([start])
-    discovered = set([start])
+    queue = deque([start])
+    seen = set([start])
+    depth = 0
 
-    while q:
-        l = len(q)
-        newq = [] # all new nodes gathered after exploring this level
-        while l:
-            cur = q.popleft()
-            # do something with each node
-            # print(cur)
-            # if cur == target:
-            #     return True
-            for u in graph[cur]:
-                if u not in discovered:
-                    discovered.add(u)
-                    newq.append(u)
-            l -= 1
-        # now append all of newq into q
-        for i in newq:
-            q.append(i)
+    while queue:
+        for _ in range(len(queue)):
+            u = queue.popleft()
+            if u == target:
+                return depth
+            for v in graph[u]:
+                if v not in seen:
+                    seen.add(v)
+                    queue.append(v)
+        depth += 1
 
 """
-BFS shortest path
+generic BFS shortest path (slower than level order BFS)
 """
 
 def bfs(graph, start, target):
     q = deque([(start, 0)]) # start node, and steps from start node
-    discovered = set([start])
+    seen = set([start])
 
     while q:
-        cur, step = q.popleft()
+        u, step = q.popleft()
         # do something with each node
         # print(cur)
-        # if cur == target:
-        #     return step
-        for u in graph[cur]:
-            if u not in discovered:
-                discovered.add(u)
-                q.append((u, step+1))
+        if u == target:
+            return step
+        for v in graph[u]:
+            if v not in seen:
+                seen.add(v)
+                q.append((v, step+1))
 

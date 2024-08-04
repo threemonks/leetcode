@@ -3,12 +3,90 @@
 """
 import logging
 from queue import Queue
+from typing import List
 
 FORMAT = "%(asctime)s - {%(pathname)s : %(lineno)s : %(funcName)s} - %(levelname)s - %(message)s"
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+"""
+Template #1 
+search for exact value
+Template #1 is used to search for an element or condition which can be determined by accessing a single index in the array.
+
+Key Attributes:
+* Most basic and elementary form of Binary Search
+* Search Condition can be determined without comparing to the element's neighbors (or use specific elements around it)
+* No post-processing required because at each step, you are checking to see if the element has been found. If you reach the end, then you know the element is not found
+
+Distinguishing Syntax:
+
+Initial Condition: left = 0, right = length-1
+Termination: left > right
+Searching Left: right = mid-1
+Searching Right: left = mid+1
+
+"""
+def search(nums: List[int], target: int) -> int:
+    n = len(nums)
+    left, right = 0, n - 1  # [] left close, right close
+    while left <= right:
+        mi = (right + left) // 2
+        if nums[mi] == target:
+            return mi
+        elif nums[mi] < target:
+            left = mi + 1
+        else:  # nums[i] > target
+            right = mi - 1
+
+    return -1
+
+"""
+Binary Search Template II
+
+Template #2 is an advanced form of Binary Search. It is used to search for an element or condition which requires accessing the current index and its immediate right neighbor's index in the array.
+
+Key Attributes:
+
+* An advanced way to implement Binary Search.
+* Search Condition needs to access the element's immediate right neighbor
+* Use the element's right neighbor to determine if the condition is met and decide whether to go left or right
+* Guarantees Search Space is at least 2 in size at each step
+* Post-processing required. Loop/Recursion ends when you have 1 element left. Need to assess if the remaining element meets the condition.
+
+Distinguishing Syntax:
+
+Initial Condition: left = 0, right = length
+Termination: left == right
+Searching Left: right = mid
+Searching Right: left = mid+1
+"""
+
+def binarySearch(nums, target):
+    """
+    :type nums: List[int]
+    :type target: int
+    :rtype: int
+    """
+    if len(nums) == 0:
+        return -1
+
+    left, right = 0, len(nums)
+    while left < right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
+
+    # Post-processing:
+    # End Condition: left == right
+    if left != len(nums) and nums[left] == target:
+        return left
+    return -1
 
 """
 https://daimajiaoliu.com/daima/6cc85e7a84a2803
@@ -19,7 +97,7 @@ https://daimajiaoliu.com/daima/487220eaf900404
 public int binarySearch(int[] nums, int target) {
     if (nums.length == 0) return -1;
     int left = 0;
-    //因为要搜索左右侧边界，所以索引最大位置必须大于数组长度，搜索的区间为[left, right)
+    //因为要搜索左侧边界，所以索引最大位置必须大于数组长度，搜索的区间为[left, right)
     int right = nums.length;
     
     //其他代码
@@ -62,44 +140,44 @@ public int right_bound(int[] nums, int target) {
 
 def left_bound(nums, target):
     """
-    find left boundary, i.e., the left most element that equals to target
+    find left boundary, i.e., the left most position i to insert target such that all nums[:i] < target, and all nums[i:] >= target
 
     :param nums:
     :param target:
     :return:
     """
     n = len(nums)
-    lo, hi = 0, n # search for boundary, could be n, so we use [0, n)
-    while lo < hi:
-        mid = lo + (hi-lo)//2
-        if nums[mid] == target:
-            hi = mid
+    left, right = 0, n # search for boundary, could be n, so we use [0, n)
+    while left < right:
+        mid = left + (right-left)//2
+        if nums[mid] == target: # for left boundary, when nums[mid] == target, do not exclude mid, keep searching to left
+            right = mid
         elif nums[mid] > target:
-            hi = mid
+            right = mid
         elif nums[mid] < target:
-            lo = mid+1
+            left = mid+1
 
-    return lo if nums[lo] == target else -1 # when exit while loop, nums[lo] == target
+    return left if nums[left] == target else -1 # when exit while loop, nums[lo] == target
 
 def right_bound(nums, target):
     """
-    find right boundary, i.e., the right most element that equals to target
+    find right boundary, i.e., the right most position i to insert target such that all nums[:i] <= target, and all nums[i:]>target
     :param nums:
     :param target:
     :return:
     """
     n = len(nums)
-    lo, hi = 0, n
-    while lo < hi:
-        mid = lo + (hi-lo)//2
-        if nums[mid] == target:
-            lo = mid+1
+    left, right = 0, n
+    while left < right:
+        mid = left + (right - left)//2
+        if nums[mid] == target: # for right bound, nums[mid] == target => exclude mid, keep searching to right
+            left = mid+1
         elif nums[mid] < target:
-            lo = mid+1
+            left = mid+1
         elif nums[mid] > target:
-            hi = mid
+            right = mid
 
-    return lo-1
+    return left-1
 
 """
 Python module bisect
@@ -234,7 +312,6 @@ def binary_search(lo, hi, p):
         return -1 # p(x) is false for all x in S!
 
     return lo # lo is the least x for which p(x) is true
-
 
 def main():
     assert binary_search1([1,3,5,6,7,8,10,15,25,32,35,45,54,67,71,87,99], 35) == 10, 'fails'

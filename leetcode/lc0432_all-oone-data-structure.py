@@ -53,6 +53,8 @@ from sortedcontainers import SortedDict
 from sortedcontainers import SortedDict
 
 """
+SortedDict + DoubleLinkedList
+
 and sorted doubly linkedlist of word set for counts {1: set('word1', 'word2')} -> {2: set('word3', 'word3')}, sort by count
 also dict of word to linkedlist node {'word1': node1}
 use a dummy head and tail for doubly linkedlist, for fast lookup of min/max
@@ -203,6 +205,8 @@ class AllOne:
 
 
 """
+Hash Map
+
 two dicts:
 words {word: count}
 counts {count: [word list]}

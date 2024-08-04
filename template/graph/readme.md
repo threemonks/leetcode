@@ -11,6 +11,7 @@
 ## Shortest path
 
 - Dijkstra's Shortest path from one node to all nodes
+- modified BFS for shortest path from single source to single dest in unweighted graph
 - Bellman-Ford Shortest path from one node to all nodes, negative edges
   allowed, negative cycles allowed
 - Floyd-Warshall Shortest path between all pairs of vertices, negative

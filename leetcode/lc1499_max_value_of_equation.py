@@ -44,6 +44,8 @@ import math
 import collections
 
 """
+Sliding Window Max
+
 To max yi+yj+|xi-xj| <=> yi+yj-xi+xj for xi<xj when i<j
 for a given j, yj+xj is fixed, we look for i that will maximize yi+yj-xi+xj, i.e., maximize yi-xi
 so we can use sliding window maximum, and look for max(yi-xi) with constraint |xi-xj|<k

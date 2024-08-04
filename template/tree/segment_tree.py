@@ -46,7 +46,7 @@ class SegmentTree:
         node.sum = node.left.sum + node.right.sum
 
     def sum_range(self, node, start, end):
-        # empty rnage
+        # empty range
         if start > end:
             return 0
         # exact range match

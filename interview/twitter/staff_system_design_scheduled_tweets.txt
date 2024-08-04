@@ -1,0 +1,12 @@
+design scheduled tweets service - user can schedule a twitter to be posted at certain time
+
+clarify question
+requirements:
+1. create tweet
+2. schedule tweet
+
+what protocol for internal system communication? RPC
+
+What type of RPCs are there?
+gRPC is a implementation
+PAXOS/RAFT => consensus algorithm

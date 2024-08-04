@@ -63,6 +63,7 @@ note:
 
 time: put: O(logN)
       retrieve: O(n) more specifically O(m_start) m_start - # of entries in the current set of logs which have timestamp greater than the current start time
+                can use binary search to get O(logN+(end-start)) for retrieve
 """
 from sortedcontainers import SortedDict
 

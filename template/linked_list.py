@@ -1,6 +1,9 @@
 """
 Linked List
 """
+from typing import Optional
+
+
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
@@ -107,3 +110,58 @@ def reverse_between(head: ListNode, left: int, right: int) -> ListNode:
     # connect reversed section back to original linked list
     node.next.next = cur # node.next is the tail of reversed section, connect it to node after revered part
     node.next = prev # node is the one before reversed part, connect it to head of reversed part
+"""
+Reverse Linked List
+
+"""
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head:
+            return head
+
+        dummy = ListNode()
+        dummy.next = head
+
+        prev = head
+        cur = head.next
+        while cur:
+            # connect prev and cur.next
+            temp = cur
+            prev.next = cur.next
+            cur = prev.next
+
+            # insert cur between dummy and its next
+            temp.next = dummy.next
+            dummy.next = temp
+
+        return dummy.next
+
+"""
+Remove node in Linked List
+"""
+## Linked List remove node
+
+class Solution:
+    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+        dummy = ListNode()
+        dummy.next = head
+
+        prev = dummy
+        cur = head
+        while cur:
+            if cur.val == val:
+                # remove cur
+                prev.next = cur.next
+                cur = prev.next
+            else:
+                prev = cur
+                cur = cur.next
+
+        return dummy.next

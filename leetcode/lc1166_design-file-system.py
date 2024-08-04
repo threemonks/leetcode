@@ -87,11 +87,13 @@ class FileSystem0:
 
 """
 Trie based approach
+
+In addition to classic TrieNode structure, we add a name and value to each TrieNode
 """
 
 class TrieNode(object):
     def __init__(self, name):
-        self.map = defaultdict(TrieNode)
+        self.children = defaultdict(TrieNode)
         self.name = name
         self.value = -1
 
@@ -108,13 +110,13 @@ class FileSystem:
         for i in range(1, len(components)):
             name = components[i]
 
-            if name not in cur.map:
+            if name not in cur.children:
                 if i == len(components)-1: # last element in path
-                    cur.map[name] = TrieNode(name)
+                    cur.children[name] = TrieNode(name)
                 else: # parent not found
                     return False
             # go to next level
-            cur = cur.map[name]
+            cur = cur.children[name]
 
         # value not equal to -1 means the path already exists in the trie
         if cur.value != -1:
@@ -131,9 +133,9 @@ class FileSystem:
 
         for i in range(1, len(components)): # skip root which is empty name
             name = components[i]
-            if name not in cur.map:
+            if name not in cur.children:
                 return -1
-            cur = cur.map[name]
+            cur = cur.children[name]
 
         return cur.value
 

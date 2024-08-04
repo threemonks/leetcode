@@ -1,0 +1,27 @@
+# Design user activity timeline
+1 uni-direction follow
+2. support functions:
+  post
+  reply
+  follow
+  like
+
+  only support first order follow
+
+major components:
+1. client / server API
+2. write path
+3. read path
+
+## RPC
+
+POST /sayHello HTTP/1.1
+HOST: api.example.com
+Content-Type: application/json
+
+{"name": "Racey McRacerson"}
+
+## One simple rule of thumb is this:
+
+If an API is mostly actions, maybe it should be RPC.
+If an API is mostly CRUD and is manipulating related data, maybe it should be REST.

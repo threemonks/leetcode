@@ -47,16 +47,12 @@ def isNotVisited(x: int, path: List[int]) -> int:
 
 # Utility function for finding paths in graph
 # from source to destination
-def findpaths(g: List[List[int]], src: int,
+def findpaths(adj_list: dict[list], src: int,
               dst: int, v: int) -> None:
     # Create a queue which stores
     # the paths
-    q = deque()
-
-    # Path vector to store the current path
-    path = []
-    path.append(src)
-    q.append(path.copy())
+    q = deque([src])
+    seen = set()
 
     while q:
         path = q.popleft()
@@ -69,11 +65,10 @@ def findpaths(g: List[List[int]], src: int,
 
         # Traverse to all the nodes connected to
         # current vertex and push new path to queue
-        for i in range(len(g[last])):
-            if g[last][i] in path:
-                newpath = path.copy()
-                newpath.append(g[last][i])
-                q.append(newpath)
+        for nei in adj_list[last]:
+            if nei not in seen:
+                q.append(path+[nei])
+                seen.add(nei)
 
 
 # Driver code

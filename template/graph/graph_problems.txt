@@ -1,0 +1,6 @@
+1. SSSP
+2. shortest path BFS or DFS
+2. traverse all vertex
+3. topological sort
+4. print all possible paths between two vertex without duplicate
+5. MST (minimum spanning tree)

@@ -14,8 +14,8 @@
         2. 首先sort所有的interval，将每个interval拆解成两个event，这些event会影响整个program的某些状态，比如 overlap_count，然后按照时间序遍历所有event，根据event来open和close window，然后判断window和状态变量是否满足所需的条件。
 
 ## 题目要求的暗示 problem hints：
-1. number of ways/arrangements/choices => DP
-2. print all possible ways / arrangements / choices => DFS
+1. 求解的个数number of ways/arrangements/choices => DP
+2. 返回所有的解 print all possible ways / arrangements / choices => backtrack / DFS
 3. 滑动窗口最大值 单调栈
 4. 任意区间最大值 线段树
 5. 前缀子数组最大值， 用辅助数组记录可以简化求最大值时间复杂度O(1) <= 最长公共上升子序列

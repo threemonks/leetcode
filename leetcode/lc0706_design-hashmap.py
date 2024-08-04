@@ -30,19 +30,19 @@ Please do not use the built-in HashMap library.
 
 """
 """
-Hash Table
+Design
 
-1. define a data structure to hold the data - LinkedList
-2. define hashing function 
-3. use chaining when collision happens, mulitple key hashed into same hash value, we add it to a LinkedList on that hash key
-4. load factor and re-hashing - do we need to define load factor, and rehash all values if exceeding load factor threshold
+Use LinkedList to hold data for given hash value
 
-mistakes:
-1. need to chain to handle hash collision
-2. null pointer check
+since key is always int, we can use key % size => array index
+hash collision = > chain [key, val] pairs
+consider load factor or not?
+
+time: N = # of keys/buckets
+      M = avg length of linkedlist
+      O(M) for put, get, remove
+      if N >> M, we can assume O(1) for put, get, remove
 """
-
-
 class ListNode:
     def __init__(self, key, val):
         self.key = key
@@ -50,8 +50,7 @@ class ListNode:
         self.next = None
 
     def __repr__(self):
-        return '{%s: %s)' % (self.key, self.val)
-
+        return '[{%s: %s} %s]' % (self.key, self.val, self.next)
 
 class MyHashMap:
 
@@ -59,71 +58,76 @@ class MyHashMap:
         """
         Initialize your data structure here.
         """
-        self.capacity = 7  # use prime number as capacity for hashing
-        self.data = [None for _ in range(self.capacity)]
+        self.size = 101 # prime number
+        self.data = [None for _ in range(self.size)] # holds linkedlist heads
 
-    def hashcode(self, key):
-        return key % self.capacity
 
     def put(self, key: int, value: int) -> None:
         """
         value will always be non-negative.
         """
-        hashed = self.hashcode(key)
-        if not self.data[hashed]:
-            self.data[hashed] = ListNode(key, value)
+        idx = key % self.size
+        if not self.data[idx]:
+            # create new node as linkedlist head
+            self.data[idx] = ListNode(key=key, val=value)
         else:
-            curr = self.data[hashed]
-            prev = curr
-            while curr:
-                if curr.key == key:
-                    curr.val = value  # update
-                    # print('update key=%s value=%s data=%s' % (key, value, self.data))
-                    return
-                prev, curr = curr, curr.next
+            # update if exists, else append
+            cur = self.data[idx]
+            prev = cur
+            while cur:
+                if cur.key == key:
+                    cur.val = value
+                    break
+                prev = cur
+                cur = cur.next
 
-            # not found
-            prev.next = ListNode(key, value)
-
-        # print('put key=%s value=%s data=%s' % (key, value, self.data))
+            if not cur: # didn't find after reached end, append here
+                prev.next = ListNode(key, value)
 
     def get(self, key: int) -> int:
         """
         Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
         """
-        hashed = self.hashcode(key)
-        curr = self.data[hashed]
-        while curr:
-            if curr.key == key:
-                return curr.val
-            curr = curr.next
+        idx = key % self.size
+        cur = self.data[idx]
+        while cur:
+            if cur.key == key:
+                return cur.val
+            cur = cur.next
 
-        # not found
-        return -1
+        if not cur:
+            return -1
 
     def remove(self, key: int) -> None:
         """
         Removes the mapping of the specified value key if this map contains a mapping for the key
         """
-        hashed = self.hashcode(key)
-        curr = self.data[hashed]
-        prev = curr
-        if self.data[hashed] and self.data[hashed].key == key:
-            self.data[hashed] = self.data[hashed].next
-            # print('remove key=%s data=%s' % (key, self.data))
-        while curr:
-            if curr.key == key:
-                prev.next = curr.next
-                # print('remove key=%s data=%s' % (key, self.data))
-                break
-            prev, curr = curr, curr.next
+        # print('before remove self.data=%s' % self.data)
+        idx = key % self.size
+        if not self.data[idx]:
+            return
+        # process if first node key,value matchs
+        if self.data[idx] and self.data[idx].key == key:
+            self.data[idx] = self.data[idx].next
+        else:
+            # process if removed value is not head of linkedlist
+            cur = self.data[idx]
+            prev = cur
+            while cur:
+                if cur.key == key:
+                    prev.next = cur.next
+                    break
+                prev = cur
+                cur = cur.next
 
+        # print('after remove self.data=%s' % self.data)
 
 # Your MyHashMap object will be instantiated and called as such:
 # obj = MyHashMap()
 # obj.put(key,value)
 # param_2 = obj.get(key)
 # obj.remove(key)
+
 
 def main():
     obj = MyHashMap()

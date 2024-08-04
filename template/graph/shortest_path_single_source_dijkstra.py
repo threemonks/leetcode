@@ -15,6 +15,9 @@ from typing import List
 
 class Solution:
     # Simple Dijkstra algo without PriorityQueue
+    # store all nodes with known best cost in list
+    # BFS traverse and update each node with better cost if available
+    # when done, you get best cost for each node
     def dijkstra(self, graph, n):
         adj_list = graph # construct adj_list from graph
         dist = [float("inf") for i in range(n + 1)]  # 存储每个点到节点0的最短距离
@@ -34,6 +37,7 @@ class Solution:
             return dist[n-1]
 
     # Dijkstra with PriorityQueue
+    # use heap to store node and min cost (min cost, node)
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         adj_list = collections.defaultdict(list)
         for u, v, w in times:

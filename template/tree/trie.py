@@ -43,7 +43,7 @@ class Trie0:
                 return False
             p = p.children[ord(word[level]) - ord('a')]
 
-        return p is not None and p.is_word == True
+        return p is not None and p.is_word is True
 
     def startsWith(self, prefix: str) -> bool:
         """
@@ -111,7 +111,7 @@ class Trie:
             if p is None:
                 return False
 
-        return p is not None and p.is_word == True
+        return p is not None and p.is_word is True
 
     def startsWith(self, prefix: str) -> bool:
         """

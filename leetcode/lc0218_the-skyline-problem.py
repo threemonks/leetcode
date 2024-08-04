@@ -46,7 +46,7 @@ from sortedcontainers import SortedDict
 from collections import defaultdict
 
 """
-Line Sweep SortedDict {height: count of this height}
+Line Sweep SortedDict/TreeMap (Java) {height: count of this height}
 
 iterate through all points, at each point, for start, increase the count of this height in SortedDict (count+=1), for end point, decrease the count of this height in SortedDict, and delete such height if its count reduces to 0, for each such operation, if the tallest height in the dict changes, we have a new skyline
 

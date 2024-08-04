@@ -42,8 +42,8 @@ Output: 3
 
 Constraints:
 
-1 <= arr.length <= 5 * 104
--108 <= arr[i] <= 108
+1 <= arr.length <= 5 * 10^4
+-108 <= arr[i] <= 10^8
 
 """
 import collections

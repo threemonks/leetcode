@@ -132,7 +132,7 @@ https://daimajiaoliu.com/daima/487220eaf900404
 
 * 第二个，寻找左侧边界的二分查找：
 - 因为我们初始化 right = nums.length， 所以决定了我们的「搜索区间」是 [left, right)， 所以决定了 while (left < right)， 同时也决定了 left = mid+1 和 right = mid
-- 因为我们需找到 target 的最左侧索引， 所以当 `nums[mid] == target` 时不要立即返回， 而要收紧右侧边界以锁定左侧边界
+- 因为我们需找到 target 的最左侧索引， 所以当 `nums[mid] == target` 时不要立即返回， 而要继续缩减右侧边界以锁定左侧边界
 
 * 第三个，寻找右侧边界的二分查找：
 - 因为我们初始化 right = nums.length，所以决定了我们的「搜索区间」是 [left, right)， 所以决定了 while (left < right)， 同时也决定了 left = mid+1 和 right = mid
@@ -144,3 +144,4 @@ https://daimajiaoliu.com/daima/487220eaf900404
 - https://leetcode.com/problems/binary-search/discuss/423162/Binary-Search-101
 - https://leetcode.com/problems/maximum-value-at-a-given-index-in-a-bounded-array/discuss/1121605/A-mechanical-way-to-implement-bug-free-binary-search-algorithms-python3
 - https://www.topcoder.com/thrive/articles/Binary%20Search
+- https://inky-hovercraft-849.notion.site/Binary-Search-45031b3e5bce497ca4f0913af31d70c3#4256b911d1ba4eae8e432cd3c439add4
