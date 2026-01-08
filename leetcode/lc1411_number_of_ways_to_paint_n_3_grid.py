@@ -69,7 +69,7 @@ i.e., color2 = 3*prev_color2 + 2*prev_color3
 """
 
 
-class Solution:
+class Solution0:
     def numOfWays(self, n: int) -> int:
         MOD = 10 ** 9 + 7
         color2 = 6
@@ -81,6 +81,89 @@ class Solution:
             color3 = (2 * prev_color2 + 2 * prev_color3) % MOD
 
         return (color2 + color3) % MOD
+
+"""
+dp (dynamic programming)
+
+a row could have these valid states
+ABA: RYR RGR YRY YGY GRG GYG
+ABC: RYG RGY GRY GYR YRG YGR
+
+transitions (moving from row i to row i+1)
+RYR
+-> YRY YGY GRG
+-> YRG GRY
+
+RYG
+-> YGY YRY
+-> YGR GRY
+
+ABA_(n+1) = 3*ABA_(n) + 2 * ABC_(n)
+
+ABC_(n+1) = 2 * ABA_(n) + 2 * ABC_(n)
+
+complexity:
+time O(N)
+space O(1)
+
+"""
+class Solution:
+    # solution for 3 colors only
+    # def numOfWays(self, n: int) -> int:
+    #     MOD = 10**9 + 7
+
+    #     # initial state for n = 1
+    #     aba = 6
+    #     abc = 6
+
+    #     for i in range(2, n+1):
+    #         # calculate next values based on transactions
+    #         next_aba = (3*aba + 2 * abc) % MOD
+    #         next_abc = (2*aba + 2 * abc) % MOD
+
+    #         #update current value for next iteration
+    #         aba, abc = next_aba, next_abc
+
+    #     return (aba + abc) % MOD
+
+    # solution for any number of colors
+    # Universal solution
+    """
+Pre-calculate Transitions
+For every pair of valid states (let's call them row1 and row2), check if they can be neighbors. They are compatible if:
+
+row1[0] != row2[0]
+
+row1[1] != row2[1]
+
+row1[2] != row2[2]    
+    """    
+    def numOfWays(self, n: int) -> int:
+        MOD = 10**9 + 7
+        colors = [0, 1, 2]
+        
+        # 1. Find all valid states for one row
+        states = []
+        for a in colors:
+            for b in colors:
+                for c in colors:
+                    if a != b and b != c:
+                        states.append((a, b, c))
+        
+        # 2. Initialize DP: Each state has 1 way to exist in the first row
+        dp = {state: 1 for state in states}
+        
+        # 3. Transition row by row
+        for _ in range(n - 1):
+            new_dp = {state: 0 for state in states}
+            for curr_state in states:
+                for prev_state in states:
+                    # Check vertical compatibility
+                    if all(curr_state[i] != prev_state[i] for i in range(3)):
+                        new_dp[curr_state] = (new_dp[curr_state] + dp[prev_state]) % MOD
+            dp = new_dp
+            
+        return sum(dp.values()) % MOD    
 
 def main():
     sol = Solution()
