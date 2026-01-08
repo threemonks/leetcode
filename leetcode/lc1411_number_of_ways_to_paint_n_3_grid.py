@@ -137,33 +137,39 @@ row1[0] != row2[0]
 row1[1] != row2[1]
 
 row1[2] != row2[2]    
-    """    
+    """
     def numOfWays(self, n: int) -> int:
-        MOD = 10**9 + 7
+        MOD = 10**9+7
         colors = [0, 1, 2]
+
+        # calculate all valid states
+        valid_states = []
+        for i in colors:
+            for j in colors:
+                for k in colors:
+                    if (i != j and j != k):
+                        valid_states.append((i, j, k))
+        print(f"{valid_states=}")
+
+        row1 = {state: 1 for state in valid_states}
+        # print(f"{row1=}")
+        for _ in range(n-1):
+            # init row2
+            row2 = {state: 0 for state in valid_states}
+            # print(f"{row2=}")
+            # for each state in row2
+            for state in valid_states:
+                # for each state in row1
+                for prev_state in valid_states:
+                    # if state is compatible with prev_state
+                    # row2[state] += row1[prev_state1]
+                    if all([state[j] != prev_state[j] for j in range(3)]):
+                        row2[state] = (row2[state] + row1[prev_state]) % MOD
+                    # print(f"{row2=}")
+            row1 = row2.copy()
         
-        # 1. Find all valid states for one row
-        states = []
-        for a in colors:
-            for b in colors:
-                for c in colors:
-                    if a != b and b != c:
-                        states.append((a, b, c))
-        
-        # 2. Initialize DP: Each state has 1 way to exist in the first row
-        dp = {state: 1 for state in states}
-        
-        # 3. Transition row by row
-        for _ in range(n - 1):
-            new_dp = {state: 0 for state in states}
-            for curr_state in states:
-                for prev_state in states:
-                    # Check vertical compatibility
-                    if all(curr_state[i] != prev_state[i] for i in range(3)):
-                        new_dp[curr_state] = (new_dp[curr_state] + dp[prev_state]) % MOD
-            dp = new_dp
-            
-        return sum(dp.values()) % MOD    
+        print(f"{row1=}")
+        return sum(row1[state] for state in valid_states) % MOD
 
 def main():
     sol = Solution()

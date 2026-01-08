@@ -55,7 +55,7 @@ class Solution:
         return self.fib(n-1) + self.fib(n-2)
 
     """
-    top down
+    bottom up
     
     complexity
     time O(log(N))
@@ -73,7 +73,7 @@ class Solution:
         return dp[n]
 
     """
-    top down with space optimization
+    bottom up with space optimization
 
     complexity
     time O(log(N))
