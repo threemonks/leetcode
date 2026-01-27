@@ -128,6 +128,9 @@ def drawtree(root):
     t.hideturtle()
     turtle.mainloop()
 
+def almost_equal(a, b, eps=1e-5):
+    return abs(a - b) <= eps
+
 
 if __name__ == '__main__':
     drawtree(deserialize('[1,2,3,null,null,4,null,null,5]'))
