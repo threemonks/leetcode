@@ -18,6 +18,35 @@ def binary_tree_equal(p: TreeNode, q: TreeNode) -> bool:
     if (p and not q) or (not p and q): return False
     return p.val == q.val and binary_tree_equal(p.left, q.left) and binary_tree_equal(p.right, q.right)
 
+from collections import deque
+
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children if children is not None else []
+
+def listToNaryTree(data):
+    if not data:
+        return None
+    
+    root = Node(data[0])
+    queue = deque([root])
+    i = 2 # Start after root and the first 'null'
+    
+    while i < len(data) and queue:
+        parent = queue.popleft()
+        # Collect children until the next 'null'
+        children_group = []
+        while i < len(data) and data[i] is not None:
+            child = Node(data[i])
+            children_group.append(child)
+            queue.append(child)
+            i += 1
+        parent.children = children_group
+        i += 1 # Skip the 'null' delimiter
+        
+    return root
+
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
